@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育费用计算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-left: 4px solid #4facfe;
+            padding-left: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .result-section {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            border-bottom: 2px solid #f1f2f6;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .result-header h3 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .result-meta {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .cost-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .cost-item h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .cost-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #e74c3c;
+        }
+
+        .cost-unit {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .summary-box h4 {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .summary-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .data-source {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c66;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .success {
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #6c6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .cost-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content, .header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 教育费用计算器</h1>
+            <p>为您的教育规划提供精准的费用预估和参考</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 教育阶段选择 -->
+            <div class="form-section">
+                <h2>🏫 选择教育阶段</h2>
+                <div class="form-group">
+                    <label for="educationStage">教育阶段</label>
+                    <select id="educationStage" onchange="updateStageOptions()">
+                        <option value="">请选择教育阶段</option>
+                        <option value="primary">小学阶段</option>
+                        <option value="middle">初中阶段</option>
+                        <option value="high">高中阶段</option>
+                        <option value="university">大学阶段</option>
+                        <option value="graduate">研究生阶段</option>
+                    </select>
+                </div>
+
+                <div id="stageOptions" class="hidden">
+                    <!-- 动态生成的选项将在这里显示 -->
+                </div>
+            </div>
+
+            <!-- 计算参数 -->
+            <div class="form-section">
+                <h2>⚙️ 计算参数</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="studyYears">学习年数</label>
+                        <input type="number" id="studyYears" value="1" min="1" max="10">
+                    </div>
+                    <div class="form-group">
+                        <label for="schoolCount">申请学校数量（如适用）</label>
+                        <input type="number" id="schoolCount" value="5" min="1" max="20">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 操作按钮 -->
+            <div style="text-align: center; margin: 30px 0;">
+                <button class="btn" onclick="calculateCosts()">📊 计算费用</button>
+                <button class="btn btn-secondary" onclick="clearResults()">🗑️ 清空结果</button>
+            </div>
+
+            <!-- 结果显示区域 -->
+            <div id="resultSection" class="result-section">
+                <div class="result-header">
+                    <h3 id="resultTitle">费用计算结果</h3>
+                    <div id="resultMeta" class="result-meta"></div>
+                </div>
+
+                <div id="costDetails" class="cost-grid">
+                    <!-- 费用详情将在这里动态生成 -->
+                </div>
+
+                <div id="summaryBox" class="summary-box">
+                    <!-- 费用汇总将在这里显示 -->
+                </div>
+
+                <div id="dataSource" class="data-source">
+                    <!-- 数据来源将在这里显示 -->
+                </div>
+            </div>
+
+            <!-- 数据验证和状态 -->
+            <div class="form-section">
+                <h2>ℹ️ 系统信息</h2>
+                <div id="systemInfo">
+                    <div class="loading">正在初始化系统...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入数据文件 -->
+    <script src="education-cost-data.js"></script>
+    <script src="education-cost-data-extended.js"></script>
+    <script src="education-cost-api.js"></script>
+    
+    <script>
+        // 全局变量
+        let educationAPI;
+        let currentResult = null;
+
+        // 初始化系统
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                educationAPI = new EducationCostAPI();
+                initializeSystem();
+            } catch (error) {
+                showError('系统初始化失败: ' + error.message);
+            }
+        });
+
+        // 初始化系统
+        function initializeSystem() {
+            const validation = educationAPI.validateData();
+            const systemInfo = document.getElementById('systemInfo');
+            
+            if (validation.isValid) {
+                systemInfo.innerHTML = `
+                    <div class="success">
+                        ✅ 系统初始化完成<br>
+                        📚 可用城市: ${validation.summary.primarySchoolCities} 个<br>
+                        🌍 可用国家: ${validation.summary.countries} 个留学国家<br>
+                        🎓 数据版本: ${EDUCATION_COST_DATA.metadata.version}<br>
+                        📅 最后更新: ${EDUCATION_COST_DATA.metadata.lastUpdated}
+                    </div>
+                `;
+            } else {
+                systemInfo.innerHTML = `
+                    <div class="error">
+                        ❌ 系统初始化失败<br>
+                        错误: ${validation.errors.join(', ')}
+                    </div>
+                `;
+            }
+        }
+
+        // 更新阶段选项
+        function updateStageOptions() {
+            const stage = document.getElementById('educationStage').value;
+            const optionsContainer = document.getElementById('stageOptions');
+            
+            if (!stage) {
+                optionsContainer.classList.add('hidden');
+                return;
+            }
+
+            let optionsHTML = '';
+
+            switch (stage) {
+                case 'primary':
+                case 'middle':
+                    optionsHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="schoolType">学校类型</label>
+                                <select id="schoolType">
+                                    <option value="public">公立</option>
+                                    <option value="private">私立</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">城市</label>
+                                <select id="city">
+                                    ${getCityOptions()}
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'high':
+                    optionsHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="direction">发展方向</label>
+                                <select id="direction" onchange="updateHighSchoolType()">
+                                    <option value="domestic">国内方向</option>
+                                    <option value="international">出国方向</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="highType">学校类型</label>
+                                <select id="highType">
+                                    <option value="public">公立</option>
+                                    <option value="private">私立</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">地区</label>
+                            <select id="location">
+                                ${getCityOptions()}
+                            </select>
+                        </div>
+                    `;
+                    break;
+
+                case 'university':
+                    optionsHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="uniDirection">留学方向</label>
+                                <select id="uniDirection" onchange="updateUniversityType()">
+                                    <option value="domestic">国内</option>
+                                    <option value="overseas">海外</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="uniType">学校类型</label>
+                                <select id="uniType">
+                                    <option value="public">公办大学</option>
+                                    <option value="private">民办大学</option>
+                                    <option value="jointProgram">中外合作办学</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'graduate':
+                    optionsHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gradDirection">留学方向</label>
+                                <select id="gradDirection" onchange="updateGraduateType()">
+                                    <option value="domestic">国内</option>
+                                    <option value="overseas">海外</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="gradType">学位类型</label>
+                                <select id="gradType">
+                                    <option value="academic">学术型硕士</option>
+                                    <option value="professional">专业型硕士</option>
+                                    <option value="phd">博士</option>
+                                </select>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            optionsContainer.innerHTML = optionsHTML;
+            optionsContainer.classList.remove('hidden');
+        }
+
+        // 获取城市选项
+        function getCityOptions() {
+            const cities = educationAPI.getAvailableCities();
+            return cities.map(city => 
+                `<option value="${city.code}">${city.name}</option>`
+            ).join('');
+        }
+
+        // 获取国家选项
+        function getCountryOptions() {
+            const countries = educationAPI.getAvailableStudyCountries();
+            return countries.map(country => 
+                `<option value="${country.code}">${country.name}</option>`
+            ).join('');
+        }
+
+        // 更新高中类型选项
+        function updateHighSchoolType() {
+            const direction = document.getElementById('direction').value;
+            const typeSelect = document.getElementById('highType');
+            const locationSelect = document.getElementById('location');
+            
+            if (direction === 'domestic') {
+                typeSelect.innerHTML = `
+                    <option value="public">公立</option>
+                    <option value="private">私立</option>
+                `;
+                locationSelect.innerHTML = getCityOptions();
+            } else {
+                typeSelect.innerHTML = `
+                    <option value="internationalPublic">公立国际部</option>
+                    <option value="internationalSchool">国际学校</option>
+                    <option value="overseas">海外高中</option>
+                `;
+                // 如果选择海外高中，更新为国家选项
+                setTimeout(() => {
+                    if (document.getElementById('highType').value === 'overseas') {
+                        locationSelect.innerHTML = educationAPI.getAvailableCountries()
+                            .map(country => `<option value="${country.code}">${country.name}</option>`)
+                            .join('');
+                    } else {
+                        locationSelect.innerHTML = getCityOptions();
+                    }
+                }, 100);
+            }
+        }
+
+        // 更新大学类型选项
+        function updateUniversityType() {
+            const direction = document.getElementById('uniDirection').value;
+            const typeSelect = document.getElementById('uniType');
+            
+            if (direction === 'domestic') {
+                typeSelect.innerHTML = `
+                    <option value="public">公办大学</option>
+                    <option value="private">民办大学</option>
+                    <option value="jointProgram">中外合作办学</option>
+                `;
+            } else {
+                typeSelect.innerHTML = getCountryOptions();
+            }
+        }
+
+        // 更新研究生类型选项
+        function updateGraduateType() {
+            const direction = document.getElementById('gradDirection').value;
+            const typeSelect = document.getElementById('gradType');
+            
+            if (direction === 'domestic') {
+                typeSelect.innerHTML = `
+                    <option value="academic">学术型硕士</option>
+                    <option value="professional">专业型硕士</option>
+                    <option value="phd">博士</option>
+                `;
+            } else {
+                typeSelect.innerHTML = getCountryOptions();
+                // 添加学位选择
+                if (!document.getElementById('degreeType')) {
+                    const degreeGroup = document.createElement('div');
+                    degreeGroup.className = 'form-group';
+                    degreeGroup.innerHTML = `
+                        <label for="degreeType">学位级别</label>
+                        <select id="degreeType">
+                            <option value="master">硕士</option>
+                            <option value="phd">博士</option>
+                        </select>
+                    `;
+                    typeSelect.parentNode.parentNode.appendChild(degreeGroup);
+                }
+            }
+        }
+
+        // 计算费用
+        function calculateCosts() {
+            try {
+                const stage = document.getElementById('educationStage').value;
+                const years = parseInt(document.getElementById('studyYears').value) || 1;
+                const schoolCount = parseInt(document.getElementById('schoolCount').value) || 5;
+                
+                if (!stage) {
+                    showError('请选择教育阶段');
+                    return;
+                }
+
+                let costData = null;
+
+                switch (stage) {
+                    case 'primary':
+                    case 'middle':
+                        const type = document.getElementById('schoolType').value;
+                        const city = document.getElementById('city').value;
+                        
+                        if (stage === 'primary') {
+                            costData = educationAPI.getPrimarySchoolCosts(type, city);
+                        } else {
+                            costData = educationAPI.getMiddleSchoolCosts(type, city);
+                        }
+                        break;
+
+                    case 'high':
+                        const direction = document.getElementById('direction').value;
+                        const highType = document.getElementById('highType').value;
+                        const location = document.getElementById('location').value;
+                        
+                        costData = educationAPI.getHighSchoolCosts(direction, highType, location);
+                        break;
+
+                    case 'university':
+                        const uniDirection = document.getElementById('uniDirection').value;
+                        const uniType = document.getElementById('uniType').value;
+                        
+                        costData = educationAPI.getUniversityCosts(uniDirection, uniType);
+                        break;
+
+                    case 'graduate':
+                        const gradDirection = document.getElementById('gradDirection').value;
+                        const gradType = document.getElementById('gradType').value;
+                        const degreeType = document.getElementById('degreeType')?.value || null;
+                        
+                        costData = educationAPI.getGraduateCosts(gradDirection, gradType, degreeType);
+                        break;
+                }
+
+                if (!costData) {
+                    showError('获取费用数据失败，请检查选择的参数');
+                    return;
+                }
+
+                // 计算总费用
+                const calculation = educationAPI.calculateTotalCost(costData, years);
+                
+                if (!calculation) {
+                    showError('计算费用失败');
+                    return;
+                }
+
+                // 显示结果
+                displayResults(costData, calculation, years, schoolCount);
+                
+            } catch (error) {
+                showError('计算过程中发生错误: ' + error.message);
+            }
+        }
+
+        // 显示结果
+        function displayResults(costData, calculation, years, schoolCount) {
+            currentResult = { costData, calculation, years, schoolCount };
+            
+            // 更新结果标题
+            document.getElementById('resultTitle').textContent = `${costData.type} - ${costData.location}`;
+            document.getElementById('resultMeta').innerHTML = `
+                学习年数: ${years}年 | 计算时间: ${new Date(calculation.lastCalculated).toLocaleString('zh-CN')}
+            `;
+
+            // 生成费用详情
+            const costDetails = document.getElementById('costDetails');
+            let detailsHTML = '';
+
+            for (const [key, cost] of Object.entries(calculation.breakdown)) {
+                const original = cost.original;
+                let displayAmount = cost.cnyAmount;
+                let totalAmount = cost.totalForPeriod;
+                
+                // 特殊处理申请费
+                if (original.unit === 'per_school') {
+                    totalAmount = cost.cnyAmount * schoolCount;
+                }
+
+                detailsHTML += `
+                    <div class="cost-item">
+                        <h4>${original.description}</h4>
+                        <div class="cost-amount">
+                            ${original.currency === 'CNY' ? '¥' : original.currency + ' '} 
+                            ${original.amount.toLocaleString()}
+                        </div>
+                        <div class="cost-unit">
+                            ${getUnitText(original.unit)} | 
+                            ${years}年总计: ¥${totalAmount.toLocaleString()}
+                        </div>
+                    </div>
+                `;
+            }
+
+            costDetails.innerHTML = detailsHTML;
+
+            // 更新费用汇总
+            const summary = calculation.summary;
+            let finalTotal = summary.grandTotal;
+            
+            // 添加申请费（如果有）
+            if (calculation.breakdown.application) {
+                finalTotal += calculation.breakdown.application.cnyAmount * (schoolCount - 1);
+            }
+
+            document.getElementById('summaryBox').innerHTML = `
+                <h4>📊 总费用预估</h4>
+                <div class="summary-amount">¥${finalTotal.toLocaleString()}</div>
+                <div>年均费用: ¥${(summary.yearlyTotal).toLocaleString()}</div>
+                ${schoolCount > 1 ? `<div>申请${schoolCount}所学校</div>` : ''}
+            `;
+
+            // 更新数据来源
+            document.getElementById('dataSource').innerHTML = `
+                <strong>📚 数据来源:</strong> ${costData.dataSource || '官方数据'}
+            `;
+
+            // 显示结果区域
+            document.getElementById('resultSection').classList.add('show');
+        }
+
+        // 获取单位文本
+        function getUnitText(unit) {
+            const unitMap = {
+                'year': '每年',
+                'month': '每月',
+                'once': '一次性',
+                'per_school': '每所学校',
+                'set': '每套'
+            };
+            return unitMap[unit] || unit;
+        }
+
+        // 清空结果
+        function clearResults() {
+            document.getElementById('resultSection').classList.remove('show');
+            currentResult = null;
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const systemInfo = document.getElementById('systemInfo');
+            systemInfo.innerHTML = `<div class="error">❌ ${message}</div>`;
+            
+            // 3秒后自动清除错误信息
+            setTimeout(() => {
+                initializeSystem();
+            }, 3000);
+        }
+
+        // 监听高中类型变化以更新地区选项
+        document.addEventListener('change', function(e) {
+            if (e.target.id === 'highType' && e.target.value === 'overseas') {
+                const locationSelect = document.getElementById('location');
+                locationSelect.innerHTML = educationAPI.getAvailableCountries()
+                    .map(country => `<option value="${country.code}">${country.name}</option>`)
+                    .join('');
+            } else if (e.target.id === 'highType' && e.target.value !== 'overseas') {
+                const locationSelect = document.getElementById('location');
+                locationSelect.innerHTML = getCityOptions();
+            }
+        });
+    </script>
+</body>
+</html>
