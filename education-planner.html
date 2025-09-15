@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #CAF4F7 0%, #E8F8F9 100%);
+            background: #CAF4F7;
             min-height: 100vh;
             color: #2C3E50;
             line-height: 1.6;
@@ -74,7 +74,7 @@
             transform: translateX(-50%);
             width: 60px;
             height: 2px;
-            background: linear-gradient(90deg, #CAF4F7, #7DD3FC);
+            background: #7DD3FC;
             border-radius: 1px;
         }
 
@@ -124,7 +124,7 @@
         }
 
         .btn-start {
-            background: linear-gradient(135deg, #7DD3FC 0%, #CAF4F7 100%);
+            background: #7DD3FC;
             color: #2C3E50;
             border: none;
             padding: 18px 40px;
@@ -143,7 +143,7 @@
         .btn-start:hover:not(:disabled) {
             transform: translateY(-1px);
             box-shadow: 0 8px 24px rgba(125, 211, 252, 0.3);
-            background: linear-gradient(135deg, #67E8F9 0%, #BAF3F6 100%);
+            background: #67E8F9;
         }
 
         .btn-start:disabled {
@@ -183,7 +183,7 @@
             font-size: 1.8rem;
             color: #2C3E50;
             margin-bottom: 12px;
-            font-weight: 300;
+            font-weight: 600;
             letter-spacing: -0.3px;
         }
 
@@ -201,7 +201,7 @@
         }
 
         .summary-card {
-            background: linear-gradient(135deg, #CAF4F7 0%, #E0F2FE 100%);
+            background: #E0F2FE;
             color: #2C3E50;
             padding: 28px;
             border-radius: 12px;
@@ -249,7 +249,7 @@
         }
 
         .cost-table th {
-            background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+            background: #F1F5F9;
             color: #475569;
             padding: 16px;
             text-align: left;
@@ -339,7 +339,7 @@
             font-size: 1.8rem;
             color: #2C3E50;
             margin-bottom: 12px;
-            font-weight: 300;
+            font-weight: 600;
             letter-spacing: -0.3px;
         }
 
@@ -433,7 +433,7 @@
             transform: translateX(-50%);
             width: 60px;
             height: 2px;
-            background: linear-gradient(90deg, #CAF4F7, #7DD3FC);
+            background: #7DD3FC;
             border-radius: 1px;
         }
 
@@ -460,7 +460,7 @@
         }
 
         .summary-item.total-highlight {
-            background: linear-gradient(135deg, #CAF4F7 0%, #E0F2FE 100%);
+            background: #E0F2FE;
             color: #2C3E50;
             border-color: #7DD3FC;
         }
@@ -810,13 +810,13 @@
     <div class="container">
         <!-- 页面头部 -->
         <div class="header">
-            <h1>🎓 教育规划计算器 2.0</h1>
+            <h1>教育规划计算器 2.0</h1>
             <p>从当前阶段到博士，为您规划完整的教育投资方案</p>
         </div>
 
         <!-- 用户输入区域 -->
         <div class="input-section">
-            <h2>📝 填写当前教育信息</h2>
+            <h2>填写当前教育信息</h2>
             <div class="input-grid">
                 <!-- 城市选择 - 始终显示在最左侧 -->
                 <div class="input-group">
@@ -876,7 +876,7 @@
             </div>
 
             <button id="startPlanning" class="btn-start" onclick="startEducationPlanning()" disabled>
-                🚀 开始规划我的教育之路
+                开始规划我的教育之路
             </button>
 
             <div id="inputError" class="error-message hidden"></div>
@@ -894,7 +894,7 @@
             </div>
 
             <div class="cost-details">
-                <h3>💰 详细费用清单</h3>
+                <h3>详细费用清单</h3>
                 <table id="currentCostTable" class="cost-table">
                     <thead>
                         <tr>
@@ -914,14 +914,14 @@
 
         <!-- 后续教育阶段卡片 -->
         <div id="futureStagesSection" class="future-stages hidden">
-            <h2>🛤️ 后续教育阶段规划</h2>
+            <h2>后续教育阶段规划</h2>
             <div id="stagesGrid" class="stages-grid">
                 <!-- 教育阶段卡片将动态生成 -->
             </div>
 
             <!-- 总费用汇总 -->
             <div id="totalSummarySection" class="total-summary hidden">
-                <h3>💰 教育投资总览</h3>
+                <h3>教育投资总览</h3>
                 <div class="total-summary-grid">
                     <div class="summary-item">
                         <div class="summary-label">当前阶段剩余费用</div>
@@ -946,7 +946,7 @@
 
             <!-- 教育完成提示 -->
             <div id="educationComplete" class="education-complete hidden">
-                <div class="complete-icon">🎓</div>
+                <div class="complete-icon"></div>
                 <div class="complete-title">恭喜！教育规划完成</div>
                 <div class="complete-message">您已完成了从当前阶段到博士的完整教育规划</div>
                 <div id="completeSummary" class="complete-summary">
@@ -2634,7 +2634,7 @@
                 </div>
                 
                 <div id="costDetails-${stage.code}" class="cost-details hidden">
-                    <h4>💰 详细费用清单</h4>
+                    <h4>详细费用清单</h4>
                     <table id="costTable-${stage.code}" class="cost-table">
                         <thead>
                             <tr>
