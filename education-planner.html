@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教育规划计算器 2.0</title>
+    <title>教育规划计算器</title>
     <style>
         * {
             margin: 0;
@@ -61,21 +61,7 @@
             margin-bottom: 35px;
             font-size: 1.6rem;
             text-align: center;
-            font-weight: 300;
-            position: relative;
-            padding-bottom: 15px;
-        }
-
-        .input-section h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 2px;
-            background: #7DD3FC;
-            border-radius: 1px;
+            font-weight: 700;
         }
 
         .input-grid {
@@ -810,8 +796,7 @@
     <div class="container">
         <!-- 页面头部 -->
         <div class="header">
-            <h1>教育规划计算器 2.0</h1>
-            <p>从当前阶段到博士，为您规划完整的教育投资方案</p>
+            <h1>教育规划计算器</h1>
         </div>
 
         <!-- 用户输入区域 -->
@@ -921,7 +906,7 @@
 
             <!-- 总费用汇总 -->
             <div id="totalSummarySection" class="total-summary hidden">
-                <h3>教育投资总览</h3>
+                <h3>教育费用总览</h3>
                 <div class="total-summary-grid">
                     <div class="summary-item">
                         <div class="summary-label">当前阶段剩余费用</div>
@@ -932,12 +917,12 @@
                         <div id="futureStageCost" class="summary-value">¥0</div>
                     </div>
                     <div class="summary-item total-highlight">
-                        <div class="summary-label">教育投资总额</div>
+                        <div class="summary-label">教育费用总额</div>
                         <div id="totalEducationCost" class="summary-value">¥0</div>
                     </div>
                 </div>
                 <div class="investment-breakdown">
-                    <h4>投资时间线</h4>
+                    <h4>费用时间线</h4>
                     <div id="investmentTimeline" class="timeline">
                         <!-- 时间线将动态生成 -->
                     </div>
