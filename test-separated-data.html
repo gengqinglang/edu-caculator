@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分离数据文件测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .test-section { margin: 30px 0; padding: 20px; border: 2px solid #ddd; border-radius: 8px; }
+        .stage-section { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+        .error { color: red; background: #ffe6e6; }
+        .success { color: green; background: #e6ffe6; }
+        .warning { color: orange; background: #fff3e0; }
+        button { margin: 5px; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .data-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        .data-table th, .data-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        .data-table th { background: #f2f2f2; font-weight: bold; }
+        .metadata { background: #e3f2fd; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        h1 { color: #333; text-align: center; }
+        h2 { color: #0066cc; border-bottom: 2px solid #0066cc; padding-bottom: 5px; }
+        h3 { color: #0088cc; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏫 幼小初分离数据文件功能测试</h1>
+        
+        <div class="test-section">
+            <h2>📋 数据文件加载测试</h2>
+            <button class="btn-primary" onclick="testDataLoading()">测试数据文件加载</button>
+            <div id="dataLoadingResult" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🏙️ 城市映射功能测试</h2>
+            <button class="btn-primary" onclick="testCityMapping()">测试城市映射</button>
+            <div id="cityMappingResult" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎒 各阶段费用数据测试</h2>
+            
+            <div class="stage-section">
+                <h3>🧸 幼儿园数据测试</h3>
+                <button class="btn-success" onclick="testKindergartenData()">测试幼儿园数据</button>
+                <div id="kindergartenResult" class="result"></div>
+            </div>
+            
+            <div class="stage-section">
+                <h3>📚 小学数据测试</h3>
+                <button class="btn-success" onclick="testPrimaryData()">测试小学数据</button>
+                <div id="primaryResult" class="result"></div>
+            </div>
+            
+            <div class="stage-section">
+                <h3>🎓 初中数据测试</h3>
+                <button class="btn-success" onclick="testMiddleData()">测试初中数据</button>
+                <div id="middleResult" class="result"></div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🧮 适配器集成测试</h2>
+            <button class="btn-warning" onclick="testAdapterIntegration()">测试适配器集成</button>
+            <div id="adapterResult" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>💰 费用计算完整测试</h2>
+            <button class="btn-warning" onclick="testCompleteCalculation()">测试完整费用计算</button>
+            <div id="calculationResult" class="result"></div>
+        </div>
+    </div>
+
+    <!-- 引入分离的数据文件 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="kindergarten-cost-data.js"></script>
+    <script src="primary-cost-data.js"></script>
+    <script src="middle-cost-data.js"></script>
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+
+    <script>
+        let adapter;
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，开始初始化...');
+        });
+
+        function testDataLoading() {
+            const result = document.getElementById('dataLoadingResult');
+            let html = '<h4>数据文件加载状态检查:</h4>';
+            let allLoaded = true;
+            
+            const dataFiles = [
+                { name: 'city-tier-mapping.js', check: () => typeof getCityTier !== 'undefined' },
+                { name: 'kindergarten-cost-data.js', check: () => typeof KINDERGARTEN_COST_DATA !== 'undefined' },
+                { name: 'primary-cost-data.js', check: () => typeof PRIMARY_COST_DATA !== 'undefined' },
+                { name: 'middle-cost-data.js', check: () => typeof MIDDLE_COST_DATA !== 'undefined' }
+            ];
+            
+            dataFiles.forEach(file => {
+                const loaded = file.check();
+                allLoaded = allLoaded && loaded;
+                html += `<p class="${loaded ? 'success' : 'error'}">
+                    ${file.name}: ${loaded ? '✅ 已加载' : '❌ 未加载'}
+                </p>`;
+            });
+            
+            // 测试适配器初始化
+            try {
+                adapter = new KindergartenPrimaryMiddleAdapter();
+                html += `<p class="success">✅ 适配器初始化成功</p>`;
+                
+                // 显示元数据信息
+                html += '<div class="metadata">';
+                html += '<h5>📊 数据文件元数据:</h5>';
+                html += `<p><strong>幼儿园数据版本:</strong> ${KINDERGARTEN_COST_DATA.metadata.version} (${KINDERGARTEN_COST_DATA.metadata.lastUpdated})</p>`;
+                html += `<p><strong>小学数据版本:</strong> ${PRIMARY_COST_DATA.metadata.version} (${PRIMARY_COST_DATA.metadata.lastUpdated})</p>`;
+                html += `<p><strong>初中数据版本:</strong> ${MIDDLE_COST_DATA.metadata.version} (${MIDDLE_COST_DATA.metadata.lastUpdated})</p>`;
+                html += '</div>';
+                
+            } catch (error) {
+                allLoaded = false;
+                html += `<p class="error">❌ 适配器初始化失败: ${error.message}</p>`;
+            }
+            
+            html += `<p><strong>总体状态: ${allLoaded ? '✅ 全部正常' : '❌ 存在问题'}</strong></p>`;
+            result.innerHTML = html;
+        }
+
+        function testCityMapping() {
+            const result = document.getElementById('cityMappingResult');
+            const testCases = [
+                { city: 'beijing', expected: '一线城市', desc: '北京' },
+                { city: 'shanghai', expected: '一线城市', desc: '上海' },
+                { city: 'chengdu', expected: '二线城市', desc: '成都' },
+                { city: 'hangzhou', expected: '二线城市', desc: '杭州' },
+                { city: 'wuxi', expected: '三线城市', desc: '无锡' },
+                { city: 'unknown_city', expected: '四线及以下', desc: '未知城市' }
+            ];
+            
+            let html = '<h4>城市等级映射测试结果:</h4>';
+            html += '<table class="data-table"><tr><th>城市</th><th>期望等级</th><th>实际等级</th><th>结果</th></tr>';
+            
+            let allPassed = true;
+            testCases.forEach(testCase => {
+                const actualTier = getCityTier(testCase.city);
+                const passed = actualTier === testCase.expected;
+                allPassed = allPassed && passed;
+                
+                html += `<tr class="${passed ? 'success' : 'error'}">
+                    <td>${testCase.desc} (${testCase.city})</td>
+                    <td>${testCase.expected}</td>
+                    <td>${actualTier}</td>
+                    <td>${passed ? '✅' : '❌'}</td>
+                </tr>`;
+            });
+            
+            html += '</table>';
+            html += `<p><strong>测试结果: ${allPassed ? '✅ 全部通过' : '❌ 存在失败'}</strong></p>`;
+            result.innerHTML = html;
+        }
+
+        function testKindergartenData() {
+            const result = document.getElementById('kindergartenResult');
+            testStageData('kindergarten', KINDERGARTEN_COST_DATA, result, '幼儿园');
+        }
+
+        function testPrimaryData() {
+            const result = document.getElementById('primaryResult');
+            testStageData('primary', PRIMARY_COST_DATA, result, '小学');
+        }
+
+        function testMiddleData() {
+            const result = document.getElementById('middleResult');
+            testStageData('middle', MIDDLE_COST_DATA, result, '初中');
+        }
+
+        function testStageData(stage, stageData, resultElement, stageName) {
+            let html = `<h4>${stageName}数据结构测试:</h4>`;
+            
+            // 检查数据完整性
+            const cityTiers = ['一线城市', '二线城市', '三线城市', '四线及以下'];
+            const schoolTypes = ['公立', '私立(中档)', '私立(高档)'];
+            const costItems = ['tuition', 'meal', 'misc', 'extracurricular'];
+            const parentingStyles = ['relaxed', 'balanced', 'intensive'];
+            
+            let dataComplete = true;
+            let totalDataPoints = 0;
+            let validDataPoints = 0;
+            
+            html += '<table class="data-table">';
+            html += '<tr><th>城市等级</th><th>学校类型</th><th>数据完整性</th><th>样本费用</th></tr>';
+            
+            cityTiers.forEach(cityTier => {
+                schoolTypes.forEach(schoolType => {
+                    const data = stageData[cityTier]?.[schoolType];
+                    totalDataPoints++;
+                    
+                    if (data) {
+                        // 检查基本费用项
+                        const hasAllItems = costItems.every(item => data[item] !== undefined);
+                        // 检查课外费的教育风格
+                        const hasAllStyles = parentingStyles.every(style => 
+                            data.extracurricular && data.extracurricular[style] !== undefined
+                        );
+                        
+                        if (hasAllItems && hasAllStyles) {
+                            validDataPoints++;
+                            html += `<tr class="success">
+                                <td>${cityTier}</td>
+                                <td>${schoolType}</td>
+                                <td>✅ 完整</td>
+                                <td>学费: ${data.tuition.min}-${data.tuition.max}元</td>
+                            </tr>`;
+                        } else {
+                            dataComplete = false;
+                            html += `<tr class="error">
+                                <td>${cityTier}</td>
+                                <td>${schoolType}</td>
+                                <td>❌ 不完整</td>
+                                <td>缺少必要字段</td>
+                            </tr>`;
+                        }
+                    } else {
+                        dataComplete = false;
+                        html += `<tr class="error">
+                            <td>${cityTier}</td>
+                            <td>${schoolType}</td>
+                            <td>❌ 缺失</td>
+                            <td>数据不存在</td>
+                        </tr>`;
+                    }
+                });
+            });
+            
+            html += '</table>';
+            html += `<div class="metadata">
+                <p><strong>数据完整性统计:</strong></p>
+                <p>总数据点: ${totalDataPoints}</p>
+                <p>有效数据点: ${validDataPoints}</p>
+                <p>完整率: ${Math.round(validDataPoints/totalDataPoints*100)}%</p>
+                <p>状态: ${dataComplete ? '✅ 数据完整' : '❌ 数据不完整'}</p>
+            </div>`;
+            
+            resultElement.innerHTML = html;
+        }
+
+        function testAdapterIntegration() {
+            const result = document.getElementById('adapterResult');
+            
+            if (!adapter) {
+                result.innerHTML = '<p class="error">❌ 适配器未初始化，请先运行数据加载测试</p>';
+                return;
+            }
+            
+            const testCases = [
+                {
+                    stage: 'kindergarten',
+                    level: 'public',
+                    city: 'beijing',
+                    style: 'balanced',
+                    desc: '北京公立幼儿园平衡风格'
+                },
+                {
+                    stage: 'primary',
+                    level: 'private_mid',
+                    city: 'shanghai',
+                    style: 'intensive',
+                    desc: '上海私立小学(中档)鸡娃风格'
+                },
+                {
+                    stage: 'middle',
+                    level: 'private_high',
+                    city: 'chengdu',
+                    style: 'relaxed',
+                    desc: '成都私立初中(高档)佛系风格'
+                }
+            ];
+            
+            let html = '<h4>适配器集成测试结果:</h4>';
+            html += '<table class="data-table">';
+            html += '<tr><th>测试案例</th><th>城市等级</th><th>学费</th><th>餐费</th><th>课外费</th><th>状态</th></tr>';
+            
+            let allPassed = true;
+            testCases.forEach(testCase => {
+                try {
+                    const costData = adapter.getCostData(
+                        testCase.stage,
+                        testCase.level,
+                        testCase.city,
+                        testCase.style
+                    );
+                    
+                    if (costData && costData.costs) {
+                        const costs = costData.costs;
+                        html += `<tr class="success">
+                            <td>${testCase.desc}</td>
+                            <td>${costData.cityTier}</td>
+                            <td>${costs['学费'].amount}元/${costs['学费'].unit}</td>
+                            <td>${costs['餐费'].amount}元/${costs['餐费'].unit}</td>
+                            <td>${costs['课外费'].amount}元/${costs['课外费'].unit}</td>
+                            <td>✅</td>
+                        </tr>`;
+                    } else {
+                        allPassed = false;
+                        html += `<tr class="error">
+                            <td>${testCase.desc}</td>
+                            <td colspan="4">数据获取失败</td>
+                            <td>❌</td>
+                        </tr>`;
+                    }
+                } catch (error) {
+                    allPassed = false;
+                    html += `<tr class="error">
+                        <td>${testCase.desc}</td>
+                        <td colspan="4">错误: ${error.message}</td>
+                        <td>❌</td>
+                    </tr>`;
+                }
+            });
+            
+            html += '</table>';
+            html += `<p><strong>集成测试结果: ${allPassed ? '✅ 全部通过' : '❌ 存在问题'}</strong></p>`;
+            result.innerHTML = html;
+        }
+
+        function testCompleteCalculation() {
+            const result = document.getElementById('calculationResult');
+            
+            if (!adapter) {
+                result.innerHTML = '<p class="error">❌ 适配器未初始化，请先运行数据加载测试</p>';
+                return;
+            }
+            
+            const testCase = {
+                stage: 'primary',
+                level: 'public',
+                city: 'beijing',
+                style: 'balanced',
+                years: 6
+            };
+            
+            try {
+                const costData = adapter.getCostData(
+                    testCase.stage,
+                    testCase.level,
+                    testCase.city,
+                    testCase.style
+                );
+                
+                const calculation = adapter.calculateTotalCost(costData, testCase.years);
+                
+                let html = '<h4>完整费用计算测试 - 北京公立小学6年</h4>';
+                html += '<div class="metadata">';
+                html += `<p><strong>城市等级:</strong> ${costData.cityTier}</p>`;
+                html += `<p><strong>教育风格:</strong> ${costData.educationStyle}</p>`;
+                html += `<p><strong>数据来源:</strong> ${costData.dataSource}</p>`;
+                html += '</div>';
+                
+                html += '<table class="data-table">';
+                html += '<tr><th>费用项目</th><th>单价</th><th>单位</th><th>总计</th></tr>';
+                
+                Object.entries(calculation.details).forEach(([key, detail]) => {
+                    html += `<tr>
+                        <td>${key}</td>
+                        <td>${detail.amount.toLocaleString()}元</td>
+                        <td>${detail.unit}</td>
+                        <td>${detail.itemTotal.toLocaleString()}元</td>
+                    </tr>`;
+                });
+                
+                html += '</table>';
+                
+                html += '<div class="metadata">';
+                html += '<h5>💰 费用汇总:</h5>';
+                html += `<p><strong>总费用:</strong> ${calculation.totalCost.toLocaleString()}元</p>`;
+                html += `<p><strong>年均费用:</strong> ${calculation.yearlyTotal.toLocaleString()}元</p>`;
+                html += `<p><strong>一次性费用:</strong> ${calculation.oneTimeCost.toLocaleString()}元</p>`;
+                html += `<p><strong>计算年数:</strong> ${calculation.years}年</p>`;
+                html += '</div>';
+                
+                html += '<p class="success"><strong>✅ 完整费用计算测试通过</strong></p>';
+                result.innerHTML = html;
+                
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ 费用计算失败: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
