@@ -251,7 +251,7 @@
             padding: 28px;
             border-radius: 12px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 0.5px solid #B3EBEF;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
         }
 
@@ -581,6 +581,432 @@
 
         .modal-btn-save:hover {
             background: #00A5B8;
+        }
+
+        .modal-btn-delete {
+            background: #f44336;
+            color: white;
+        }
+
+        .modal-btn-delete:hover {
+            background: #d32f2f;
+        }
+
+        /* 新增费用项按钮样式 */
+        .add-cost-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .add-cost-btn {
+            background: #01BCD6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(1, 188, 214, 0.2);
+        }
+
+        .add-cost-btn:hover {
+            background: #00A5B8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(1, 188, 214, 0.3);
+        }
+
+        .add-cost-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(1, 188, 214, 0.2);
+        }
+
+        /* 删除费用项按钮样式 */
+        .delete-cost-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .delete-cost-btn:hover {
+            background: #d32f2f;
+        }
+
+        /* 底部弹窗样式 */
+        .bottom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .bottom-modal-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            background: rgba(0, 0, 0, 0);
+        }
+
+        .bottom-modal-overlay:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .bottom-modal {
+            width: 100%;
+            background: white;
+            border-radius: 16px 16px 0 0;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* 移除冲突的transform规则，让animation生效 */
+
+        /* 丝滑的弹窗动画 */
+        @keyframes slideUpSmooth {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDownSmooth {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+
+        .bottom-modal-overlay:not(.hidden) .bottom-modal {
+            animation: slideUpSmooth 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards !important;
+        }
+
+        .bottom-modal-overlay.hidden .bottom-modal {
+            animation: slideDownSmooth 0.25s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards !important;
+        }
+
+        .bottom-modal-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+
+        .bottom-modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+        }
+
+        .bottom-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .bottom-modal-close:hover {
+            background: #f0f0f0;
+        }
+
+        /* 教育信息展示区域 */
+        .education-info-section {
+            padding: 20px 24px;
+            background: rgba(202, 244, 247, 0.3);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        /* 费用输入区域 */
+        .cost-input-section {
+            padding: 24px;
+        }
+
+        .input-field {
+            margin-bottom: 24px;
+        }
+
+        .input-field:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-field label {
+            display: block;
+            font-size: 0.9rem;
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            border-color: #01BCD6;
+            box-shadow: 0 0 0 3px rgba(1, 188, 214, 0.1);
+        }
+
+        /* 单位选择器 */
+        .unit-selector {
+            display: flex;
+            gap: 12px;
+        }
+
+        .unit-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .unit-btn:hover {
+            border-color: #01BCD6;
+            color: #01BCD6;
+        }
+
+        .unit-btn.selected {
+            background: #01BCD6;
+            border-color: #01BCD6;
+            color: white;
+        }
+
+        /* 操作按钮区域 */
+        .bottom-modal-actions {
+            padding: 20px 24px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 12px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+        }
+
+        .bottom-btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .bottom-btn-cancel {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .bottom-btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .bottom-btn-save {
+            background: #01BCD6;
+            color: white;
+        }
+
+        .bottom-btn-save:hover {
+            background: #00A5B8;
+        }
+
+        .bottom-btn-save:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 费用编辑弹窗特有样式 */
+        .cost-info-section {
+            padding: 20px 24px;
+            background: rgba(202, 244, 247, 0.3);
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .cost-info-header {
+            margin-bottom: 16px;
+        }
+
+        .cost-info-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .cost-info-unit {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            background: #e3f2fd;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .cost-info-details {
+            margin-top: 12px;
+        }
+
+        .amount-input-section {
+            padding: 24px;
+        }
+
+        .preview-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(202, 244, 247, 0.3);
+            border-radius: 8px;
+            border: 1px solid #e0f2fe;
+        }
+
+        /* 教育总费用模块 */
+        .total-cost-sticky {
+            position: static;
+            background: rgba(202, 244, 247, 0.3);
+            border: 0.5px solid #B3EBEF;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1440px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+
+        .total-cost-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-cost-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+
+        .total-cost-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #01BCD6;
+        }
+
+        @media (max-width: 1024px) {
+            .total-cost-sticky {
+                max-width: 800px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .total-cost-sticky {
+                max-width: calc(100vw - 30px);
+                margin: 15px auto;
+                padding: 16px;
+            }
+
+            .total-cost-label {
+                font-size: 1.1rem;
+            }
+
+            .total-cost-amount {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .total-cost-sticky {
+                max-width: calc(100vw - 20px);
+                padding: 14px;
+            }
+
+            .total-cost-label {
+                font-size: 1rem;
+            }
+
+            .total-cost-amount {
+                font-size: 1.4rem;
+            }
         }
 
         /* 后续阶段卡片 - 与当前阶段保持一致 */
@@ -1188,6 +1614,17 @@
                         <option value="australia">澳洲</option>
                     </select>
                 </div>
+
+                <!-- 教育风格选择 -->
+                <div class="input-group">
+                    <label for="educationStyle">教育风格</label>
+                    <select id="educationStyle" onchange="validateInputs()">
+                        <option value="">请选择教育风格</option>
+                        <option value="relaxed">佛系</option>
+                        <option value="balanced">平衡</option>
+                        <option value="intensive">鸡娃</option>
+                    </select>
+                </div>
             </div>
 
             <button id="startPlanning" class="btn-start" onclick="startEducationPlanning()" disabled>
@@ -1195,6 +1632,14 @@
             </button>
 
             <div id="inputError" class="error-message hidden"></div>
+        </div>
+
+        <!-- 教育总费用模块 -->
+        <div id="totalEducationCost" class="total-cost-sticky hidden">
+            <div class="total-cost-content">
+                <span class="total-cost-label">教育总费用</span>
+                <span id="totalEducationAmount" class="total-cost-amount">¥0</span>
+            </div>
         </div>
 
         <!-- 当前阶段费用展示 -->
@@ -1218,6 +1663,7 @@
                             <th>金额</th>
                             <th>单位</th>
                             <th>剩余年限总计</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1227,6 +1673,12 @@
                 <!-- 移动端列表 -->
                 <div id="currentCostList" class="cost-list">
                     <!-- 费用项目列表将动态生成 -->
+                </div>
+                <!-- 新增费用项按钮 -->
+                <div class="add-cost-section">
+                    <button class="add-cost-btn" onclick="openAddCostModal(userPlan.currentStage)">
+                        + 新增费用项
+                    </button>
                 </div>
             </div>
         </div>
@@ -1252,7 +1704,7 @@
                     </div>
                     <div class="summary-item total-highlight">
                         <div class="summary-label">教育费用总额</div>
-                        <div id="totalEducationCost" class="summary-value">¥0</div>
+                        <div id="totalCostSummary" class="summary-value">¥0</div>
                     </div>
                 </div>
                 <div class="investment-breakdown">
@@ -1292,6 +1744,7 @@
             currentLevel: '',
             currentCity: '',
             currentCountry: '',
+            educationStyle: '', // 教育风格：relaxed(佛系), balanced(平衡), intensive(鸡娃)
             currentCosts: null,
             futureStages: [],
             totalInvestment: 0,
@@ -1444,19 +1897,16 @@
             const stage = document.getElementById('currentStage').value;
             const grade = document.getElementById('currentGrade').value;
             const level = document.getElementById('currentLevel').value;
-            const citySelector = document.getElementById('citySelector');
             const countrySelector = document.getElementById('countrySelector');
             const city = document.getElementById('currentCity').value;
             const country = document.getElementById('currentCountry').value;
+            const educationStyle = document.getElementById('educationStyle').value;
             const startBtn = document.getElementById('startPlanning');
             
-            let isValid = stage && grade && level;
+            let isValid = stage && grade && level && city && educationStyle;
             
-            // 检查是否需要额外的地区选择
-            if (citySelector.style.display !== 'none') {
-                isValid = isValid && city;
-            }
-            if (countrySelector.style.display !== 'none') {
+            // 检查是否需要额外的国家选择（针对海外教育）
+            if (countrySelector && countrySelector.style.display !== 'none') {
                 isValid = isValid && country;
             }
             
@@ -1519,79 +1969,8 @@
             }
         }
 
-        // 显示当前阶段费用
-        function displayCurrentStageCosts() {
-            // 获取费用数据
-            const costData = getCurrentStageCostData();
-            if (!costData) {
-                showError('无法获取当前阶段费用数据');
-                return;
-            }
-            
-            userPlan.currentCosts = costData;
-            
-            // 更新页面标题
-            const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(userPlan.currentStage);
-            const gradeInfo = EDUCATION_STAGES_CONFIG.getGradeInfo(userPlan.currentStage, userPlan.currentGrade);
-            const levelInfo = EDUCATION_STAGES_CONFIG.getEducationLevelInfo(userPlan.currentStage, userPlan.currentLevel);
-            const remainingYears = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
-            
-            document.getElementById('currentStageTitle').textContent = 
-                `${stageInfo.name} - ${levelInfo.name}`;
-            document.getElementById('currentStageMeta').textContent = 
-                `当前: ${gradeInfo.name} | 剩余年限: ${remainingYears}年 | 数据来源: ${costData.dataSource}`;
-            
-            // 计算费用
-            const calculation = dataAdapter.calculateTotalCost(costData, remainingYears);
-            
-            // 显示费用汇总
-            displayCostSummary(calculation, remainingYears);
-            
-            // 显示费用详情表格
-            displayCostDetails(costData, calculation, remainingYears, userPlan.currentStage);
-            
-            // 保存当前阶段数据到全局变量中，供编辑使用
-            if (!window.stageCostData) {
-                window.stageCostData = {};
-            }
-            
-            // 保存原始数据的副本，用于对比是否被修改
-            const originalCostData = JSON.parse(JSON.stringify(costData));
-            
-            window.stageCostData[userPlan.currentStage] = {
-                costData: costData,
-                originalCostData: originalCostData,
-                years: remainingYears,
-                calculation: calculation,
-                modified: false
-            };
-            
-            // 显示当前阶段区域
-            document.getElementById('currentStageSection').classList.add('show');
-        }
 
         // 获取当前阶段费用数据
-        function getCurrentStageCostData() {
-            const stage = userPlan.currentStage;
-            const level = userPlan.currentLevel;
-            
-            try {
-                // 使用数据适配器获取费用数据
-                const costData = dataAdapter.getStageCostData(stage, level);
-                
-                if (!costData) {
-                    throw new Error('无法获取费用数据');
-                }
-                
-                return costData;
-                
-            } catch (error) {
-                console.error('获取费用数据失败:', error);
-                
-                // 返回备用数据
-                return dataAdapter.getFallbackCostData(stage, level);
-            }
-        }
 
         // 显示费用汇总
         function displayCostSummary(calculation, years) {
@@ -1616,30 +1995,6 @@
         }
 
         // 显示费用详情表格
-        function displayCostDetails(costData, calculation, years, stageCode) {
-            const tableBody = document.querySelector('#currentCostTable tbody');
-            
-            let detailsHTML = '';
-            for (const [key, cost] of Object.entries(costData.costs)) {
-                const calcCost = calculation.breakdown[key];
-                const totalForPeriod = calcCost ? calcCost.totalForPeriod : cost.amount * years;
-                
-                detailsHTML += `
-                    <tr>
-                        <td>${cost.description}</td>
-                        <td>
-                            <input type="number" class="cost-input" value="${cost.amount}" 
-                                   onchange="updateStageCostItem('${stageCode}', '${key}', this.value)"
-                                   placeholder="¥${cost.amount.toLocaleString()}">
-                        </td>
-                        <td>${getUnitText(cost.unit)}</td>
-                        <td id="total-${stageCode}-${key}">¥${Math.round(totalForPeriod).toLocaleString()}</td>
-                    </tr>
-                `;
-            }
-            
-            tableBody.innerHTML = detailsHTML;
-        }
 
         // 生成后续阶段卡片
         function generateFutureStageCards() {
@@ -1800,71 +2155,6 @@
             return levelInfo ? levelInfo.direction : null;
         }
 
-        // 更新阶段卡片 - 与当前教育阶段保持完全一致
-        function updateStageCard(stageCode, levelCode) {
-            if (!levelCode) {
-                // 隐藏费用相关区域
-                const costSummary = document.getElementById(`costSummary-${stageCode}`);
-                const costDetails = document.getElementById(`costDetails-${stageCode}`);
-                if (costSummary) costSummary.classList.add('hidden');
-                if (costDetails) costDetails.classList.add('hidden');
-                return;
-            }
-            
-            try {
-                // 使用数据适配器获取费用数据
-                const costData = dataAdapter.getStageCostData(stageCode, levelCode);
-                if (!costData) {
-                    showError(`无法获取${stageCode}阶段的费用数据`);
-                    return;
-                }
-                
-                const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(stageCode);
-                const years = stageInfo.totalYears;
-                const calculation = dataAdapter.calculateTotalCost(costData, years);
-                
-                // 创建或更新费用汇总卡片
-                const costSummary = document.getElementById(`costSummary-${stageCode}`);
-                costSummary.innerHTML = createCostSummaryCards(calculation, years);
-                costSummary.classList.remove('hidden');
-                
-                // 创建或更新费用详情表格
-                const costDetails = document.getElementById(`costDetails-${stageCode}`);
-                const costTable = costDetails.querySelector(`#costTable-${stageCode} tbody`);
-                costTable.innerHTML = createCostTableRows(costData, calculation, years, stageCode);
-                
-                // 更新移动端列表
-                const costList = document.getElementById(`costList-${stageCode}`);
-                if (costList) {
-                    costList.innerHTML = createCostList(costData, calculation, years, stageCode);
-                }
-                
-                costDetails.classList.remove('hidden');
-                
-                // 保存费用数据到全局变量中，供编辑使用
-                if (!window.stageCostData) {
-                    window.stageCostData = {};
-                }
-                
-                // 保存原始数据的副本，用于对比是否被修改
-                const originalCostData = JSON.parse(JSON.stringify(costData));
-                
-                window.stageCostData[stageCode] = {
-                    costData: costData,
-                    originalCostData: originalCostData,
-                    years: years,
-                    calculation: calculation,
-                    modified: false
-                };
-                
-                // 更新总费用汇总
-                updateTotalSummary();
-                
-            } catch (error) {
-                console.error('更新阶段卡片失败:', error);
-                showError('更新费用信息失败');
-            }
-        }
         
         // 创建费用汇总卡片HTML - 与当前阶段保持一致
         function createCostSummaryCards(calculation, years) {
@@ -1966,6 +2256,7 @@
         function getUnitText(unit) {
             const unitMap = {
                 'year': '每年',
+                'quarter': '每季',
                 'month': '每月',
                 'once': '一次性',
                 'per_school': '每所学校',
@@ -2012,11 +2303,14 @@
                 let futureStageCost = 0;
                 let timelineItems = [];
 
-                // 计算当前阶段费用
-                if (userPlan.currentCosts) {
+                // 计算当前阶段费用  
+                if (userPlan.currentStage && window.stageCostData && window.stageCostData[userPlan.currentStage]) {
                     const remainingYears = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
-                    const currentCalculation = dataAdapter.calculateTotalCost(userPlan.currentCosts, remainingYears);
-                    currentStageCost = currentCalculation.summary.grandTotal;
+                    const currentStageData = window.stageCostData[userPlan.currentStage];
+                    if (currentStageData && currentStageData.costData) {
+                        const currentCalculation = dataAdapter.calculateTotalCost(currentStageData.costData, remainingYears);
+                        currentStageCost = currentCalculation.summary.grandTotal;
+                    }
                     
                     // 添加到时间线
                     const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(userPlan.currentStage);
@@ -2070,7 +2364,7 @@
                 const totalCost = currentStageCost + futureStageCost;
                 document.getElementById('currentStageCost').textContent = `¥${Math.round(currentStageCost).toLocaleString()}`;
                 document.getElementById('futureStageCost').textContent = `¥${Math.round(futureStageCost).toLocaleString()}`;
-                document.getElementById('totalEducationCost').textContent = `¥${Math.round(totalCost).toLocaleString()}`;
+                document.getElementById('totalCostSummary').textContent = `¥${Math.round(totalCost).toLocaleString()}`;
 
                 // 更新时间线
                 updateInvestmentTimeline(timelineItems);
@@ -2185,84 +2479,6 @@
             checkEducationComplete();
         }
 
-        // 显示当前阶段费用
-        function displayCurrentStageCosts() {
-            // 获取费用数据
-            const costData = getCurrentStageCostData();
-            if (!costData) {
-                showError('无法获取当前阶段费用数据');
-                return;
-            }
-            
-            userPlan.currentCosts = costData;
-            
-            // Update page title
-            const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(userPlan.currentStage);
-            const gradeInfo = EDUCATION_STAGES_CONFIG.getGradeInfo(userPlan.currentStage, userPlan.currentGrade);
-            const levelInfo = EDUCATION_STAGES_CONFIG.getEducationLevelInfo(userPlan.currentStage, userPlan.currentLevel);
-            const remainingYears = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
-            
-            document.getElementById('currentStageTitle').textContent = 
-                `${stageInfo.name} - ${levelInfo.name}`;
-            document.getElementById('currentStageMeta').textContent = 
-                `当前: ${gradeInfo.name} | 剩余年限: ${remainingYears}年 | 数据来源: ${costData.dataSource}`;
-            
-            // Calculate costs
-            const calculation = dataAdapter.calculateTotalCost(costData, remainingYears);
-            
-            // Display cost summary
-            displayCostSummary(calculation, remainingYears);
-            
-            // Display cost details table
-            displayCostDetails(costData, calculation, remainingYears, userPlan.currentStage);
-            
-            // Save current stage data to global variable for editing
-            if (!window.stageCostData) {
-                window.stageCostData = {};
-            }
-            
-            // Save a copy of original data for modification comparison
-            const originalCostData = JSON.parse(JSON.stringify(costData));
-            
-            window.stageCostData[userPlan.currentStage] = {
-                costData: costData,
-                originalCostData: originalCostData,
-                years: remainingYears,
-                calculation: calculation,
-                modified: false
-            };
-            
-            // Show current stage section
-            document.getElementById('currentStageSection').classList.add('show');
-        }
-
-        // 获取当前阶段费用数据
-        function getCurrentStageCostData() {
-            try {
-                // 构造选项对象，包含城市和国家信息
-                const options = {};
-                
-                if (userPlan.currentCity) {
-                    options.city = userPlan.currentCity;
-                }
-                
-                if (userPlan.currentCountry) {
-                    options.country = userPlan.currentCountry;
-                }
-                
-                // 使用数据适配器获取费用数据
-                const costData = dataAdapter.getStageCostData(
-                    userPlan.currentStage, 
-                    userPlan.currentLevel, 
-                    options
-                );
-                
-                return costData;
-            } catch (error) {
-                console.error('获取当前阶段费用数据失败:', error);
-                return null;
-            }
-        }
 
         // 显示费用汇总卡片
         function displayCostSummary(calculation, years) {
@@ -2273,59 +2489,71 @@
             }
         }
 
-        // 显示费用详情表格
+        // 统一的费用详情显示函数 - 同时处理当前阶段和未来阶段
         function displayCostDetails(costData, calculation, years, stageCode) {
+            // 确定表格和列表的ID
+            const isCurrentStage = stageCode === userPlan.currentStage;
+            const tableSelector = isCurrentStage ? '#currentCostTable tbody' : `#costTable-${stageCode} tbody`;
+            const listId = isCurrentStage ? 'currentCostList' : `costList-${stageCode}`;
+            
             // 更新表格（桌面端）
-            const tableBody = document.querySelector('#currentCostTable tbody');
-            
-            // 汇率转换（与数据适配器中的汇率保持一致）
-            const exchangeRates = {
-                'CNY': 1.0,
-                'USD': 7.24,
-                'GBP': 9.15,
-                'CAD': 5.31,
-                'AUD': 4.82,
-                'EUR': 7.85,
-                'JPY': 0.049,
-                'SGD': 5.38
-            };
-            
-            let detailsHTML = '';
-            for (const [key, cost] of Object.entries(costData.costs)) {
-                const calcCost = calculation.breakdown[key];
-                const totalForPeriod = calcCost ? calcCost.totalForPeriod : cost.amount * years;
+            const tableBody = document.querySelector(tableSelector);
+            if (tableBody) {
+                // 汇率转换（与数据适配器中的汇率保持一致）
+                const exchangeRates = {
+                    'CNY': 1.0,
+                    'USD': 7.24,
+                    'GBP': 9.15,
+                    'CAD': 5.31,
+                    'AUD': 4.82,
+                    'EUR': 7.85,
+                    'JPY': 0.049,
+                    'SGD': 5.38
+                };
                 
-                // 转换为人民币显示
-                const rate = exchangeRates[cost.currency] || 1;
-                const amountInCNY = cost.amount * rate;
-                
-                // 显示格式：如果是外币，显示"¥xxx (原价$xxx)"
-                let displayAmount;
-                if (cost.currency === 'CNY') {
-                    displayAmount = `¥${cost.amount.toLocaleString()}`;
-                } else {
-                    const currencySymbol = getCurrencySymbol(cost.currency);
-                    displayAmount = `¥${Math.round(amountInCNY).toLocaleString()} (${currencySymbol}${cost.amount.toLocaleString()})`;
+                let detailsHTML = '';
+                for (const [key, cost] of Object.entries(costData.costs)) {
+                    const calcCost = calculation.breakdown[key];
+                    const totalForPeriod = calcCost ? calcCost.totalForPeriod : cost.amount * years;
+                    
+                    // 转换为人民币显示
+                    const rate = exchangeRates[cost.currency] || 1;
+                    const amountInCNY = cost.amount * rate;
+                    
+                    // 显示格式：如果是外币，显示"¥xxx (原价$xxx)"
+                    let displayAmount;
+                    if (cost.currency === 'CNY') {
+                        displayAmount = `¥${cost.amount.toLocaleString()}`;
+                    } else {
+                        const currencySymbol = getCurrencySymbol(cost.currency);
+                        displayAmount = `¥${Math.round(amountInCNY).toLocaleString()} (${currencySymbol}${cost.amount.toLocaleString()})`;
+                    }
+                    
+                    // 判断是否为自定义费用项
+                    const isCustomItem = cost.isCustom === true;
+                    
+                    detailsHTML += `
+                        <tr>
+                            <td>${cost.description}</td>
+                            <td>
+                                <input type="number" class="cost-input" value="${cost.amount}" 
+                                       onchange="updateStageCostItem('${stageCode}', '${key}', this.value)"
+                                       placeholder="${cost.currency === 'CNY' ? '¥' + cost.amount.toLocaleString() : getCurrencySymbol(cost.currency) + cost.amount.toLocaleString()}">
+                            </td>
+                            <td>${getUnitText(cost.unit)}</td>
+                            <td id="total-${stageCode}-${key}">¥${Math.round(totalForPeriod).toLocaleString()}</td>
+                            <td>
+                                <button class="cost-item-edit" onclick="openCostEditModal('${stageCode}', '${key}', ${isCustomItem})">编辑</button>
+                            </td>
+                        </tr>
+                    `;
                 }
                 
-                detailsHTML += `
-                    <tr>
-                        <td>${cost.description}</td>
-                        <td>
-                            <input type="number" class="cost-input" value="${cost.amount}" 
-                                   onchange="updateStageCostItem('${stageCode}', '${key}', this.value)"
-                                   placeholder="${cost.currency === 'CNY' ? '¥' + cost.amount.toLocaleString() : getCurrencySymbol(cost.currency) + cost.amount.toLocaleString()}">
-                        </td>
-                        <td>${getUnitText(cost.unit)}</td>
-                        <td id="total-${stageCode}-${key}">¥${Math.round(totalForPeriod).toLocaleString()}</td>
-                    </tr>
-                `;
+                tableBody.innerHTML = detailsHTML;
             }
             
-            tableBody.innerHTML = detailsHTML;
-            
             // 更新列表（移动端）
-            const costList = document.getElementById('currentCostList');
+            const costList = document.getElementById(listId);
             if (costList) {
                 costList.innerHTML = createCostList(costData, calculation, years, stageCode);
             }
@@ -2383,94 +2611,9 @@
         }
 
         // 更新阶段卡片 - 支持城市和国家选择
+        // 更新阶段卡片 - 统一函数的别名
         function updateStageCard(stageCode) {
-            const levelSelect = document.getElementById(`level-${stageCode}`);
-            const citySelect = document.getElementById(`city-${stageCode}`);
-            const countrySelect = document.getElementById(`country-${stageCode}`);
-            
-            const levelCode = levelSelect ? levelSelect.value : '';
-            const cityCode = citySelect ? citySelect.value : '';
-            const countryCode = countrySelect ? countrySelect.value : '';
-            
-            if (!levelCode) {
-                // 隐藏费用相关区域
-                const costSummary = document.getElementById(`costSummary-${stageCode}`);
-                const costDetails = document.getElementById(`costDetails-${stageCode}`);
-                if (costSummary) costSummary.classList.add('hidden');
-                if (costDetails) costDetails.classList.add('hidden');
-                return;
-            }
-            
-            // 检查是否需要地区选择
-            const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(stageCode);
-            const levelInfo = stageInfo.educationLevels.find(level => level.code === levelCode);
-            
-            if (levelInfo) {
-                if (levelInfo.direction === 'domestic' && !cityCode) {
-                    return; // 需要城市选择但未选择
-                }
-                if (levelInfo.direction === 'overseas' && !countryCode) {
-                    return; // 需要国家选择但未选择
-                }
-            }
-            
-            try {
-                // 构造选项对象
-                const options = {};
-                if (cityCode) options.city = cityCode;
-                if (countryCode) options.country = countryCode;
-                
-                // 使用数据适配器获取费用数据
-                const costData = dataAdapter.getStageCostData(stageCode, levelCode, options);
-                if (!costData) {
-                    showError(`无法获取${stageCode}阶段的费用数据`);
-                    return;
-                }
-                
-                const years = stageInfo.totalYears;
-                const calculation = dataAdapter.calculateTotalCost(costData, years);
-                
-                // 创建或更新费用汇总卡片
-                const costSummary = document.getElementById(`costSummary-${stageCode}`);
-                costSummary.innerHTML = createCostSummaryCards(calculation, years);
-                costSummary.classList.remove('hidden');
-                
-                // 创建或更新费用详情表格
-                const costDetails = document.getElementById(`costDetails-${stageCode}`);
-                const costTable = costDetails.querySelector(`#costTable-${stageCode} tbody`);
-                costTable.innerHTML = createCostTableRows(costData, calculation, years, stageCode);
-                
-                // 更新移动端列表
-                const costList = document.getElementById(`costList-${stageCode}`);
-                if (costList) {
-                    costList.innerHTML = createCostList(costData, calculation, years, stageCode);
-                }
-                
-                costDetails.classList.remove('hidden');
-                
-                // 保存费用数据到全局变量中，供编辑使用
-                if (!window.stageCostData) {
-                    window.stageCostData = {};
-                }
-                
-                // 保存原始数据的副本，用于对比是否被修改
-                const originalCostData = JSON.parse(JSON.stringify(costData));
-                
-                window.stageCostData[stageCode] = {
-                    costData: costData,
-                    originalCostData: originalCostData,
-                    years: years,
-                    calculation: calculation,
-                    modified: false
-                };
-                
-                // 更新总费用汇总
-                updateTotalSummary();
-                
-            } catch (error) {
-                console.error('更新阶段卡片失败:', error);
-                showError('更新费用信息失败');
-            }
+            updateStageDisplay(stageCode);
         }
 
         // 计算单个费用项目的总计（与数据适配器逻辑保持一致）
@@ -2494,6 +2637,8 @@
             switch (cost.unit) {
                 case 'year':
                     return amountInCNY * years;
+                case 'quarter':
+                    return amountInCNY * 4 * years; // 每季 = 每年4次
                 case 'month':
                     return amountInCNY * 12 * years;
                 case 'once':
@@ -2506,6 +2651,23 @@
                 default:
                     return amountInCNY * years;
             }
+        }
+
+        // 更新阶段费用项目（包括单位） - 使用统一的更新逻辑
+        function updateStageCostItemWithUnit(stageCode, costKey, newAmount, newUnit) {
+            const stageData = window.stageCostData[stageCode];
+            if (!stageData) {
+                return;
+            }
+            
+            const numValue = parseFloat(newAmount) || 0;
+            
+            // 更新费用数据（金额和单位）
+            stageData.costData.costs[costKey].amount = numValue;
+            stageData.costData.costs[costKey].unit = newUnit;
+            
+            // 使用统一的阶段更新函数，这会重新计算和显示所有内容
+            updateStageDisplay(stageCode);
         }
 
         // 更新阶段费用项目 - 适配新的表格结构，支持当前阶段
@@ -2569,19 +2731,32 @@
             stageData.modified = stageHasModifications;
             
             // 更新卡片标题，显示修改状态
-            const cardTitle = document.querySelector(`#stage-${stageCode} .card-title`);
-            let modifiedIndicator = cardTitle.querySelector('.modified-indicator');
-            if (stageHasModifications && !modifiedIndicator) {
-                modifiedIndicator = document.createElement('span');
-                modifiedIndicator.className = 'modified-indicator';
-                modifiedIndicator.title = '此阶段费用已被修改';
-                cardTitle.appendChild(modifiedIndicator);
-            } else if (!stageHasModifications && modifiedIndicator) {
-                modifiedIndicator.remove();
+            let cardTitle;
+            if (stageCode === userPlan.currentStage) {
+                // 当前阶段使用不同的选择器
+                cardTitle = document.querySelector('#currentStageTitle');
+            } else {
+                // 未来阶段使用原有的选择器
+                cardTitle = document.querySelector(`#stage-${stageCode} .card-title`);
+            }
+            
+            if (cardTitle) {
+                let modifiedIndicator = cardTitle.querySelector('.modified-indicator');
+                if (stageHasModifications && !modifiedIndicator) {
+                    modifiedIndicator = document.createElement('span');
+                    modifiedIndicator.className = 'modified-indicator';
+                    modifiedIndicator.title = '此阶段费用已被修改';
+                    cardTitle.appendChild(modifiedIndicator);
+                } else if (!stageHasModifications && modifiedIndicator) {
+                    modifiedIndicator.remove();
+                }
             }
             
             // 更新总费用汇总
             updateTotalSummary();
+            
+            // 更新教育总费用
+            updateTotalEducationCost();
         }
 
 
@@ -2621,39 +2796,6 @@
         }
 
         // 验证输入完整性
-        function validateInputs() {
-            const citySelect = document.getElementById('currentCity');
-            const stageSelect = document.getElementById('currentStage');
-            const gradeSelect = document.getElementById('currentGrade');
-            const levelSelect = document.getElementById('currentLevel');
-            const countrySelect = document.getElementById('currentCountry');
-            const startButton = document.getElementById('startPlanning');
-            
-            let isValid = true;
-            
-            // 检查基本字段
-            if (!citySelect.value) {
-                isValid = false;
-            } else if (!stageSelect.value) {
-                isValid = false;
-            } else if (!gradeSelect.value) {
-                isValid = false;
-            } else if (!levelSelect.value) {
-                isValid = false;
-            } else {
-                // 检查是否需要选择国家
-                const selectedLevel = levelSelect.value;
-                const selectedStage = stageSelect.value;
-                const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(selectedStage);
-                const levelInfo = stageInfo?.educationLevels?.find(level => level.code === selectedLevel);
-                
-                if (levelInfo && levelInfo.direction === 'overseas' && !countrySelect.value) {
-                    isValid = false;
-                }
-            }
-            
-            startButton.disabled = !isValid;
-        }
 
         // 开始教育规划
         function startEducationPlanning() {
@@ -2666,12 +2808,13 @@
                 const grade = document.getElementById('currentGrade').value;
                 const level = document.getElementById('currentLevel').value;
                 const country = document.getElementById('currentCountry').value;
+                const educationStyle = document.getElementById('educationStyle').value;
                 
-                console.log('📝 用户输入:', { city, stage, grade, level, country });
+                console.log('📝 用户输入:', { city, stage, grade, level, country, educationStyle });
                 
                 // 验证输入
-                if (!city || !stage || !grade || !level) {
-                    console.error('❌ 输入验证失败:', { city: !!city, stage: !!stage, grade: !!grade, level: !!level });
+                if (!city || !stage || !grade || !level || !educationStyle) {
+                    console.error('❌ 输入验证失败:', { city: !!city, stage: !!stage, grade: !!grade, level: !!level, educationStyle: !!educationStyle });
                     return;
                 }
                 
@@ -2706,7 +2849,8 @@
                     currentGrade: grade,
                     currentLevel: level,
                     currentCity: city,
-                    currentCountry: country
+                    currentCountry: country,
+                    educationStyle: educationStyle
                 };
                 
                 console.log('💾 用户计划已保存:', userPlan);
@@ -2744,6 +2888,28 @@
                     console.error('❌ 找不到 futureStagesSection 元素');
                 }
                 
+                // 强制显示教育总费用模块
+                console.log('🔧 强制检查和显示教育总费用模块...');
+                const totalCostModule = document.getElementById('totalEducationCost');
+                if (totalCostModule) {
+                    console.log('找到教育总费用模块，当前class:', totalCostModule.className);
+                    totalCostModule.classList.remove('hidden');
+                    console.log('已移除hidden类，新class:', totalCostModule.className);
+                    
+                    // 设置一个默认值确保显示
+                    const totalAmountElement = document.getElementById('totalEducationAmount');
+                    if (totalAmountElement && window.stageCostData && window.stageCostData[userPlan.currentStage]) {
+                        const stageData = window.stageCostData[userPlan.currentStage];
+                        if (stageData.calculation && stageData.calculation.summary) {
+                            const amount = stageData.calculation.summary.periodicTotal || 0;
+                            totalAmountElement.textContent = `¥${Math.round(amount).toLocaleString()}`;
+                            console.log('✅ 教育总费用已设置:', amount);
+                        }
+                    }
+                } else {
+                    console.error('❌ 找不到教育总费用模块 totalEducationCost');
+                }
+                
                 console.log('🎉 教育规划启动成功!');
                 
             } catch (error) {
@@ -2756,16 +2922,28 @@
         // 获取当前阶段费用数据
         function getCurrentStageCostData() {
             try {
+                console.log('getCurrentStageCostData - 开始执行');
+                console.log('getCurrentStageCostData - userPlan数据:', userPlan);
+                
                 // 构造选项对象，包含城市和国家信息
                 const options = {};
                 
                 if (userPlan.currentCity) {
                     options.city = userPlan.currentCity;
+                    console.log('getCurrentStageCostData - 设置city:', userPlan.currentCity);
                 }
                 
                 if (userPlan.currentCountry) {
                     options.country = userPlan.currentCountry;
+                    console.log('getCurrentStageCostData - 设置country:', userPlan.currentCountry);
                 }
+                
+                console.log('getCurrentStageCostData - options对象:', options);
+                console.log('getCurrentStageCostData - 即将调用getStageCostData参数:', {
+                    stage: userPlan.currentStage,
+                    level: userPlan.currentLevel,
+                    options: options
+                });
                 
                 // 使用数据适配器获取费用数据
                 const costData = dataAdapter.getStageCostData(
@@ -2774,56 +2952,181 @@
                     options
                 );
                 
+                console.log('getCurrentStageCostData - getStageCostData返回结果:', costData);
                 return costData;
             } catch (error) {
                 console.error('获取当前阶段费用数据失败:', error);
+                console.error('错误详情:', error.stack);
                 return null;
             }
         }
 
         // 显示当前阶段费用
-        function displayCurrentStageCosts() {
+        // 合并默认费用项和自定义费用项
+        function getMergedCostData(stageCode, baseCostData) {
+            console.log('合并费用数据 - stageCode:', stageCode);
+            console.log('合并费用数据 - baseCostData:', baseCostData);
+            
+            // 检查是否已有修改过的数据
+            let mergedCostData;
+            if (window.stageCostData && window.stageCostData[stageCode] && window.stageCostData[stageCode].costData) {
+                // 使用已修改的数据作为基础
+                console.log('使用已修改的数据作为基础');
+                mergedCostData = JSON.parse(JSON.stringify(window.stageCostData[stageCode].costData));
+                
+                // 移除之前的自定义费用项（它们可能已经改变）
+                for (const key in mergedCostData.costs) {
+                    if (mergedCostData.costs[key].isCustom) {
+                        delete mergedCostData.costs[key];
+                    }
+                }
+            } else {
+                // 使用原始基础数据
+                console.log('使用原始基础数据');
+                mergedCostData = JSON.parse(JSON.stringify(baseCostData));
+            }
+            
+            // 添加当前的自定义费用项
+            if (window.customCostItems[stageCode]) {
+                const customItems = window.customCostItems[stageCode];
+                console.log('找到自定义费用项:', customItems);
+                
+                for (const itemId in customItems) {
+                    const customItem = customItems[itemId];
+                    // 将自定义费用项添加到costs对象中
+                    mergedCostData.costs[itemId] = {
+                        amount: customItem.amount,
+                        unit: customItem.unit,
+                        currency: customItem.currency || 'CNY',
+                        description: customItem.description,
+                        isCustom: true
+                    };
+                }
+            }
+            
+            console.log('合并后的费用数据:', mergedCostData);
+            return mergedCostData;
+        }
+
+        // 统一的阶段显示函数 - 同时处理当前阶段和未来阶段
+        function updateStageDisplay(stageCode, options = {}) {
+            console.log('updateStageDisplay - 开始更新阶段:', stageCode, options);
+            
             try {
-                const costData = getCurrentStageCostData();
-                if (!costData) {
-                    showError('无法获取当前阶段费用数据');
-                    return;
+                let baseCostData;
+                let years;
+                
+                // 获取基础费用数据
+                if (stageCode === userPlan.currentStage) {
+                    // 当前阶段
+                    baseCostData = getCurrentStageCostData();
+                    years = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
+                    
+                    if (!baseCostData) {
+                        showError('无法获取当前阶段费用数据');
+                        return;
+                    }
+                } else {
+                    // 未来阶段
+                    const levelSelect = document.getElementById(`level-${stageCode}`);
+                    const citySelect = document.getElementById(`city-${stageCode}`);
+                    const countrySelect = document.getElementById(`country-${stageCode}`);
+                    
+                    const levelCode = options.levelCode || (levelSelect ? levelSelect.value : '');
+                    const cityCode = options.cityCode || (citySelect ? citySelect.value : '');
+                    const countryCode = options.countryCode || (countrySelect ? countrySelect.value : '');
+                    
+                    if (!levelCode) {
+                        // 隐藏费用相关区域
+                        const costSummary = document.getElementById(`costSummary-${stageCode}`);
+                        const costDetails = document.getElementById(`costDetails-${stageCode}`);
+                        if (costSummary) costSummary.classList.add('hidden');
+                        if (costDetails) costDetails.classList.add('hidden');
+                        return;
+                    }
+                    
+                    // 构造选项对象
+                    const dataOptions = {};
+                    if (cityCode) dataOptions.city = cityCode;
+                    if (countryCode) dataOptions.country = countryCode;
+                    
+                    baseCostData = dataAdapter.getStageCostData(stageCode, levelCode, dataOptions);
+                    if (!baseCostData) {
+                        showError(`无法获取${stageCode}阶段的费用数据`);
+                        return;
+                    }
+                    
+                    const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(stageCode);
+                    years = stageInfo.totalYears;
                 }
                 
-                const remainingYears = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
-                const calculation = dataAdapter.calculateTotalCost(costData, remainingYears);
+                // 合并自定义费用项
+                const mergedCostData = getMergedCostData(stageCode, baseCostData);
+                console.log('updateStageDisplay - mergedCostData:', mergedCostData);
                 
-                // 更新阶段标题和信息
-                const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(userPlan.currentStage);
-                const levelInfo = EDUCATION_STAGES_CONFIG.getEducationLevelInfo(userPlan.currentStage, userPlan.currentLevel);
-                const gradeInfo = stageInfo.grades.find(g => g.code === userPlan.currentGrade);
+                const calculation = dataAdapter.calculateTotalCost(mergedCostData, years);
+                console.log('updateStageDisplay - calculation result:', calculation);
                 
-                document.getElementById('currentStageTitle').textContent = `${stageInfo.name} - ${levelInfo.name}`;
-                document.getElementById('currentStageMeta').textContent = 
-                    `${gradeInfo.name} | 剩余${remainingYears}年 | ${costData.cityName || costData.countryName || ''}`;
+                // 更新UI
+                if (stageCode === userPlan.currentStage) {
+                    // 当前阶段的特殊处理
+                    const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(userPlan.currentStage);
+                    const levelInfo = EDUCATION_STAGES_CONFIG.getEducationLevelInfo(userPlan.currentStage, userPlan.currentLevel);
+                    const gradeInfo = stageInfo.grades.find(g => g.code === userPlan.currentGrade);
+                    
+                    document.getElementById('currentStageTitle').textContent = `${stageInfo.name} - ${levelInfo.name}`;
+                    document.getElementById('currentStageMeta').textContent = 
+                        `${gradeInfo.name} | 剩余${years}年 | ${baseCostData.cityName || baseCostData.countryName || ''}`;
+                    
+                    // 显示费用汇总
+                    displayCostSummary(calculation, years);
+                } else {
+                    // 未来阶段的处理
+                    const costSummary = document.getElementById(`costSummary-${stageCode}`);
+                    if (costSummary) {
+                        costSummary.innerHTML = createCostSummaryCards(calculation, years);
+                        costSummary.classList.remove('hidden');
+                    }
+                    
+                    const costDetails = document.getElementById(`costDetails-${stageCode}`);
+                    if (costDetails) {
+                        costDetails.classList.remove('hidden');
+                    }
+                }
                 
-                // 显示费用汇总
-                displayCostSummary(calculation, remainingYears);
+                // 显示费用详情（统一处理）
+                displayCostDetails(mergedCostData, calculation, years, stageCode);
                 
-                // 显示费用详情
-                displayCostDetails(costData, calculation, remainingYears, userPlan.currentStage);
-                
-                // 保存当前阶段数据到全局变量
+                // 保存数据到全局变量
                 if (!window.stageCostData) {
                     window.stageCostData = {};
                 }
-                window.stageCostData[userPlan.currentStage] = {
-                    costData: costData,
-                    originalCostData: JSON.parse(JSON.stringify(costData)),
-                    years: remainingYears,
+                window.stageCostData[stageCode] = {
+                    costData: mergedCostData,  // 合并后的数据
+                    originalCostData: JSON.parse(JSON.stringify(baseCostData)), // 原始基础数据
+                    years: years,
                     calculation: calculation,
                     modified: false
                 };
                 
+                // 更新总费用汇总
+                if (stageCode === userPlan.currentStage) {
+                    updateTotalEducationCost();
+                } else {
+                    updateTotalSummary();
+                }
+                
+                console.log(`updateStageDisplay - 阶段 ${stageCode} 更新完成`);
+                
             } catch (error) {
-                console.error('显示当前阶段费用失败:', error);
-                showError('显示费用信息失败');
+                console.error(`更新阶段 ${stageCode} 失败:`, error);
+                showError('更新费用信息失败');
             }
+        }
+        
+        // 为了兼容性，保留原函数名作为别名
+        function displayCurrentStageCosts() {
+            updateStageDisplay(userPlan.currentStage);
         }
 
         // 生成后续阶段卡片
@@ -2932,6 +3235,12 @@
                     <div id="costList-${stage.code}" class="cost-list">
                         <!-- 费用项目列表将动态生成 -->
                     </div>
+                    <!-- 新增费用项按钮 -->
+                    <div class="add-cost-section">
+                        <button class="add-cost-btn" onclick="openAddCostModal('${stage.code}')">
+                            + 新增费用项
+                        </button>
+                    </div>
                 </div>
             `;
         }
@@ -2991,8 +3300,15 @@
                 // 计算当前阶段费用
                 if (userPlan.currentStage && window.stageCostData && window.stageCostData[userPlan.currentStage]) {
                     const remainingYears = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
-                    const currentCalculation = dataAdapter.calculateTotalCost(userPlan.currentCosts, remainingYears);
-                    currentStageCost = currentCalculation.summary.periodicTotal;
+                    // 使用window.stageCostData中的数据而不是userPlan.currentCosts
+                    const currentStageData = window.stageCostData[userPlan.currentStage];
+                    if (currentStageData && currentStageData.costData) {
+                        const currentCalculation = dataAdapter.calculateTotalCost(currentStageData.costData, remainingYears);
+                        currentStageCost = currentCalculation.summary.periodicTotal;
+                    } else {
+                        console.error('updateTotalSummary: 当前阶段数据不可用，跳过计算');
+                        return;
+                    }
                     
                     // 添加到时间线
                     const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(userPlan.currentStage);
@@ -3058,7 +3374,6 @@
                 
                 document.getElementById('currentStageCost').textContent = `¥${Math.round(currentStageCost).toLocaleString()}`;
                 document.getElementById('futureStageCost').textContent = `¥${Math.round(futureStageCost).toLocaleString()}`;
-                document.getElementById('totalEducationCost').textContent = `¥${Math.round(totalCost).toLocaleString()}`;
 
                 // 更新时间线
                 updateInvestmentTimeline(timelineItems);
@@ -3105,19 +3420,58 @@
         };
 
         // 打开费用修改弹窗
-        function openCostEditModal(stageCode, costKey) {
-            const stageData = window.stageCostData[stageCode];
-            if (!stageData) return;
+        function openCostEditModal(stageCode, costKey, isCustom = false) {
+            console.log('openCostEditModal 调用参数:', { stageCode, costKey, isCustom });
+            console.log('当前 window.customCostItems:', window.customCostItems);
+            console.log('当前阶段自定义费用项:', window.customCostItems[stageCode]);
+            let cost, originalCost;
+            
+            if (isCustom) {
+                // 自定义费用项
+                if (!window.customCostItems[stageCode] || !window.customCostItems[stageCode][costKey]) {
+                    console.error('找不到自定义费用项:', stageCode, costKey);
+                    return;
+                }
+                cost = window.customCostItems[stageCode][costKey];
+                originalCost = cost; // 自定义项没有原始数据
+                console.log('自定义费用项数据:', { cost, originalCost });
+            } else {
+                // 默认费用项
+                const stageData = window.stageCostData[stageCode];
+                if (!stageData) return;
 
-            const cost = stageData.costData.costs[costKey];
-            const originalCost = stageData.originalCostData.costs[costKey];
+                cost = stageData.costData.costs[costKey];
+                
+                // 检查是否为自定义费用项（可能在合并数据中被标记）
+                if (cost && cost.isCustom) {
+                    // 这实际上是自定义费用项，从正确的位置获取数据
+                    if (window.customCostItems[stageCode] && window.customCostItems[stageCode][costKey]) {
+                        cost = window.customCostItems[stageCode][costKey];
+                        originalCost = cost; // 自定义项使用自己作为原始数据
+                    } else {
+                        console.error('自定义费用项数据不一致:', stageCode, costKey);
+                        return;
+                    }
+                } else {
+                    // 真正的默认费用项
+                    originalCost = stageData.originalCostData.costs[costKey];
+                    if (!originalCost) {
+                        console.error('找不到默认费用项的原始数据:', stageCode, costKey);
+                        return;
+                    }
+                }
+            }
+            
+            // 所有费用项都显示删除按钮
+            document.getElementById('deleteCostBtn').style.display = 'inline-block';
             
             // 保存当前编辑信息
             currentEditingCost = {
                 stageCode: stageCode,
                 costKey: costKey,
+                isCustom: isCustom || (cost && cost.isCustom), // 确保正确标记自定义项
                 costData: cost,
-                years: stageData.years
+                years: (isCustom || (cost && cost.isCustom)) ? 1 : window.stageCostData[stageCode].years
             };
 
             // 填充弹窗信息
@@ -3144,31 +3498,62 @@
             // 设置当前金额
             document.getElementById('modalAmountInput').value = cost.amount;
             
+            // 设置当前单位选择器状态
+            selectedEditUnit = cost.unit;
+            document.querySelectorAll('#costEditModal .unit-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            const currentUnitBtn = document.querySelector(`#costEditModal [data-unit="${cost.unit}"]`);
+            if (currentUnitBtn) {
+                currentUnitBtn.classList.add('selected');
+            }
+            
             // 计算并显示总费用
             updateModalTotalAmount();
             
             // 显示弹窗
-            document.getElementById('costEditModal').classList.add('active');
+            const modal = document.getElementById('costEditModal');
+            console.log('打开弹窗 - 当前类:', modal.className);
+            
+            // 强制重排以确保初始状态被应用
+            modal.offsetHeight;
+            
+            // 移除hidden类触发动画
+            modal.classList.remove('hidden');
+            console.log('移除hidden后 - 当前类:', modal.className);
+            
+            // 检查弹窗元素的transform样式
+            const bottomModal = modal.querySelector('.bottom-modal');
+            console.log('弹窗元素的transform样式:', getComputedStyle(bottomModal).transform);
             
             // 聚焦到输入框
             setTimeout(() => {
                 document.getElementById('modalAmountInput').focus();
                 document.getElementById('modalAmountInput').select();
-            }, 300);
+            }, 450);
         }
 
         // 关闭费用修改弹窗
         function closeCostEditModal() {
-            document.getElementById('costEditModal').classList.remove('active');
+            const modal = document.getElementById('costEditModal');
+            console.log('关闭弹窗 - 当前类:', modal.className);
+            modal.classList.add('hidden');
+            console.log('添加hidden后 - 当前类:', modal.className);
+            
+            // 重置编辑单位选择状态
+            selectedEditUnit = null;
         }
 
         // 更新弹窗中的总费用显示
         function updateModalTotalAmount() {
             const input = document.getElementById('modalAmountInput');
             const newAmount = parseFloat(input.value) || 0;
+            const newUnit = selectedEditUnit || currentEditingCost.costData.unit; // 使用选择的单位或原单位
+            
             const totalAmount = calculateItemTotal({
                 ...currentEditingCost.costData,
-                amount: newAmount
+                amount: newAmount,
+                unit: newUnit  // 使用新的单位进行计算
             }, currentEditingCost.years);
             
             document.getElementById('modalTotalAmount').textContent = `¥${Math.round(totalAmount).toLocaleString()}`;
@@ -3177,9 +3562,23 @@
         // 保存费用修改
         function saveCostEdit() {
             const newAmount = parseFloat(document.getElementById('modalAmountInput').value) || 0;
+            const newUnit = selectedEditUnit || currentEditingCost.costData.unit; // 使用新选择的单位或保持原单位
             
-            // 调用原有的更新函数
-            updateStageCostItem(currentEditingCost.stageCode, currentEditingCost.costKey, newAmount);
+            if (currentEditingCost.isCustom) {
+                // 更新自定义费用项
+                if (window.customCostItems[currentEditingCost.stageCode] && 
+                    window.customCostItems[currentEditingCost.stageCode][currentEditingCost.costKey]) {
+                    const customItem = window.customCostItems[currentEditingCost.stageCode][currentEditingCost.costKey];
+                    customItem.amount = newAmount;
+                    customItem.unit = newUnit;
+                    
+                    // 重新计算阶段费用（这会自动更新所有显示）
+                    recalculateStageTotal(currentEditingCost.stageCode);
+                }
+            } else {
+                // 更新默认费用项（包括金额和单位）
+                updateStageCostItemWithUnit(currentEditingCost.stageCode, currentEditingCost.costKey, newAmount, newUnit);
+            }
             
             // 关闭弹窗
             closeCostEditModal();
@@ -3233,6 +3632,9 @@
                     displayAmount = `¥${Math.round(amountInCNY).toLocaleString()}`;
                 }
                 
+                // 判断是否为自定义费用项
+                const isCustomItem = cost.isCustom === true;
+                
                 listHTML += `
                     <div class="cost-item">
                         <div style="display: flex; align-items: center; justify-content: space-between; min-height: 60px;">
@@ -3242,7 +3644,7 @@
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <div class="cost-item-amount">${displayAmount}/${getUnitText(cost.unit)}</div>
-                                <button class="cost-item-edit" onclick="openCostEditModal('${stageCode}', '${key}')">编辑</button>
+                                <button class="cost-item-edit" onclick="openCostEditModal('${stageCode}', '${key}', ${isCustomItem})">编辑</button>
                             </div>
                         </div>
                     </div>
@@ -3252,46 +3654,500 @@
             return listHTML;
         }
 
+        // 计算和更新教育总费用
+        function updateTotalEducationCost() {
+            console.log('updateTotalEducationCost 被调用');
+            console.log('当前阶段:', userPlan.currentStage);
+            console.log('stageCostData:', window.stageCostData);
+            
+            // 确保总费用模块存在
+            const totalCostModule = document.getElementById('totalEducationCost');
+            if (!totalCostModule) {
+                console.error('updateTotalEducationCost - 未找到totalEducationCost元素');
+                return;
+            }
+            
+            let totalCost = 0;
+            
+            // 计算当前阶段费用
+            if (window.stageCostData[userPlan.currentStage]) {
+                const currentStageData = window.stageCostData[userPlan.currentStage];
+                console.log('当前阶段数据:', currentStageData);
+                if (currentStageData.calculation && currentStageData.calculation.summary) {
+                    totalCost += currentStageData.calculation.summary.periodicTotal;
+                    console.log('当前阶段费用:', currentStageData.calculation.summary.periodicTotal);
+                } else {
+                    console.warn('当前阶段calculation数据不完整');
+                }
+            } else {
+                console.warn('未找到当前阶段数据');
+            }
+            
+            // 计算未来阶段费用
+            const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
+            const futureStages = subsequentStages.slice(1); // 排除当前阶段
+            console.log('未来阶段:', futureStages.map(s => s.code));
+            
+            futureStages.forEach(stage => {
+                if (window.stageCostData[stage.code]) {
+                    const stageData = window.stageCostData[stage.code];
+                    if (stageData.calculation && stageData.calculation.summary) {
+                        totalCost += stageData.calculation.summary.periodicTotal;
+                        console.log(`${stage.code}阶段费用:`, stageData.calculation.summary.periodicTotal);
+                    }
+                }
+            });
+            
+            // 更新显示
+            console.log('计算得出的总费用:', totalCost);
+            const totalAmountElement = document.getElementById('totalEducationAmount');
+            if (totalAmountElement) {
+                totalAmountElement.textContent = `¥${Math.round(totalCost).toLocaleString()}`;
+                console.log('总费用已更新到DOM:', Math.round(totalCost));
+            } else {
+                console.error('未找到totalEducationAmount元素');
+            }
+            
+            // 显示总费用模块 - 即使只有当前阶段费用也要显示
+            if (totalCost >= 0) { // 改为 >= 0，即使是0也显示
+                totalCostModule.classList.remove('hidden');
+                console.log('总费用模块已显示, 总费用:', totalCost);
+                console.log('模块移除hidden后class:', totalCostModule.className);
+            } else {
+                console.log('总费用为负数，不显示模块');
+            }
+        }
+
         // 初始化全局变量
         window.stageCostData = {};
+        window.customCostItems = {}; // 存储自定义费用项
+        let currentAddCostStage = null; // 当前正在添加费用项的阶段
+        let selectedUnit = null; // 当前选择的单位
+        let selectedEditUnit = null; // 编辑时选择的单位
+
+        // 打开新增费用项模态框
+        function openAddCostModal(stageCode) {
+            currentAddCostStage = stageCode;
+            
+            // 清空表单
+            document.getElementById('newCostName').value = '';
+            document.getElementById('newCostAmount').value = '';
+            
+            // 清除单位选择
+            document.querySelectorAll('.unit-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            selectedUnit = null;
+            
+            // 获取并显示教育信息
+            populateEducationInfo(stageCode);
+            
+            // 显示模态框
+            const modal = document.getElementById('addCostModal');
+            
+            // 强制重排以确保初始状态被应用
+            modal.offsetHeight;
+            
+            // 移除hidden类触发动画
+            modal.classList.remove('hidden');
+            
+            // 聚焦到名称输入框
+            setTimeout(() => {
+                document.getElementById('newCostName').focus();
+            }, 450);
+        }
+
+        // 关闭新增费用项模态框
+        function closeAddCostModal() {
+            const modal = document.getElementById('addCostModal');
+            modal.classList.add('hidden');
+            currentAddCostStage = null;
+        }
+
+        // 单位选择功能
+        function selectUnit(unit) {
+            // 移除所有选中状态（仅限新增弹窗）
+            document.querySelectorAll('#addCostModal .unit-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // 设置当前选中（仅限新增弹窗）
+            const selectedBtn = document.querySelector(`#addCostModal [data-unit="${unit}"]`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('selected');
+                selectedUnit = unit;
+            }
+        }
+        
+        function selectEditUnit(unit) {
+            // 移除所有选中状态（仅限编辑弹窗）
+            document.querySelectorAll('#costEditModal .unit-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // 设置当前选中（仅限编辑弹窗）
+            const selectedBtn = document.querySelector(`#costEditModal [data-unit="${unit}"]`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('selected');
+                selectedEditUnit = unit;
+                
+                // 更新预计总费用
+                updateModalTotalAmount();
+            }
+        }
+
+        // 填充教育信息
+        function populateEducationInfo(stageCode) {
+            let stageName = '';
+            let levelName = '';
+            let countryName = '';
+            let showCountry = false;
+
+            // 获取教育阶段名称
+            if (stageCode === userPlan.currentStage) {
+                const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(userPlan.currentStage);
+                stageName = stageInfo ? stageInfo.name : '当前阶段';
+                
+                const levelInfo = EDUCATION_STAGES_CONFIG.getEducationLevelInfo(userPlan.currentStage, userPlan.currentLevel);
+                levelName = levelInfo ? levelInfo.name : '未知水平';
+                
+                // 检查是否为海外教育
+                if (levelInfo && levelInfo.direction === 'overseas') {
+                    showCountry = true;
+                    countryName = userPlan.currentCountry || '未选择';
+                }
+            } else {
+                // 未来阶段
+                const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(stageCode);
+                stageName = stageInfo ? stageInfo.name : '未知阶段';
+                
+                const levelSelect = document.getElementById(`level-${stageCode}`);
+                if (levelSelect && levelSelect.value) {
+                    const levelInfo = EDUCATION_STAGES_CONFIG.getEducationLevelInfo(stageCode, levelSelect.value);
+                    levelName = levelInfo ? levelInfo.name : '未知水平';
+                    
+                    // 检查是否为海外教育
+                    if (levelInfo && levelInfo.direction === 'overseas') {
+                        showCountry = true;
+                        const countrySelect = document.getElementById(`country-${stageCode}`);
+                        if (countrySelect && countrySelect.value) {
+                            // 根据国家代码获取国家名称
+                            const countryOptions = {
+                                'usa': '美国',
+                                'uk': '英国', 
+                                'canada': '加拿大',
+                                'australia': '澳大利亚',
+                                'singapore': '新加坡',
+                                'germany': '德国',
+                                'france': '法国',
+                                'japan': '日本'
+                            };
+                            countryName = countryOptions[countrySelect.value] || countrySelect.value;
+                        }
+                    }
+                }
+            }
+
+            // 更新显示
+            document.getElementById('modalStageInfo').textContent = stageName;
+            document.getElementById('modalLevelInfo').textContent = levelName;
+            
+            const countryInfo = document.getElementById('modalCountryInfo');
+            if (showCountry) {
+                document.getElementById('modalCountryValue').textContent = countryName;
+                countryInfo.style.display = 'flex';
+            } else {
+                countryInfo.style.display = 'none';
+            }
+        }
+
+        // 保存新增费用项
+        function saveNewCostItem() {
+            const name = document.getElementById('newCostName').value.trim();
+            const amount = parseFloat(document.getElementById('newCostAmount').value);
+            const unit = selectedUnit;
+            
+            // 验证输入
+            if (!name) {
+                alert('请输入费用名称');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                alert('请输入有效的费用金额');
+                return;
+            }
+            if (!unit) {
+                alert('请选择计费单位');
+                return;
+            }
+            
+            // 生成唯一ID
+            const customId = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            // 创建费用项对象
+            const costItem = {
+                id: customId,
+                description: name,
+                amount: amount,
+                unit: unit,
+                currency: 'CNY',
+                isCustom: true
+            };
+            
+            // 保存到全局数据
+            console.log('保存自定义费用项 - currentAddCostStage:', currentAddCostStage);
+            console.log('保存自定义费用项 - customId:', customId);
+            console.log('保存自定义费用项 - costItem:', costItem);
+            
+            if (!window.customCostItems[currentAddCostStage]) {
+                window.customCostItems[currentAddCostStage] = {};
+            }
+            window.customCostItems[currentAddCostStage][customId] = costItem;
+            
+            console.log('保存后的 window.customCostItems:', window.customCostItems);
+            
+            // 重新计算费用（这会自动更新显示，包含新的自定义费用项）
+            recalculateStageTotal(currentAddCostStage);
+            
+            // 关闭模态框
+            closeAddCostModal();
+            
+            console.log('✅ 新增费用项成功:', costItem);
+        }
+
+        // 添加自定义费用项到显示列表
+        function addCustomCostItemToDisplay(stageCode, itemId, costItem) {
+            // 获取单位显示文本
+            const unitText = {
+                'year': '每年',
+                'month': '每月', 
+                'once': '一次性'
+            }[costItem.unit] || costItem.unit;
+            
+            // 添加到桌面端表格
+            const tableId = stageCode === userPlan.currentStage ? 'currentCostTable' : `costTable-${stageCode}`;
+            const table = document.getElementById(tableId);
+            if (table) {
+                const tbody = table.querySelector('tbody');
+                const row = tbody.insertRow();
+                row.id = `cost-row-${itemId}`;
+                row.innerHTML = `
+                    <td>${costItem.description}</td>
+                    <td>¥${costItem.amount.toLocaleString()}</td>
+                    <td>${unitText}</td>
+                    <td>¥${costItem.amount.toLocaleString()}</td>
+                    <td>
+                        <button class="delete-cost-btn" onclick="deleteCustomCostItem('${stageCode}', '${itemId}')">删除</button>
+                    </td>
+                `;
+            }
+            
+            // 添加到移动端列表
+            const listId = stageCode === userPlan.currentStage ? 'currentCostList' : `costList-${stageCode}`;
+            const list = document.getElementById(listId);
+            if (list) {
+                const item = document.createElement('div');
+                item.className = 'cost-item';
+                item.id = `cost-card-${itemId}`;
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: space-between; min-height: 60px;">
+                        <div>
+                            <div class="cost-item-title" style="margin-bottom: 4px;">${costItem.description}</div>
+                            <div class="cost-item-total">总计: ¥${costItem.amount.toLocaleString()}</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="cost-item-amount">¥${costItem.amount.toLocaleString()}/${unitText}</div>
+                            <button class="cost-item-edit" onclick="openCostEditModal('${stageCode}', '${itemId}', true)">编辑</button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(item);
+            }
+        }
+
+        // 从弹窗内删除当前费用项
+        function deleteCurrentCostItem() {
+            if (confirm('确定要删除这个费用项吗？删除后将无法恢复。')) {
+                if (currentEditingCost.isCustom) {
+                    // 删除自定义费用项
+                    deleteCustomCostItem(currentEditingCost.stageCode, currentEditingCost.costKey);
+                } else {
+                    // 删除默认费用项
+                    deleteDefaultCostItem(currentEditingCost.stageCode, currentEditingCost.costKey);
+                }
+                closeCostEditModal();
+            }
+        }
+
+        // 删除默认费用项
+        function deleteDefaultCostItem(stageCode, costKey) {
+            console.log('删除默认费用项:', stageCode, costKey);
+            
+            // 从stageCostData中删除
+            if (window.stageCostData[stageCode] && window.stageCostData[stageCode].costData.costs[costKey]) {
+                delete window.stageCostData[stageCode].costData.costs[costKey];
+                delete window.stageCostData[stageCode].originalCostData.costs[costKey];
+            }
+            
+            // 重新生成当前阶段的显示
+            if (stageCode === userPlan.currentStage) {
+                updateCurrentStageDisplay();
+            } else {
+                updateStageCard(stageCode);
+            }
+            
+            // 更新总费用
+            updateTotalEducationCost();
+            
+            console.log('✅ 删除默认费用项成功:', costKey);
+        }
+
+        // 更新当前阶段显示
+        function updateCurrentStageDisplay() {
+            console.log('重新生成当前阶段显示');
+            displayCurrentStageCosts();
+        }
+
+        // 删除自定义费用项
+        function deleteCustomCostItem(stageCode, itemId) {
+            // 从数据中删除
+            if (window.customCostItems[stageCode]) {
+                delete window.customCostItems[stageCode][itemId];
+            }
+            
+            // 从显示中删除
+            const row = document.getElementById(`cost-row-${itemId}`);
+            if (row) row.remove();
+            
+            const card = document.getElementById(`cost-card-${itemId}`);
+            if (card) card.remove();
+            
+            // 重新计算费用
+            recalculateStageTotal(stageCode);
+            
+            console.log('✅ 删除费用项成功:', itemId);
+        }
+
+        // 重新计算阶段总费用
+        function recalculateStageTotal(stageCode) {
+            console.log('重新计算阶段总费用:', stageCode);
+            
+            // 使用统一的更新函数
+            updateStageDisplay(stageCode);
+            
+            console.log(`阶段 ${stageCode} 重新计算费用完成`);
+        }
     </script>
 
-    <!-- 费用修改弹窗 -->
-    <div id="costEditModal" class="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <div class="modal-title">修改费用</div>
-                <button class="modal-close" onclick="closeCostEditModal()">&times;</button>
+    <!-- 费用编辑底部弹窗 -->
+    <div id="costEditModal" class="bottom-modal-overlay hidden">
+        <div class="bottom-modal">
+            <div class="bottom-modal-header">
+                <div class="bottom-modal-title">费用调整</div>
+                <button class="bottom-modal-close" onclick="closeCostEditModal()">&times;</button>
             </div>
-            <div class="modal-content">
-                <div class="modal-info">
-                    <div class="modal-info-item">
-                        <span class="modal-info-label">费用项目:</span>
-                        <span id="modalCostTitle" class="modal-info-value"></span>
-                    </div>
-                    <div class="modal-info-item">
-                        <span class="modal-info-label">计费单位:</span>
-                        <span id="modalCostUnit" class="modal-info-value"></span>
-                    </div>
-                    <div class="modal-info-item">
-                        <span class="modal-info-label">原始金额:</span>
-                        <span id="modalOriginalAmount" class="modal-info-value"></span>
+            
+            <!-- 费用信息展示区域 -->
+            <div class="cost-info-section">
+                <div class="cost-info-header">
+                    <div class="cost-info-title">
+                        <span id="modalCostTitle">费用项目</span>
+                        <span class="cost-info-unit" id="modalCostUnit">单位</span>
                     </div>
                 </div>
-                <div class="modal-field">
-                    <label class="modal-label" for="modalAmountInput">修改金额</label>
-                    <input type="number" id="modalAmountInput" class="modal-input" placeholder="请输入新的金额">
-                </div>
-                <div class="modal-info">
-                    <div class="modal-info-item">
-                        <span class="modal-info-label">预计总费用:</span>
-                        <span id="modalTotalAmount" class="modal-info-value">¥0</span>
+                <div class="cost-info-details">
+                    <div class="info-item">
+                        <span class="info-label">原始金额:</span>
+                        <span id="modalOriginalAmount" class="info-value">¥0</span>
                     </div>
                 </div>
             </div>
-            <div class="modal-actions">
-                <button class="modal-btn modal-btn-cancel" onclick="closeCostEditModal()">取消</button>
-                <button class="modal-btn modal-btn-save" onclick="saveCostEdit()">保存</button>
+            
+            <!-- 金额调整区域 -->
+            <div class="amount-input-section">
+                <div class="input-field">
+                    <label for="modalAmountInput">调整后金额</label>
+                    <input type="number" id="modalAmountInput" placeholder="请输入金额" min="0" step="0.01">
+                </div>
+                
+                <div class="input-field">
+                    <label>计费单位</label>
+                    <div class="unit-selector">
+                        <button type="button" class="unit-btn" data-unit="year" onclick="selectEditUnit('year')">每年</button>
+                        <button type="button" class="unit-btn" data-unit="quarter" onclick="selectEditUnit('quarter')">每季</button>
+                        <button type="button" class="unit-btn" data-unit="month" onclick="selectEditUnit('month')">每月</button>
+                        <button type="button" class="unit-btn" data-unit="once" onclick="selectEditUnit('once')">一次性</button>
+                    </div>
+                </div>
+                
+                <div class="preview-section">
+                    <div class="info-item">
+                        <span class="info-label">预计总费用:</span>
+                        <span id="modalTotalAmount" class="info-value">¥0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作按钮区域 -->
+            <div class="bottom-modal-actions">
+                <button class="bottom-btn bottom-btn-delete" id="deleteCostBtn" onclick="deleteCurrentCostItem()" style="display: none;">删除</button>
+                <button class="bottom-btn bottom-btn-cancel" onclick="closeCostEditModal()">取消</button>
+                <button class="bottom-btn bottom-btn-save" onclick="saveCostEdit()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增费用项底部弹窗 -->
+    <div id="addCostModal" class="bottom-modal-overlay hidden">
+        <div class="bottom-modal">
+            <div class="bottom-modal-header">
+                <div class="bottom-modal-title">新增费用项</div>
+                <button class="bottom-modal-close" onclick="closeAddCostModal()">&times;</button>
+            </div>
+            
+            <!-- 教育信息展示区域 -->
+            <div class="education-info-section">
+                <div class="info-item">
+                    <span class="info-label">教育阶段:</span>
+                    <span id="modalStageInfo" class="info-value"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">教育水平:</span>
+                    <span id="modalLevelInfo" class="info-value"></span>
+                </div>
+                <div class="info-item" id="modalCountryInfo" style="display: none;">
+                    <span class="info-label">留学国家:</span>
+                    <span id="modalCountryValue" class="info-value"></span>
+                </div>
+            </div>
+            
+            <!-- 费用输入区域 -->
+            <div class="cost-input-section">
+                <div class="input-field">
+                    <label for="newCostName">费用名称</label>
+                    <input type="text" id="newCostName" placeholder="请输入费用名称" maxlength="20">
+                </div>
+                
+                <div class="input-field">
+                    <label for="newCostAmount">费用金额</label>
+                    <input type="number" id="newCostAmount" placeholder="请输入金额" min="0" step="0.01">
+                </div>
+                
+                <div class="input-field">
+                    <label>计费单位</label>
+                    <div class="unit-selector">
+                        <button type="button" class="unit-btn" data-unit="year" onclick="selectUnit('year')">每年</button>
+                        <button type="button" class="unit-btn" data-unit="quarter" onclick="selectUnit('quarter')">每季</button>
+                        <button type="button" class="unit-btn" data-unit="month" onclick="selectUnit('month')">每月</button>
+                        <button type="button" class="unit-btn" data-unit="once" onclick="selectUnit('once')">一次性</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作按钮区域 -->
+            <div class="bottom-modal-actions">
+                <button class="bottom-btn bottom-btn-cancel" onclick="closeAddCostModal()">取消</button>
+                <button class="bottom-btn bottom-btn-save" onclick="saveNewCostItem()">添加</button>
             </div>
         </div>
     </div>

@@ -12,18 +12,22 @@ class EducationDataAdapter {
     
     // 教育水平到API参数的映射
     this.levelMappings = {
+      // 幼儿园阶段映射
+      kindergarten: {
+        public: { type: 'public', city: 'beijing' },
+        private: { type: 'private', city: 'beijing' }
+      },
+      
       // 小学阶段映射
       primary: {
         public: { type: 'public', city: 'beijing' },
-        private: { type: 'private', city: 'beijing' },
-        bilingual: { type: 'private', city: 'shanghai' } // 用上海私立代表双语
+        private: { type: 'private', city: 'beijing' }
       },
       
       // 初中阶段映射
       middle: {
         public: { type: 'public', city: 'beijing' },
-        private: { type: 'private', city: 'beijing' },
-        bilingual: { type: 'private', city: 'shanghai' }
+        private: { type: 'private', city: 'beijing' }
       },
       
       // 高中阶段映射
@@ -99,6 +103,13 @@ class EducationDataAdapter {
       let costData = null;
       
       switch (stage) {
+        case 'kindergarten':
+          costData = this.costAPI.getKindergartenCosts(
+            mapping.type, 
+            options.city || mapping.city
+          );
+          break;
+          
         case 'primary':
           costData = this.costAPI.getPrimarySchoolCosts(
             mapping.type, 
@@ -157,6 +168,14 @@ class EducationDataAdapter {
             );
           }
           break;
+      }
+      
+      // 调试信息
+      console.log('getStageCostData result:', { stage, level, costData });
+      
+      if (!costData) {
+        console.warn(`getStageCostData: 未获取到数据，使用备用数据`, { stage, level, options });
+        return this.getFallbackCostData(stage, level);
       }
       
       return costData;
@@ -357,6 +376,39 @@ class EducationDataAdapter {
    * @returns {Object} 计算结果
    */
   calculateTotalCost(costData, years, customRates = {}) {
+    // 详细参数调试
+    console.log('calculateTotalCost - 函数被调用');
+    console.log('calculateTotalCost - 参数 costData:', costData);
+    console.log('calculateTotalCost - 参数 years:', years);
+    console.log('calculateTotalCost - 参数 customRates:', customRates);
+    console.log('calculateTotalCost - arguments对象:', arguments);
+    
+    // 验证输入数据
+    if (!costData) {
+      console.error('calculateTotalCost: costData is undefined, 使用备用数据');
+      // 使用备用数据而不是返回空结果
+      costData = {
+        costs: {
+          tuition: { amount: 0, unit: "year", currency: "CNY", description: "学费" },
+          books: { amount: 500, unit: "year", currency: "CNY", description: "书本费" },
+          meals: { amount: 600, unit: "month", currency: "CNY", description: "餐费" },
+          transport: { amount: 200, unit: "month", currency: "CNY", description: "交通费" },
+          tutoring: { amount: 1000, unit: "month", currency: "CNY", description: "课外辅导费" },
+          activities: { amount: 500, unit: "year", currency: "CNY", description: "活动费" }
+        }
+      };
+      console.log('calculateTotalCost: 已设置备用数据', costData);
+    }
+    
+    if (!costData.costs) {
+      console.error('calculateTotalCost: costData.costs is undefined', costData);
+      return {
+        summary: { periodicTotal: 0, yearlyTotal: 0, onceTotal: 0 },
+        breakdown: {},
+        metadata: { years, defaultApplicationSchools: 5, exchangeRates: {}, calculationDate: new Date().toISOString() }
+      };
+    }
+
     // 最新汇率（2024年基准）
     const exchangeRates = {
       'CNY': 1.0,      // 人民币基准
@@ -393,6 +445,12 @@ class EducationDataAdapter {
           // 按年计费
           itemTotal = amountInCNY * years;
           yearlyAmount = amountInCNY;
+          break;
+
+        case 'quarter':
+          // 按季度计费
+          itemTotal = amountInCNY * 4 * years;
+          yearlyAmount = amountInCNY * 4;
           break;
 
         case 'month':

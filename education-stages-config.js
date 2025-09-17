@@ -18,8 +18,7 @@ const EDUCATION_STAGES_CONFIG = {
       ],
       educationLevels: [
         { code: "public", name: "公立幼儿园", direction: "domestic" },
-        { code: "private", name: "普通私立幼儿园", direction: "domestic" },
-        { code: "bilingual", name: "民办双语幼儿园", direction: "bilingual" }
+        { code: "private", name: "私立幼儿园", direction: "domestic" }
       ],
       nextStage: "primary"
     },
@@ -37,8 +36,7 @@ const EDUCATION_STAGES_CONFIG = {
       ],
       educationLevels: [
         { code: "public", name: "公立小学", direction: "domestic" },
-        { code: "private", name: "普通私立小学", direction: "domestic" },
-        { code: "bilingual", name: "民办双语小学", direction: "bilingual" }
+        { code: "private", name: "私立小学", direction: "domestic" }
       ],
       nextStage: "middle"
     },
@@ -53,8 +51,7 @@ const EDUCATION_STAGES_CONFIG = {
       ],
       educationLevels: [
         { code: "public", name: "公立初中", direction: "domestic" },
-        { code: "private", name: "普通私立初中", direction: "domestic" },
-        { code: "bilingual", name: "民办双语初中", direction: "bilingual" }
+        { code: "private", name: "私立初中", direction: "domestic" }
       ],
       nextStage: "high"
     },

@@ -31,6 +31,199 @@ const EDUCATION_COST_DATA = {
     ]
   },
 
+  // 幼儿园阶段数据  
+  kindergarten: {
+    // 公立幼儿园（按城市）
+    public: {
+      beijing: {
+        cityName: "北京",
+        costs: {
+          tuition: { amount: 600, unit: "month", currency: "CNY", description: "保教费" },
+          meals: { amount: 500, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 200, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 300, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 400, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 150, unit: "month", currency: "CNY", description: "交通费" }
+        },
+        dataSource: "北京市教委官网"
+      },
+      shanghai: {
+        cityName: "上海",
+        costs: {
+          tuition: { amount: 650, unit: "month", currency: "CNY", description: "保教费" },
+          meals: { amount: 550, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 220, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 350, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 450, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 180, unit: "month", currency: "CNY", description: "交通费" }
+        },
+        dataSource: "上海市教委官网"
+      },
+      guangzhou: {
+        cityName: "广州",
+        costs: {
+          tuition: { amount: 500, unit: "month", currency: "CNY", description: "保教费" },
+          meals: { amount: 450, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 180, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 280, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 350, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 120, unit: "month", currency: "CNY", description: "交通费" }
+        },
+        dataSource: "广州市教育局"
+      },
+      shenzhen: {
+        cityName: "深圳",
+        costs: {
+          tuition: { amount: 700, unit: "month", currency: "CNY", description: "保教费" },
+          meals: { amount: 600, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 250, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 380, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 500, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 200, unit: "month", currency: "CNY", description: "交通费" }
+        },
+        dataSource: "深圳市教育局"
+      },
+      hangzhou: {
+        cityName: "杭州",
+        costs: {
+          tuition: { amount: 550, unit: "month", currency: "CNY", description: "保教费" },
+          meals: { amount: 480, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 200, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 300, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 380, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 150, unit: "month", currency: "CNY", description: "交通费" }
+        },
+        dataSource: "杭州市教育局"
+      },
+      chengdu: {
+        cityName: "成都",
+        costs: {
+          tuition: { amount: 450, unit: "month", currency: "CNY", description: "保教费" },
+          meals: { amount: 400, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 160, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 250, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 300, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 100, unit: "month", currency: "CNY", description: "交通费" }
+        },
+        dataSource: "成都市教育局"
+      },
+      wuhan: {
+        cityName: "武汉",
+        costs: {
+          tuition: { amount: 400, unit: "month", currency: "CNY", description: "保教费" },
+          meals: { amount: 380, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 150, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 220, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 280, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 90, unit: "month", currency: "CNY", description: "交通费" }
+        },
+        dataSource: "武汉市教育局"
+      }
+    },
+
+    // 私立幼儿园（按城市）
+    private: {
+      beijing: {
+        cityName: "北京",
+        costs: {
+          tuition: { amount: 3500, unit: "month", currency: "CNY", description: "保教费" },
+          enrollment: { amount: 8000, unit: "once", currency: "CNY", description: "入园费" },
+          meals: { amount: 800, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 600, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 1200, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 1500, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 300, unit: "month", currency: "CNY", description: "交通费" },
+          supplies: { amount: 800, unit: "year", currency: "CNY", description: "用品费" }
+        },
+        dataSource: "北京幼教网"
+      },
+      shanghai: {
+        cityName: "上海",
+        costs: {
+          tuition: { amount: 4000, unit: "month", currency: "CNY", description: "保教费" },
+          enrollment: { amount: 10000, unit: "once", currency: "CNY", description: "入园费" },
+          meals: { amount: 900, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 700, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 1400, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 1800, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 350, unit: "month", currency: "CNY", description: "交通费" },
+          supplies: { amount: 1000, unit: "year", currency: "CNY", description: "用品费" }
+        },
+        dataSource: "上海幼教网"
+      },
+      guangzhou: {
+        cityName: "广州",
+        costs: {
+          tuition: { amount: 2800, unit: "month", currency: "CNY", description: "保教费" },
+          enrollment: { amount: 6000, unit: "once", currency: "CNY", description: "入园费" },
+          meals: { amount: 650, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 500, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 1000, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 1200, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 250, unit: "month", currency: "CNY", description: "交通费" },
+          supplies: { amount: 600, unit: "year", currency: "CNY", description: "用品费" }
+        },
+        dataSource: "广州幼教网"
+      },
+      shenzhen: {
+        cityName: "深圳",
+        costs: {
+          tuition: { amount: 4200, unit: "month", currency: "CNY", description: "保教费" },
+          enrollment: { amount: 12000, unit: "once", currency: "CNY", description: "入园费" },
+          meals: { amount: 1000, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 800, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 1500, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 2000, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 400, unit: "month", currency: "CNY", description: "交通费" },
+          supplies: { amount: 1200, unit: "year", currency: "CNY", description: "用品费" }
+        },
+        dataSource: "深圳幼教网"
+      },
+      hangzhou: {
+        cityName: "杭州",
+        costs: {
+          tuition: { amount: 3200, unit: "month", currency: "CNY", description: "保教费" },
+          enrollment: { amount: 7000, unit: "once", currency: "CNY", description: "入园费" },
+          meals: { amount: 750, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 550, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 1100, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 1400, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 280, unit: "month", currency: "CNY", description: "交通费" },
+          supplies: { amount: 700, unit: "year", currency: "CNY", description: "用品费" }
+        },
+        dataSource: "杭州幼教网"
+      },
+      chengdu: {
+        cityName: "成都",
+        costs: {
+          tuition: { amount: 2500, unit: "month", currency: "CNY", description: "保教费" },
+          enrollment: { amount: 5000, unit: "once", currency: "CNY", description: "入园费" },
+          meals: { amount: 600, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 450, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 900, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 1100, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 200, unit: "month", currency: "CNY", description: "交通费" },
+          supplies: { amount: 500, unit: "year", currency: "CNY", description: "用品费" }
+        },
+        dataSource: "成都幼教网"
+      },
+      wuhan: {
+        cityName: "武汉",
+        costs: {
+          tuition: { amount: 2200, unit: "month", currency: "CNY", description: "保教费" },
+          enrollment: { amount: 4500, unit: "once", currency: "CNY", description: "入园费" },
+          meals: { amount: 550, unit: "month", currency: "CNY", description: "餐费" },
+          uniform: { amount: 400, unit: "set", currency: "CNY", description: "校服费" },
+          books: { amount: 800, unit: "year", currency: "CNY", description: "教材费" },
+          activities: { amount: 1000, unit: "year", currency: "CNY", description: "活动费" },
+          transport: { amount: 180, unit: "month", currency: "CNY", description: "交通费" },
+          supplies: { amount: 450, unit: "year", currency: "CNY", description: "用品费" }
+        },
+        dataSource: "武汉幼教网"
+      }
+    }
+  },
+
   // 小学阶段数据
   primarySchool: {
     // 公立小学（按城市）

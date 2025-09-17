@@ -23,9 +23,34 @@ class EducationCostAPI {
   }
 
   /**
+   * 获取幼儿园阶段费用数据
+   * @param {string} type - 学校类型 ('public' | 'private')
+   * @param {string} city - 城市代码 ('beijing', 'shanghai', 'guangzhou', 'shenzhen', 'hangzhou', 'chengdu', 'wuhan')
+   * @returns {Object} 费用数据对象
+   */
+  getKindergartenCosts(type, city) {
+    try {
+      const data = this.primaryData.kindergarten[type][city];
+      if (!data) {
+        throw new Error(`未找到 ${city} 的${type === 'public' ? '公立' : '私立'}幼儿园数据`);
+      }
+      return {
+        stage: 'kindergarten',
+        type: type === 'public' ? '公立' : '私立',
+        location: data.cityName,
+        costs: data.costs,
+        dataSource: data.dataSource
+      };
+    } catch (error) {
+      console.error('获取幼儿园数据失败:', error);
+      return null;
+    }
+  }
+
+  /**
    * 获取小学阶段费用数据
    * @param {string} type - 学校类型 ('public' | 'private')
-   * @param {string} city - 城市代码 ('beijing', 'shanghai', 'guangzhou', 'shenzhen', 'hangzhou', 'nanjing', 'chengdu', 'wuhan')
+   * @param {string} city - 城市代码 ('beijing', 'shanghai', 'guangzhou', 'shenzhen', 'hangzhou', 'chengdu', 'wuhan')
    * @returns {Object} 费用数据对象
    */
   getPrimarySchoolCosts(type, city) {
