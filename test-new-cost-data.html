@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幼小初费用数据测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; }
+        .error { color: red; }
+        .success { color: green; }
+        button { margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>幼小初费用数据测试</h1>
+    
+    <div class="test-section">
+        <h3>测试1: 城市映射</h3>
+        <button onclick="testCityMapping()">测试城市映射</button>
+        <div id="cityMappingResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>测试2: 费用数据获取</h3>
+        <button onclick="testCostDataRetrieval()">测试费用数据获取</button>
+        <div id="costDataResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>测试3: 费用计算</h3>
+        <button onclick="testCostCalculation()">测试费用计算</button>
+        <div id="costCalculationResult" class="result"></div>
+    </div>
+
+    <!-- 引入必要的数据文件 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="kindergarten-primary-middle-cost-data.js"></script>
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+
+    <script>
+        let adapter;
+        
+        // 初始化
+        try {
+            adapter = new KindergartenPrimaryMiddleAdapter();
+            console.log('适配器初始化成功');
+        } catch (error) {
+            console.error('适配器初始化失败:', error);
+        }
+
+        function testCityMapping() {
+            const result = document.getElementById('cityMappingResult');
+            try {
+                const testCases = [
+                    { city: 'beijing', expected: '一线城市' },
+                    { city: 'chengdu', expected: '二线城市' },
+                    { city: 'wuxi', expected: '三线城市' },
+                    { city: 'unknown', expected: '四线及以下' }
+                ];
+                
+                let html = '<h4>城市映射测试结果:</h4>';
+                let allPassed = true;
+                
+                testCases.forEach(testCase => {
+                    const actualTier = getCityTier(testCase.city);
+                    const passed = actualTier === testCase.expected;
+                    allPassed = allPassed && passed;
+                    
+                    html += `<p class="${passed ? 'success' : 'error'}">
+                        ${testCase.city} -> ${actualTier} 
+                        (期望: ${testCase.expected}) 
+                        ${passed ? '✅' : '❌'}
+                    </p>`;
+                });
+                
+                html += `<p><strong>总体结果: ${allPassed ? '✅ 通过' : '❌ 失败'}</strong></p>`;
+                result.innerHTML = html;
+                
+            } catch (error) {
+                result.innerHTML = `<p class="error">测试失败: ${error.message}</p>`;
+            }
+        }
+
+        function testCostDataRetrieval() {
+            const result = document.getElementById('costDataResult');
+            try {
+                const testCases = [
+                    {
+                        stage: 'kindergarten',
+                        level: 'public',
+                        city: 'beijing',
+                        style: 'balanced',
+                        description: '北京公立幼儿园平衡风格'
+                    },
+                    {
+                        stage: 'primary',
+                        level: 'private_mid',
+                        city: 'shanghai',
+                        style: 'intensive',
+                        description: '上海私立小学(中档)鸡娃风格'
+                    },
+                    {
+                        stage: 'middle',
+                        level: 'private_high',
+                        city: 'chengdu',
+                        style: 'relaxed',
+                        description: '成都私立初中(高档)佛系风格'
+                    }
+                ];
+                
+                let html = '<h4>费用数据获取测试结果:</h4>';
+                let allPassed = true;
+                
+                testCases.forEach(testCase => {
+                    try {
+                        const costData = adapter.getCostData(
+                            testCase.stage,
+                            testCase.level,
+                            testCase.city,
+                            testCase.style
+                        );
+                        
+                        const hasCosts = costData && costData.costs;
+                        const hasRequiredFields = hasCosts && 
+                            costData.costs['学费'] && 
+                            costData.costs['餐费'] && 
+                            costData.costs['杂费'] && 
+                            costData.costs['课外费'];
+                        
+                        const passed = hasCosts && hasRequiredFields;
+                        allPassed = allPassed && passed;
+                        
+                        html += `<div class="${passed ? 'success' : 'error'}">
+                            <p><strong>${testCase.description}</strong> ${passed ? '✅' : '❌'}</p>`;
+                        
+                        if (passed) {
+                            html += `<ul>
+                                <li>城市等级: ${costData.cityTier}</li>
+                                <li>学费: ${costData.costs['学费'].amount}元/${costData.costs['学费'].unit}</li>
+                                <li>餐费: ${costData.costs['餐费'].amount}元/${costData.costs['餐费'].unit}</li>
+                                <li>杂费: ${costData.costs['杂费'].amount}元/${costData.costs['杂费'].unit}</li>
+                                <li>课外费: ${costData.costs['课外费'].amount}元/${costData.costs['课外费'].unit}</li>
+                            </ul>`;
+                        } else {
+                            html += `<p>数据获取失败或缺少必要字段</p>`;
+                        }
+                        html += `</div>`;
+                        
+                    } catch (error) {
+                        allPassed = false;
+                        html += `<div class="error">
+                            <p><strong>${testCase.description}</strong> ❌</p>
+                            <p>错误: ${error.message}</p>
+                        </div>`;
+                    }
+                });
+                
+                html += `<p><strong>总体结果: ${allPassed ? '✅ 通过' : '❌ 失败'}</strong></p>`;
+                result.innerHTML = html;
+                
+            } catch (error) {
+                result.innerHTML = `<p class="error">测试失败: ${error.message}</p>`;
+            }
+        }
+
+        function testCostCalculation() {
+            const result = document.getElementById('costCalculationResult');
+            try {
+                const testCase = {
+                    stage: 'primary',
+                    level: 'public',
+                    city: 'beijing',
+                    style: 'balanced',
+                    years: 6
+                };
+                
+                const costData = adapter.getCostData(
+                    testCase.stage,
+                    testCase.level,
+                    testCase.city,
+                    testCase.style
+                );
+                
+                const calculation = adapter.calculateTotalCost(costData, testCase.years);
+                
+                let html = '<h4>费用计算测试结果:</h4>';
+                html += `<div class="success">
+                    <p><strong>北京公立小学6年总费用计算</strong> ✅</p>
+                    <ul>
+                        <li>总费用: ${calculation.totalCost.toLocaleString()}元</li>
+                        <li>年均费用: ${calculation.yearlyTotal.toLocaleString()}元</li>
+                        <li>一次性费用: ${calculation.oneTimeCost.toLocaleString()}元</li>
+                        <li>计算年数: ${calculation.years}年</li>
+                    </ul>
+                    <h5>费用详情:</h5>
+                    <ul>`;
+                
+                Object.entries(calculation.details).forEach(([key, detail]) => {
+                    html += `<li>${key}: ${detail.amount}元/${detail.unit} × ${testCase.years}年 = ${detail.itemTotal.toLocaleString()}元</li>`;
+                });
+                
+                html += `</ul></div>`;
+                result.innerHTML = html;
+                
+            } catch (error) {
+                result.innerHTML = `<p class="error">测试失败: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

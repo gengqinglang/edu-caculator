@@ -1733,11 +1733,17 @@
     <script src="education-cost-api.js"></script>
     <script src="education-stages-config.js"></script>
     <script src="education-data-adapter.js"></script>
+    
+    <!-- 新的幼小初费用数据和适配器 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="kindergarten-primary-middle-cost-data.js"></script>
+    <script src="kindergarten-primary-middle-adapter.js"></script>
 
     <script>
         // 全局变量
         let educationAPI;
         let dataAdapter;
+        let kindergartenPrimaryMiddleAdapter; // 新的幼小初适配器
         let userPlan = {
             currentStage: '',
             currentGrade: '',
@@ -1758,6 +1764,7 @@
             try {
                 educationAPI = new EducationCostAPI();
                 dataAdapter = new EducationDataAdapter(educationAPI, EDUCATION_STAGES_CONFIG);
+                kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
                 console.log('✅ 教育规划计算器初始化成功');
                 
                 // 显示系统信息
@@ -2925,6 +2932,35 @@
                 console.log('getCurrentStageCostData - 开始执行');
                 console.log('getCurrentStageCostData - userPlan数据:', userPlan);
                 
+                // 检查是否为幼小初阶段，使用新的适配器
+                if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(userPlan.currentStage)) {
+                    console.log('使用新的幼小初适配器获取费用数据');
+                    
+                    const costDataResult = kindergartenPrimaryMiddleAdapter.getCostData(
+                        userPlan.currentStage,
+                        userPlan.currentLevel,
+                        userPlan.currentCity,
+                        userPlan.educationStyle || 'balanced'
+                    );
+                    
+                    console.log('getCurrentStageCostData - 幼小初适配器返回结果:', costDataResult);
+                    
+                    // 转换为旧格式以保持兼容性
+                    const compatibleData = {
+                        costs: costDataResult.costs,
+                        cityName: costDataResult.cityTier,
+                        stageName: costDataResult.stage,
+                        levelName: costDataResult.level,
+                        educationStyle: costDataResult.educationStyle,
+                        dataSource: costDataResult.dataSource
+                    };
+                    
+                    return compatibleData;
+                }
+                
+                // 对于其他阶段，使用原有适配器
+                console.log('使用原有适配器获取费用数据');
+                
                 // 构造选项对象，包含城市和国家信息
                 const options = {};
                 
@@ -3045,12 +3081,35 @@
                         return;
                     }
                     
-                    // 构造选项对象
-                    const dataOptions = {};
-                    if (cityCode) dataOptions.city = cityCode;
-                    if (countryCode) dataOptions.country = countryCode;
+                    // 检查是否为幼小初阶段，使用新的适配器
+                    if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
+                        console.log(`使用新的幼小初适配器获取${stageCode}阶段费用数据`);
+                        
+                        const costDataResult = kindergartenPrimaryMiddleAdapter.getCostData(
+                            stageCode,
+                            levelCode,
+                            cityCode,
+                            userPlan.educationStyle || 'balanced'
+                        );
+                        
+                        // 转换为旧格式以保持兼容性
+                        baseCostData = {
+                            costs: costDataResult.costs,
+                            cityName: costDataResult.cityTier,
+                            stageName: costDataResult.stage,
+                            levelName: costDataResult.level,
+                            educationStyle: costDataResult.educationStyle,
+                            dataSource: costDataResult.dataSource
+                        };
+                    } else {
+                        // 对于其他阶段，使用原有适配器
+                        const dataOptions = {};
+                        if (cityCode) dataOptions.city = cityCode;
+                        if (countryCode) dataOptions.country = countryCode;
+                        
+                        baseCostData = dataAdapter.getStageCostData(stageCode, levelCode, dataOptions);
+                    }
                     
-                    baseCostData = dataAdapter.getStageCostData(stageCode, levelCode, dataOptions);
                     if (!baseCostData) {
                         showError(`无法获取${stageCode}阶段的费用数据`);
                         return;
@@ -3064,7 +3123,13 @@
                 const mergedCostData = getMergedCostData(stageCode, baseCostData);
                 console.log('updateStageDisplay - mergedCostData:', mergedCostData);
                 
-                const calculation = dataAdapter.calculateTotalCost(mergedCostData, years);
+                // 根据阶段选择合适的计算器
+                let calculation;
+                if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
+                    calculation = kindergartenPrimaryMiddleAdapter.calculateTotalCost(mergedCostData, years);
+                } else {
+                    calculation = dataAdapter.calculateTotalCost(mergedCostData, years);
+                }
                 console.log('updateStageDisplay - calculation result:', calculation);
                 
                 // 更新UI
