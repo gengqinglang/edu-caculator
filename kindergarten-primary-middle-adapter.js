@@ -8,16 +8,38 @@
 class KindergartenPrimaryMiddleAdapter {
   constructor() {
     // 确保依赖的数据文件已加载
-    if (typeof KINDERGARTEN_PRIMARY_MIDDLE_COST_DATA === 'undefined') {
-      throw new Error('KINDERGARTEN_PRIMARY_MIDDLE_COST_DATA 未加载');
+    if (typeof KINDERGARTEN_COST_DATA === 'undefined') {
+      throw new Error('kindergarten-cost-data.js 未加载');
+    }
+    if (typeof PRIMARY_COST_DATA === 'undefined') {
+      throw new Error('primary-cost-data.js 未加载');
+    }
+    if (typeof MIDDLE_COST_DATA === 'undefined') {
+      throw new Error('middle-cost-data.js 未加载');
     }
     if (typeof getCityTier === 'undefined') {
       throw new Error('city-tier-mapping.js 未加载');
     }
     
-    this.costData = KINDERGARTEN_PRIMARY_MIDDLE_COST_DATA;
+    // 组合三个阶段的数据
+    this.costData = {
+      kindergarten: KINDERGARTEN_COST_DATA,
+      primary: PRIMARY_COST_DATA,
+      middle: MIDDLE_COST_DATA
+    };
     this.getCityTier = getCityTier;
-    this.getAverageCost = getAverageCost;
+  }
+
+  /**
+   * 计算平均费用值
+   * @param {object} costRange - 费用范围对象 {min: number, max: number}
+   * @returns {number} - 平均值
+   */
+  getAverageCost(costRange) {
+    if (!costRange || typeof costRange.min !== 'number' || typeof costRange.max !== 'number') {
+      return 0;
+    }
+    return Math.round((costRange.min + costRange.max) / 2);
   }
 
   /**
@@ -40,7 +62,8 @@ class KindergartenPrimaryMiddleAdapter {
       const levelName = this.mapLevelToChineseName(level);
       
       // 4. 获取基础费用数据
-      const baseCostData = this.costData[cityTier]?.[stageName]?.[levelName];
+      const stageData = this.costData[stage];
+      const baseCostData = stageData?.[cityTier]?.[levelName];
       
       if (!baseCostData) {
         console.warn(`未找到费用数据: ${cityTier} - ${stageName} - ${levelName}`);
@@ -206,9 +229,9 @@ class KindergartenPrimaryMiddleAdapter {
     return {
       costs: {
         学费: { amount: 0, unit: 'year', currency: 'CNY', description: '学费' },
-        餐费: { amount: 250, unit: 'month', currency: 'CNY', description: '餐费' },
-        杂费: { amount: 100, unit: 'month', currency: 'CNY', description: '杂费' },
-        课外费: { amount: 500, unit: 'month', currency: 'CNY', description: '课外费' }
+        餐费: { amount: 3000, unit: 'year', currency: 'CNY', description: '餐费' },
+        杂费: { amount: 1000, unit: 'year', currency: 'CNY', description: '杂费' },
+        课外费: { amount: 5000, unit: 'year', currency: 'CNY', description: '课外费' }
       },
       cityTier: '未知',
       stage: '未知',
