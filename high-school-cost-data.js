@@ -50,9 +50,9 @@ const HIGH_SCHOOL_COST_DATA = {
       meal: { min: 9600, max: 14400 }, // 800-1200元/月 * 12月
       misc: { min: 1000, max: 2000 },
       tutoring: {
-        relaxed: { min: 0, max: 5000 },
-        balanced: { min: 5000, max: 20000 },
-        intensive: { min: 20000, max: 50000 }
+        relaxed: { min: 20000, max: 30000 },
+        balanced: { min: 35000, max: 60000 },
+        intensive: { min: 80000, max: 150000 }
       }
     },
     
@@ -111,9 +111,9 @@ const HIGH_SCHOOL_COST_DATA = {
       meal: { min: 7200, max: 10800 }, // 600-900元/月 * 12月
       misc: { min: 800, max: 1500 },
       tutoring: {
-        relaxed: { min: 0, max: 3000 },
-        balanced: { min: 3000, max: 15000 },
-        intensive: { min: 15000, max: 40000 }
+        relaxed: { min: 12000, max: 20000 },
+        balanced: { min: 25000, max: 45000 },
+        intensive: { min: 60000, max: 120000 }
       }
     },
     
@@ -170,9 +170,9 @@ const HIGH_SCHOOL_COST_DATA = {
       meal: { min: 6000, max: 9600 }, // 500-800元/月 * 12月
       misc: { min: 600, max: 1000 },
       tutoring: {
-        relaxed: { min: 0, max: 2000 },
-        balanced: { min: 2000, max: 10000 },
-        intensive: { min: 10000, max: 30000 }
+        relaxed: { min: 8000, max: 15000 },
+        balanced: { min: 18000, max: 35000 },
+        intensive: { min: 45000, max: 90000 }
       }
     },
     
@@ -229,9 +229,9 @@ const HIGH_SCHOOL_COST_DATA = {
       meal: { min: 4800, max: 7200 }, // 400-600元/月 * 12月
       misc: { min: 500, max: 800 },
       tutoring: {
-        relaxed: { min: 0, max: 1000 },
-        balanced: { min: 1000, max: 8000 },
-        intensive: { min: 8000, max: 20000 }
+        relaxed: { min: 8000, max: 12000 },
+        balanced: { min: 15000, max: 25000 },
+        intensive: { min: 30000, max: 60000 }
       }
     },
     
