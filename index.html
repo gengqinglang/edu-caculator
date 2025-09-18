@@ -1618,7 +1618,7 @@
                 <!-- 教育风格选择 -->
                 <div class="input-group">
                     <label for="educationStyle">教育风格</label>
-                    <select id="educationStyle" onchange="validateInputs()">
+                    <select id="educationStyle" onchange="validateInputs(); handleEducationStyleChange()">
                         <option value="">请选择教育风格</option>
                         <option value="relaxed">佛系</option>
                         <option value="balanced">平衡</option>
@@ -1756,11 +1756,101 @@
             currentCosts: null,
             futureStages: [],
             totalInvestment: 0,
-            educationPath: []
+            educationPath: [],
+            // 新增：每个阶段独立的教育风格设置
+            stageEducationStyles: {} // 格式：{ 'primary': 'balanced', 'middle': 'intensive' }
         };
 
 
         
+        // 获取阶段特定的教育风格
+        function getStageEducationStyle(stageCode) {
+            // 如果该阶段有独立设置，使用独立设置
+            if (userPlan.stageEducationStyles[stageCode]) {
+                return userPlan.stageEducationStyles[stageCode];
+            }
+            // 否则使用基础信息的教育风格作为默认值
+            return userPlan.educationStyle || 'balanced';
+        }
+
+        // 设置阶段教育风格
+        function setStageEducationStyle(stageCode, educationStyle) {
+            userPlan.stageEducationStyles[stageCode] = educationStyle;
+            console.log(`🎯 设置${stageCode}阶段教育风格为:`, educationStyle);
+        }
+
+        // 重置所有未来阶段的教育风格为基础默认值
+        function resetAllStageEducationStyles() {
+            const defaultStyle = userPlan.educationStyle || 'balanced';
+            console.log('🔄 重置所有未来阶段教育风格为:', defaultStyle);
+            
+            // 清空现有设置
+            userPlan.stageEducationStyles = {};
+            
+            // 更新所有未来阶段选择器的值
+            const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
+            const futureStages = subsequentStages.slice(1);
+            
+            futureStages.forEach(stage => {
+                const educationStyleSelect = document.getElementById(`educationStyle-${stage.code}`);
+                if (educationStyleSelect) {
+                    educationStyleSelect.value = defaultStyle;
+                }
+            });
+        }
+
+        // 初始化未来阶段教育风格选择器的默认值
+        function initializeFutureStageEducationStyles() {
+            const defaultStyle = userPlan.educationStyle || 'balanced';
+            const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
+            const futureStages = subsequentStages.slice(1);
+            
+            futureStages.forEach(stage => {
+                const educationStyleSelect = document.getElementById(`educationStyle-${stage.code}`);
+                if (educationStyleSelect) {
+                    // 设置默认值
+                    const stageStyle = getStageEducationStyle(stage.code);
+                    educationStyleSelect.value = stageStyle;
+                    console.log(`📋 初始化${stage.code}阶段教育风格:`, stageStyle);
+                }
+            });
+        }
+
+        // 处理基础信息教育风格变化
+        function handleEducationStyleChange() {
+            const educationStyleSelect = document.getElementById('educationStyle');
+            if (!educationStyleSelect || !educationStyleSelect.value) {
+                return;
+            }
+            
+            const newEducationStyle = educationStyleSelect.value;
+            console.log('🔄 基础信息教育风格变化为:', newEducationStyle);
+            
+            // 更新用户计划中的教育风格
+            userPlan.educationStyle = newEducationStyle;
+            
+            // 如果已经开始规划（有未来阶段），重置所有未来阶段的教育风格
+            if (userPlan.currentStage && document.getElementById('futureStagesSection')) {
+                const futureStagesSection = document.getElementById('futureStagesSection');
+                if (!futureStagesSection.classList.contains('hidden')) {
+                    console.log('🔄 重置所有未来阶段教育风格并重新计算费用');
+                    resetAllStageEducationStyles();
+                    
+                    // 重新计算所有未来阶段的费用
+                    const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
+                    const futureStages = subsequentStages.slice(1);
+                    
+                    futureStages.forEach(stage => {
+                        const levelSelect = document.getElementById(`level-${stage.code}`);
+                        if (levelSelect && levelSelect.value) {
+                            // 如果该阶段已经有选择，重新计算费用
+                            updateStageCard(stage.code);
+                        }
+                    });
+                }
+            }
+        }
+
         // 初始化应用
         document.addEventListener('DOMContentLoaded', function() {
             try {
@@ -2622,6 +2712,12 @@
         // 更新阶段卡片 - 支持城市和国家选择
         // 更新阶段卡片 - 统一函数的别名
         function updateStageCard(stageCode) {
+            // 获取并保存该阶段的教育风格选择
+            const educationStyleSelect = document.getElementById(`educationStyle-${stageCode}`);
+            if (educationStyleSelect && educationStyleSelect.value) {
+                setStageEducationStyle(stageCode, educationStyleSelect.value);
+            }
+            
             updateStageDisplay(stageCode);
         }
 
@@ -3078,11 +3174,15 @@
                     if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
                         console.log(`✅ 使用新的幼小初适配器获取${stageCode}阶段费用数据`);
                         
+                        // 获取该阶段特定的教育风格
+                        const stageEducationStyle = getStageEducationStyle(stageCode);
+                        console.log(`🎯 ${stageCode}阶段使用教育风格:`, stageEducationStyle);
+                        
                         const costDataResult = kindergartenPrimaryMiddleAdapter.getCostData(
                             stageCode,
                             levelCode,
                             cityCode,
-                            userPlan.educationStyle || 'balanced'
+                            stageEducationStyle
                         );
                         
                         // 转换为旧格式以保持兼容性
@@ -3203,6 +3303,11 @@
                 stagesGrid.insertAdjacentHTML("beforeend", cardHTML);
             });
             
+            // 初始化未来阶段教育风格选择器的默认值
+            setTimeout(() => {
+                initializeFutureStageEducationStyles();
+            }, 100); // 延迟执行，确保DOM已渲染
+            
             // 如果已经是最后阶段，显示完成提示
             if (userPlan.currentStage === "phd") {
                 document.getElementById("educationComplete").classList.remove("hidden");
@@ -3240,6 +3345,15 @@
                             ${stage.educationLevels.map(level => 
                                 `<option value="${level.code}">${level.name}</option>`
                             ).join('')}
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="educationStyle-${stage.code}">教育风格</label>
+                        <select id="educationStyle-${stage.code}" onchange="updateStageCard('${stage.code}')">
+                            <option value="relaxed">佛系</option>
+                            <option value="balanced">平衡</option>
+                            <option value="intensive">鸡娃</option>
                         </select>
                     </div>
                     
