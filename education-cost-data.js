@@ -557,42 +557,33 @@ const EDUCATION_COST_DATA = {
       beijing: {
         cityName: "北京",
         costs: {
-          tuition: { amount: 2000, unit: "year", currency: "CNY", description: "学费" },
-          books: { amount: 800, unit: "year", currency: "CNY", description: "书本费" },
-          uniform: { amount: 500, unit: "set", currency: "CNY", description: "校服费" },
-          meals: { amount: 800, unit: "month", currency: "CNY", description: "餐费" },
-          accommodation: { amount: 1200, unit: "month", currency: "CNY", description: "住宿费" },
-          transport: { amount: 300, unit: "month", currency: "CNY", description: "交通费" },
-          tutoring: { amount: 1500, unit: "month", currency: "CNY", description: "课外辅导费" },
-          activities: { amount: 800, unit: "year", currency: "CNY", description: "活动费" }
+          tuition: { amount: 1400, unit: "year", currency: "CNY", description: "学费" },
+          accommodation: { amount: 1500, unit: "year", currency: "CNY", description: "住宿费" },
+          meals: { amount: 12000, unit: "year", currency: "CNY", description: "餐费" },
+          misc: { amount: 1500, unit: "year", currency: "CNY", description: "杂费" },
+          tutoring: { amount: 25000, unit: "year", currency: "CNY", description: "补课/辅导费" }
         },
         dataSource: "北京市教委官网"
       },
       shanghai: {
         cityName: "上海",
         costs: {
-          tuition: { amount: 2500, unit: "year", currency: "CNY", description: "学费" },
-          books: { amount: 900, unit: "year", currency: "CNY", description: "书本费" },
-          uniform: { amount: 600, unit: "set", currency: "CNY", description: "校服费" },
-          meals: { amount: 900, unit: "month", currency: "CNY", description: "餐费" },
-          accommodation: { amount: 1500, unit: "month", currency: "CNY", description: "住宿费" },
-          transport: { amount: 400, unit: "month", currency: "CNY", description: "交通费" },
-          tutoring: { amount: 1800, unit: "month", currency: "CNY", description: "课外辅导费" },
-          activities: { amount: 1000, unit: "year", currency: "CNY", description: "活动费" }
+          tuition: { amount: 1400, unit: "year", currency: "CNY", description: "学费" },
+          accommodation: { amount: 1500, unit: "year", currency: "CNY", description: "住宿费" },
+          meals: { amount: 12000, unit: "year", currency: "CNY", description: "餐费" },
+          misc: { amount: 1500, unit: "year", currency: "CNY", description: "杂费" },
+          tutoring: { amount: 25000, unit: "year", currency: "CNY", description: "补课/辅导费" }
         },
         dataSource: "上海市教委官网"
       },
       guangzhou: {
         cityName: "广州",
         costs: {
-          tuition: { amount: 1800, unit: "year", currency: "CNY", description: "学费" },
-          books: { amount: 700, unit: "year", currency: "CNY", description: "书本费" },
-          uniform: { amount: 500, unit: "set", currency: "CNY", description: "校服费" },
-          meals: { amount: 750, unit: "month", currency: "CNY", description: "餐费" },
-          accommodation: { amount: 1000, unit: "month", currency: "CNY", description: "住宿费" },
-          transport: { amount: 300, unit: "month", currency: "CNY", description: "交通费" },
-          tutoring: { amount: 1300, unit: "month", currency: "CNY", description: "课外辅导费" },
-          activities: { amount: 700, unit: "year", currency: "CNY", description: "活动费" }
+          tuition: { amount: 1400, unit: "year", currency: "CNY", description: "学费" },
+          accommodation: { amount: 1500, unit: "year", currency: "CNY", description: "住宿费" },
+          meals: { amount: 12000, unit: "year", currency: "CNY", description: "餐费" },
+          misc: { amount: 1500, unit: "year", currency: "CNY", description: "杂费" },
+          tutoring: { amount: 25000, unit: "year", currency: "CNY", description: "补课/辅导费" }
         },
         dataSource: "广州市教育局"
       },
