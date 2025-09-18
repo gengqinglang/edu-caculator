@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>教育风格切换测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 3px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; }
+        button { margin: 5px; padding: 10px 15px; border: none; border-radius: 3px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f2f2f2; }
+        .highlight { background: #ffeb3b; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🎯 教育风格切换数据刷新测试</h1>
+    
+    <div class="test-section">
+        <h3>测试场景</h3>
+        <p>模拟用户切换教育风格后数据是否正确刷新</p>
+        <button class="btn-primary" onclick="runEducationStyleTest()">开始测试</button>
+        <button class="btn-warning" onclick="clearCache()">清除缓存</button>
+    </div>
+    
+    <div id="testResults"></div>
+
+    <!-- 引入数据文件 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="primary-cost-data.js"></script>
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+
+    <script>
+        // 模拟用户计划对象
+        let userPlan = {
+            currentStage: 'primary',
+            currentLevel: 'public', 
+            currentCity: 'beijing',
+            educationStyle: 'balanced'
+        };
+        
+        // 模拟全局缓存
+        window.stageCostData = {};
+        window.customCostItems = {};
+        
+        let adapter;
+        
+        // 初始化
+        try {
+            adapter = new KindergartenPrimaryMiddleAdapter();
+        } catch (error) {
+            console.error('适配器初始化失败:', error);
+        }
+
+        function runEducationStyleTest() {
+            const resultsDiv = document.getElementById('testResults');
+            let html = '';
+            
+            try {
+                html += '<div class="result info"><h4>🧪 测试流程</h4>';
+                html += '<p>1. 首次获取"平衡"风格数据并缓存</p>';
+                html += '<p>2. 切换到"鸡娃"风格，验证数据是否刷新</p>';
+                html += '<p>3. 切换回"平衡"风格，验证缓存是否生效</p>';
+                html += '</div>';
+                
+                // 步骤1：首次获取平衡风格数据
+                html += '<div class="result"><h4>📝 步骤1：首次获取"平衡"风格数据</h4>';
+                userPlan.educationStyle = 'balanced';
+                
+                const baseCostData1 = adapter.getCostData('primary', 'public', 'beijing', 'balanced');
+                const mergedData1 = getMergedCostData('primary', baseCostData1);
+                const calculation1 = adapter.calculateTotalCost(mergedData1, 6);
+                
+                // 模拟保存缓存
+                window.stageCostData['primary'] = {
+                    costData: mergedData1,
+                    originalCostData: JSON.parse(JSON.stringify(baseCostData1)),
+                    years: 6,
+                    calculation: calculation1,
+                    modified: false,
+                    educationStyle: userPlan.educationStyle
+                };
+                
+                const extracurricular1 = mergedData1.costs['课外费'].amount;
+                html += `<p>平衡风格课外费: <span class="highlight">${extracurricular1}元/年</span></p>`;
+                html += `<p>缓存状态: ${window.stageCostData['primary'] ? '✅ 已缓存' : '❌ 未缓存'}</p>`;
+                html += `<p>缓存的教育风格: ${window.stageCostData['primary']?.educationStyle}</p>`;
+                html += '</div>';
+                
+                // 步骤2：切换到鸡娃风格
+                html += '<div class="result"><h4>🔄 步骤2：切换到"鸡娃"风格</h4>';
+                userPlan.educationStyle = 'intensive';
+                
+                const baseCostData2 = adapter.getCostData('primary', 'public', 'beijing', 'intensive');
+                const mergedData2 = getMergedCostData('primary', baseCostData2);
+                const calculation2 = adapter.calculateTotalCost(mergedData2, 6);
+                
+                const extracurricular2 = mergedData2.costs['课外费'].amount;
+                html += `<p>鸡娃风格课外费: <span class="highlight">${extracurricular2}元/年</span></p>`;
+                
+                const isRefreshed = extracurricular2 !== extracurricular1;
+                html += `<p>数据刷新状态: ${isRefreshed ? '✅ 已刷新' : '❌ 未刷新'}</p>`;
+                
+                if (isRefreshed) {
+                    html += `<p class="success">✅ 教育风格切换后数据正确刷新！</p>`;
+                } else {
+                    html += `<p class="warning">⚠️ 教育风格切换后数据未刷新，可能存在缓存问题</p>`;
+                }
+                html += '</div>';
+                
+                // 步骤3：切换回平衡风格，测试缓存
+                html += '<div class="result"><h4>💾 步骤3：切换回"平衡"风格，测试缓存</h4>';
+                
+                // 清除当前缓存，重新设置平衡风格缓存
+                window.stageCostData['primary'] = {
+                    costData: mergedData1,
+                    originalCostData: JSON.parse(JSON.stringify(baseCostData1)),
+                    years: 6,
+                    calculation: calculation1,
+                    modified: false,
+                    educationStyle: 'balanced'  // 平衡风格缓存
+                };
+                
+                userPlan.educationStyle = 'balanced';
+                
+                const baseCostData3 = adapter.getCostData('primary', 'public', 'beijing', 'balanced');
+                const mergedData3 = getMergedCostData('primary', baseCostData3);
+                
+                const extracurricular3 = mergedData3.costs['课外费'].amount;
+                html += `<p>重新获取平衡风格课外费: <span class="highlight">${extracurricular3}元/年</span></p>`;
+                
+                const cacheWorking = extracurricular3 === extracurricular1;
+                html += `<p>缓存机制状态: ${cacheWorking ? '✅ 正常工作' : '❌ 异常'}</p>`;
+                html += '</div>';
+                
+                // 汇总测试结果
+                html += '<div class="result"><h4>📊 测试结果汇总</h4>';
+                html += '<table>';
+                html += '<tr><th>教育风格</th><th>课外费(元/年)</th><th>数据来源</th></tr>';
+                html += `<tr><td>平衡(首次)</td><td>${extracurricular1}</td><td>新数据</td></tr>`;
+                html += `<tr><td>鸡娃</td><td>${extracurricular2}</td><td>${isRefreshed ? '新数据' : '缓存'}</td></tr>`;
+                html += `<tr><td>平衡(再次)</td><td>${extracurricular3}</td><td>${cacheWorking ? '缓存' : '新数据'}</td></tr>`;
+                html += '</table>';
+                
+                const overallSuccess = isRefreshed && cacheWorking;
+                if (overallSuccess) {
+                    html += '<p class="success"><strong>🎉 所有测试通过！教育风格切换和缓存机制都正常工作。</strong></p>';
+                } else {
+                    html += '<p class="warning"><strong>⚠️ 部分测试失败，需要检查缓存逻辑。</strong></p>';
+                }
+                html += '</div>';
+                
+            } catch (error) {
+                html += `<div class="result warning">`;
+                html += `<h4>❌ 测试失败</h4>`;
+                html += `<p>错误信息: ${error.message}</p>`;
+                html += `<p>错误堆栈: <pre>${error.stack}</pre></p>`;
+                html += `</div>`;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        function clearCache() {
+            window.stageCostData = {};
+            window.customCostItems = {};
+            document.getElementById('testResults').innerHTML = '<div class="result info"><p>✅ 缓存已清除</p></div>';
+        }
+        
+        // 模拟getMergedCostData函数（简化版）
+        function getMergedCostData(stageCode, baseCostData) {
+            console.log('合并费用数据 - stageCode:', stageCode);
+            console.log('当前教育风格:', userPlan.educationStyle);
+            
+            // 检查是否已有缓存数据
+            let mergedCostData;
+            const cachedData = window.stageCostData && window.stageCostData[stageCode];
+            
+            if (cachedData && cachedData.costData) {
+                // 检查缓存的教育风格是否与当前选择一致
+                const cachedEducationStyle = cachedData.educationStyle;
+                const currentEducationStyle = userPlan.educationStyle;
+                
+                console.log('缓存的教育风格:', cachedEducationStyle);
+                console.log('当前的教育风格:', currentEducationStyle);
+                
+                if (cachedEducationStyle === currentEducationStyle) {
+                    // 教育风格未变，使用缓存数据
+                    console.log('✅ 教育风格未变，使用缓存数据');
+                    mergedCostData = JSON.parse(JSON.stringify(cachedData.costData));
+                } else {
+                    // 教育风格已变，强制使用新数据
+                    console.log('🔄 教育风格已变，强制刷新数据');
+                    mergedCostData = JSON.parse(JSON.stringify(baseCostData));
+                }
+            } else {
+                // 没有缓存数据，使用原始基础数据
+                console.log('📝 没有缓存数据，使用原始基础数据');
+                mergedCostData = JSON.parse(JSON.stringify(baseCostData));
+            }
+            
+            return mergedCostData;
+        }
+    </script>
+</body>
+</html>

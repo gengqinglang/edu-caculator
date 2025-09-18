@@ -3004,23 +3004,39 @@
         function getMergedCostData(stageCode, baseCostData) {
             console.log('合并费用数据 - stageCode:', stageCode);
             console.log('合并费用数据 - baseCostData:', baseCostData);
+            console.log('当前教育风格:', userPlan.educationStyle);
             
-            // 检查是否已有修改过的数据
+            // 检查是否已有缓存数据
             let mergedCostData;
-            if (window.stageCostData && window.stageCostData[stageCode] && window.stageCostData[stageCode].costData) {
-                // 使用已修改的数据作为基础
-                console.log('使用已修改的数据作为基础');
-                mergedCostData = JSON.parse(JSON.stringify(window.stageCostData[stageCode].costData));
+            const cachedData = window.stageCostData && window.stageCostData[stageCode];
+            
+            if (cachedData && cachedData.costData) {
+                // 检查缓存的教育风格是否与当前选择一致
+                const cachedEducationStyle = cachedData.educationStyle;
+                const currentEducationStyle = userPlan.educationStyle;
                 
-                // 移除之前的自定义费用项（它们可能已经改变）
-                for (const key in mergedCostData.costs) {
-                    if (mergedCostData.costs[key].isCustom) {
-                        delete mergedCostData.costs[key];
+                console.log('缓存的教育风格:', cachedEducationStyle);
+                console.log('当前的教育风格:', currentEducationStyle);
+                
+                if (cachedEducationStyle === currentEducationStyle) {
+                    // 教育风格未变，使用缓存数据
+                    console.log('✅ 教育风格未变，使用缓存数据');
+                    mergedCostData = JSON.parse(JSON.stringify(cachedData.costData));
+                    
+                    // 移除之前的自定义费用项（它们可能已经改变）
+                    for (const key in mergedCostData.costs) {
+                        if (mergedCostData.costs[key].isCustom) {
+                            delete mergedCostData.costs[key];
+                        }
                     }
+                } else {
+                    // 教育风格已变，强制使用新数据
+                    console.log('🔄 教育风格已变，强制刷新数据');
+                    mergedCostData = JSON.parse(JSON.stringify(baseCostData));
                 }
             } else {
-                // 使用原始基础数据
-                console.log('使用原始基础数据');
+                // 没有缓存数据，使用原始基础数据
+                console.log('📝 没有缓存数据，使用原始基础数据');
                 mergedCostData = JSON.parse(JSON.stringify(baseCostData));
             }
             
@@ -3173,7 +3189,8 @@
                     originalCostData: JSON.parse(JSON.stringify(baseCostData)), // 原始基础数据
                     years: years,
                     calculation: calculation,
-                    modified: false
+                    modified: false,
+                    educationStyle: userPlan.educationStyle  // 保存当前教育风格用于缓存验证
                 };
                 
                 // 更新总费用汇总
