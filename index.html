@@ -2935,10 +2935,6 @@
                 console.log('getCurrentStageCostData - userPlan数据:', userPlan);
                 
                 // 检查是否为幼小初阶段，使用新的适配器
-                console.log('🔍 适配器检查 - kindergartenPrimaryMiddleAdapter:', kindergartenPrimaryMiddleAdapter);
-                console.log('🔍 适配器检查 - userPlan.currentStage:', userPlan.currentStage);
-                console.log('🔍 适配器检查 - isStageSupported结果:', kindergartenPrimaryMiddleAdapter ? kindergartenPrimaryMiddleAdapter.isStageSupported(userPlan.currentStage) : 'adapter为空');
-                
                 if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(userPlan.currentStage)) {
                     console.log('✅ 使用新的幼小初适配器获取费用数据');
                     
@@ -3014,35 +3010,10 @@
             let mergedCostData;
             const cachedData = window.stageCostData && window.stageCostData[stageCode];
             
-            if (cachedData && cachedData.costData) {
-                // 检查缓存的教育风格是否与当前选择一致
-                const cachedEducationStyle = cachedData.educationStyle;
-                const currentEducationStyle = userPlan.educationStyle;
-                
-                console.log('缓存的教育风格:', cachedEducationStyle);
-                console.log('当前的教育风格:', currentEducationStyle);
-                
-                if (cachedEducationStyle === currentEducationStyle) {
-                    // 教育风格未变，使用缓存数据
-                    console.log('✅ 教育风格未变，使用缓存数据');
-                    mergedCostData = JSON.parse(JSON.stringify(cachedData.costData));
-                    
-                    // 移除之前的自定义费用项（它们可能已经改变）
-                    for (const key in mergedCostData.costs) {
-                        if (mergedCostData.costs[key].isCustom) {
-                            delete mergedCostData.costs[key];
-                        }
-                    }
-                } else {
-                    // 教育风格已变，强制使用新数据
-                    console.log('🔄 教育风格已变，强制刷新数据');
-                    mergedCostData = JSON.parse(JSON.stringify(baseCostData));
-                }
-            } else {
-                // 没有缓存数据，使用原始基础数据
-                console.log('📝 没有缓存数据，使用原始基础数据');
-                mergedCostData = JSON.parse(JSON.stringify(baseCostData));
-            }
+            // 🚨 重要修复：任何录入栏位变化都要重新获取默认值，重新计算
+            // 完全禁用缓存机制，确保每次都使用最新的录入参数重新计算
+            console.log('🔄 按用户要求：任何录入栏位变化都重新计算，不使用缓存');
+            mergedCostData = JSON.parse(JSON.stringify(baseCostData));
             
             // 添加当前的自定义费用项
             if (window.customCostItems[stageCode]) {
@@ -3104,10 +3075,6 @@
                     }
                     
                     // 检查是否为幼小初阶段，使用新的适配器
-                    console.log(`🔍 未来阶段适配器检查 - stageCode: ${stageCode}`);
-                    console.log('🔍 未来阶段适配器检查 - kindergartenPrimaryMiddleAdapter:', kindergartenPrimaryMiddleAdapter);
-                    console.log(`🔍 未来阶段适配器检查 - isStageSupported结果:`, kindergartenPrimaryMiddleAdapter ? kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode) : 'adapter为空');
-                    
                     if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
                         console.log(`✅ 使用新的幼小初适配器获取${stageCode}阶段费用数据`);
                         
