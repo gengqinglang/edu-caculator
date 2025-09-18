@@ -136,6 +136,15 @@ class KindergartenPrimaryMiddleAdapter {
           yearlyTotal: 0,
           onceTotal: 0,
           grandTotal: 0
+        },
+        // 添加空的breakdown对象
+        breakdown: {},
+        // 添加metadata对象
+        metadata: {
+          years: years || 0,
+          defaultApplicationSchools: 1,
+          exchangeRates: { 'CNY': 1.0 },
+          calculationDate: new Date().toISOString()
         }
       };
     }
@@ -145,11 +154,15 @@ class KindergartenPrimaryMiddleAdapter {
     let oneTimeCost = 0;
     const details = {};
 
+    // 创建与原系统兼容的breakdown对象
+    const breakdown = {};
+
     // 遍历所有费用项目
     Object.entries(costData.costs).forEach(([key, cost]) => {
       const amount = cost.amount || 0;
       let itemTotal = 0;
       let yearlyAmount = 0;
+      let isOnceOnly = false;
 
       // 根据单位计算费用
       switch (cost.unit) {
@@ -172,9 +185,14 @@ class KindergartenPrimaryMiddleAdapter {
           break;
         case 'once':
         case 'set':
+          itemTotal = amount;
+          oneTimeCost += amount;
+          isOnceOnly = true;
+          break;
         case 'per_school':
           itemTotal = amount;
           oneTimeCost += amount;
+          isOnceOnly = true;
           break;
         default:
           // 默认按年计算
@@ -185,6 +203,7 @@ class KindergartenPrimaryMiddleAdapter {
 
       totalCost += itemTotal;
       
+      // 保持新的details结构
       details[key] = {
         amount: amount,
         unit: cost.unit,
@@ -192,6 +211,19 @@ class KindergartenPrimaryMiddleAdapter {
         yearlyAmount: yearlyAmount,
         description: cost.description,
         note: cost.note || null
+      };
+
+      // 添加与原系统完全兼容的breakdown结构
+      breakdown[key] = {
+        originalAmount: amount,
+        originalCurrency: cost.currency || 'CNY',
+        convertedAmount: amount, // 幼小初只用CNY，无需转换
+        exchangeRate: 1.0,       // CNY汇率为1
+        totalForPeriod: itemTotal,
+        yearlyAmount: yearlyAmount,
+        unit: cost.unit,
+        isOnceOnly: isOnceOnly,
+        schoolCount: cost.unit === 'per_school' ? 1 : 1  // 幼小初阶段默认为1
       };
     });
 
@@ -207,6 +239,15 @@ class KindergartenPrimaryMiddleAdapter {
         yearlyTotal: Math.round(yearlyTotal),    // 年均费用  
         onceTotal: Math.round(oneTimeCost),      // 一次性费用
         grandTotal: Math.round(totalCost)        // 总投资（与periodicTotal相同）
+      },
+      // 添加与原系统完全兼容的breakdown对象
+      breakdown,
+      // 添加metadata对象，保持与原系统一致
+      metadata: {
+        years,
+        defaultApplicationSchools: 1,  // 幼小初阶段默认为1
+        exchangeRates: { 'CNY': 1.0 }, // 只支持CNY
+        calculationDate: new Date().toISOString()
       }
     };
   }

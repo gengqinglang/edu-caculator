@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Breakdown字段修复测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 15px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .info { background: #d1ecf1; border-color: #bee5eb; }
+        .code { background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 3px; font-family: monospace; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Breakdown字段修复测试</h1>
+    
+    <button onclick="testBreakdownStructure()">测试Breakdown结构</button>
+    
+    <div id="testResults"></div>
+
+    <!-- 引入数据文件 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="primary-cost-data.js"></script>
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+
+    <script>
+        function testBreakdownStructure() {
+            const resultsDiv = document.getElementById('testResults');
+            let html = '';
+            
+            try {
+                // 初始化适配器
+                const adapter = new KindergartenPrimaryMiddleAdapter();
+                
+                // 测试数据获取
+                const costData = adapter.getCostData('primary', 'public', 'beijing', 'balanced');
+                const calculation = adapter.calculateTotalCost(costData, 6);
+                
+                console.log('完整计算结果:', calculation);
+                
+                // 1. 检查breakdown字段是否存在
+                html += '<div class="test-result ' + (calculation.breakdown ? 'success' : 'error') + '">';
+                html += '<h3>1. Breakdown字段检查</h3>';
+                if (calculation.breakdown) {
+                    html += '<p>✅ calculation.breakdown 存在</p>';
+                    html += `<p>包含费用项数量: ${Object.keys(calculation.breakdown).length}</p>`;
+                } else {
+                    html += '<p>❌ calculation.breakdown 不存在</p>';
+                }
+                html += '</div>';
+                
+                // 2. 检查breakdown结构完整性
+                if (calculation.breakdown) {
+                    html += '<div class="test-result info">';
+                    html += '<h3>2. Breakdown结构详情</h3>';
+                    html += '<table>';
+                    html += '<tr><th>费用项</th><th>原始金额</th><th>货币</th><th>总费用</th><th>年均费用</th><th>是否一次性</th></tr>';
+                    
+                    let allFieldsPresent = true;
+                    Object.entries(calculation.breakdown).forEach(([key, breakdown]) => {
+                        const requiredFields = ['originalAmount', 'originalCurrency', 'convertedAmount', 'exchangeRate', 'totalForPeriod', 'yearlyAmount', 'unit', 'isOnceOnly', 'schoolCount'];
+                        const missingFields = requiredFields.filter(field => breakdown[field] === undefined);
+                        
+                        if (missingFields.length > 0) {
+                            allFieldsPresent = false;
+                        }
+                        
+                        html += `<tr>
+                            <td>${key}</td>
+                            <td>${breakdown.originalAmount}</td>
+                            <td>${breakdown.originalCurrency}</td>
+                            <td>${breakdown.totalForPeriod}</td>
+                            <td>${breakdown.yearlyAmount}</td>
+                            <td>${breakdown.isOnceOnly ? '是' : '否'}</td>
+                        </tr>`;
+                    });
+                    html += '</table>';
+                    
+                    html += `<p><strong>字段完整性: ${allFieldsPresent ? '✅ 完整' : '❌ 不完整'}</strong></p>`;
+                    html += '</div>';
+                }
+                
+                // 3. 模拟原系统调用
+                html += '<div class="test-result">';
+                html += '<h3>3. 原系统调用模拟</h3>';
+                
+                try {
+                    // 模拟displayCostDetails中的调用
+                    const testKey = '学费';
+                    if (calculation.breakdown[testKey]) {
+                        const calcCost = calculation.breakdown[testKey];
+                        const totalForPeriod = calcCost.totalForPeriod;
+                        
+                        html += '<div class="success">';
+                        html += '<div class="code">';
+                        html += `// 原系统调用：<br>`;
+                        html += `calculation.breakdown['${testKey}'].totalForPeriod<br>`;
+                        html += `// 结果: ${totalForPeriod}`;
+                        html += '</div>';
+                        html += '<p>✅ 原系统调用成功</p>';
+                        html += '</div>';
+                    } else {
+                        html += '<div class="error">';
+                        html += `<p>❌ 未找到 '${testKey}' 的breakdown数据</p>`;
+                        html += '</div>';
+                    }
+                } catch (error) {
+                    html += '<div class="error">';
+                    html += `<p>❌ 原系统调用失败: ${error.message}</p>`;
+                    html += '</div>';
+                }
+                html += '</div>';
+                
+                // 4. 对比新旧结构
+                html += '<div class="test-result info">';
+                html += '<h3>4. 新旧结构对比</h3>';
+                html += '<div class="code">';
+                html += '新结构 (details):<br>';
+                if (calculation.details && calculation.details['学费']) {
+                    html += `details['学费'].itemTotal = ${calculation.details['学费'].itemTotal}<br>`;
+                }
+                html += '<br>旧结构 (breakdown):<br>';
+                if (calculation.breakdown && calculation.breakdown['学费']) {
+                    html += `breakdown['学费'].totalForPeriod = ${calculation.breakdown['学费'].totalForPeriod}<br>`;
+                }
+                html += '</div>';
+                
+                // 检查数值是否一致
+                if (calculation.details && calculation.breakdown && 
+                    calculation.details['学费'] && calculation.breakdown['学费']) {
+                    const detailsValue = calculation.details['学费'].itemTotal;
+                    const breakdownValue = calculation.breakdown['学费'].totalForPeriod;
+                    const isConsistent = detailsValue === breakdownValue;
+                    
+                    html += `<p>数值一致性: ${isConsistent ? '✅ 一致' : '❌ 不一致'} (${detailsValue} vs ${breakdownValue})</p>`;
+                }
+                html += '</div>';
+                
+                // 5. 测试metadata字段
+                html += '<div class="test-result ' + (calculation.metadata ? 'success' : 'error') + '">';
+                html += '<h3>5. Metadata字段检查</h3>';
+                if (calculation.metadata) {
+                    html += '<p>✅ calculation.metadata 存在</p>';
+                    html += `<p>计算年数: ${calculation.metadata.years}</p>`;
+                    html += `<p>汇率: ${JSON.stringify(calculation.metadata.exchangeRates)}</p>`;
+                    html += `<p>计算时间: ${calculation.metadata.calculationDate}</p>`;
+                } else {
+                    html += '<p>❌ calculation.metadata 不存在</p>';
+                }
+                html += '</div>';
+                
+            } catch (error) {
+                html += '<div class="test-result error">';
+                html += '<h3>❌ 测试失败</h3>';
+                html += `<p>错误信息: ${error.message}</p>`;
+                html += `<p>错误堆栈: <pre>${error.stack}</pre></p>`;
+                html += '</div>';
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
