@@ -1764,20 +1764,35 @@
             stageEducationStyles: {} // 格式：{ 'primary': 'balanced', 'middle': 'intensive' }
         };
 
-        // 初始化适配器
-        try {
-            kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
-            console.log('✅ 幼小初适配器初始化成功');
-        } catch (error) {
-            console.error('❌ 幼小初适配器初始化失败:', error);
+        // 初始化适配器函数
+        function initializeAdapters() {
+            try {
+                if (typeof KindergartenPrimaryMiddleAdapter !== 'undefined') {
+                    kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
+                    console.log('✅ 幼小初适配器初始化成功');
+                } else {
+                    console.warn('⚠️ KindergartenPrimaryMiddleAdapter 类未找到');
+                }
+            } catch (error) {
+                console.error('❌ 幼小初适配器初始化失败:', error);
+            }
+
+            try {
+                if (typeof HighSchoolAdapter !== 'undefined') {
+                    highSchoolAdapter = new HighSchoolAdapter();
+                    console.log('✅ 高中适配器初始化成功');
+                } else {
+                    console.warn('⚠️ HighSchoolAdapter 类未找到');
+                }
+            } catch (error) {
+                console.error('❌ 高中适配器初始化失败:', error);
+            }
         }
 
-        try {
-            highSchoolAdapter = new HighSchoolAdapter();
-            console.log('✅ 高中适配器初始化成功');
-        } catch (error) {
-            console.error('❌ 高中适配器初始化失败:', error);
-        }
+        // 页面加载完成后初始化适配器
+        window.addEventListener('load', function() {
+            initializeAdapters();
+        });
 
         
         // 获取阶段特定的教育风格
@@ -2998,6 +3013,8 @@
             try {
                 console.log('getCurrentStageCostData - 开始执行');
                 console.log('getCurrentStageCostData - userPlan数据:', userPlan);
+                console.log('getCurrentStageCostData - 当前阶段:', userPlan.currentStage);
+                console.log('getCurrentStageCostData - 高中适配器状态:', highSchoolAdapter ? '已初始化' : '未初始化');
                 
                 // 检查是否为幼小初阶段，使用新的适配器
                 if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(userPlan.currentStage)) {
@@ -3026,6 +3043,7 @@
                 }
                 
                 // 检查是否为高中阶段，使用高中适配器
+                console.log('getCurrentStageCostData - 检查高中阶段:', userPlan.currentStage, '是否支持:', highSchoolAdapter ? highSchoolAdapter.isStageSupported(userPlan.currentStage) : false);
                 if (highSchoolAdapter && highSchoolAdapter.isStageSupported(userPlan.currentStage)) {
                     console.log('✅ 使用高中适配器获取费用数据');
                     

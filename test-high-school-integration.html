@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高中集成测试</title>
+</head>
+<body>
+    <h1>高中集成测试</h1>
+    
+    <div id="results">
+        <h2>测试结果</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <!-- 引入所有依赖 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="high-school-cost-data.js"></script>
+    <script src="high-school-adapter.js"></script>
+
+    <script>
+        function runTests() {
+            const results = document.getElementById('test-results');
+            let output = '';
+
+            try {
+                // 测试1: 检查数据加载
+                output += '<h3>1. 数据加载测试</h3>';
+                output += `HIGH_SCHOOL_COST_DATA loaded: ${typeof HIGH_SCHOOL_COST_DATA !== 'undefined'}<br>`;
+                output += `getCityTier loaded: ${typeof getCityTier !== 'undefined'}<br>`;
+                output += `HighSchoolAdapter loaded: ${typeof HighSchoolAdapter !== 'undefined'}<br>`;
+
+                // 测试2: 适配器初始化
+                output += '<h3>2. 适配器初始化测试</h3>';
+                const adapter = new HighSchoolAdapter();
+                output += `Adapter created successfully: ${adapter !== null}<br>`;
+                output += `isStageSupported('high'): ${adapter.isStageSupported('high')}<br>`;
+                output += `isStageSupported('primary'): ${adapter.isStageSupported('primary')}<br>`;
+
+                // 测试3: 费用数据获取
+                output += '<h3>3. 费用数据获取测试</h3>';
+                const costData = adapter.getCostData('high', 'domesticPublic', 'beijing', '', 'balanced');
+                output += `Cost data retrieved: ${costData !== null}<br>`;
+                output += `City tier: ${costData.cityTier}<br>`;
+                output += `Stage: ${costData.stage}<br>`;
+                output += `Level: ${costData.level}<br>`;
+                
+                output += '<h4>费用项目:</h4>';
+                Object.keys(costData.costs).forEach(key => {
+                    const cost = costData.costs[key];
+                    output += `${key}: ¥${cost.amount} (${cost.description})<br>`;
+                });
+
+                // 测试4: 费用计算
+                output += '<h3>4. 费用计算测试</h3>';
+                const calculation = adapter.calculateTotalCost(costData, 3);
+                output += `Total cost: ¥${calculation.totalCost}<br>`;
+                output += `Yearly total: ¥${calculation.yearlyTotal}<br>`;
+                output += `One time cost: ¥${calculation.oneTimeCost}<br>`;
+                output += `Has summary object: ${calculation.summary !== undefined}<br>`;
+                output += `Has breakdown object: ${calculation.breakdown !== undefined}<br>`;
+
+            } catch (error) {
+                output += `<h3 style="color: red;">错误: ${error.message}</h3>`;
+                output += `<pre>${error.stack}</pre>`;
+            }
+
+            results.innerHTML = output;
+        }
+
+        // 页面加载后运行测试
+        window.onload = runTests;
+    </script>
+</body>
+</html>
