@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>兼容性修复测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 15px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        .code { background: #f8f9fa; padding: 10px; margin: 10px 0; border-radius: 3px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>🔧 兼容性修复测试</h1>
+    
+    <button onclick="testCompatibility()">测试兼容性修复</button>
+    
+    <div id="testResults"></div>
+
+    <!-- 引入数据文件 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="primary-cost-data.js"></script>
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+
+    <script>
+        function testCompatibility() {
+            const resultsDiv = document.getElementById('testResults');
+            let html = '';
+            
+            try {
+                // 初始化适配器
+                const adapter = new KindergartenPrimaryMiddleAdapter();
+                
+                // 测试数据获取
+                const costData = adapter.getCostData('primary', 'public', 'beijing', 'balanced');
+                const calculation = adapter.calculateTotalCost(costData, 6);
+                
+                console.log('计算结果:', calculation);
+                
+                // 检查新结构
+                html += '<div class="test-result success">';
+                html += '<h3>✅ 新数据结构检查</h3>';
+                html += `<p><strong>totalCost:</strong> ${calculation.totalCost}</p>`;
+                html += `<p><strong>yearlyTotal:</strong> ${calculation.yearlyTotal}</p>`;
+                html += `<p><strong>oneTimeCost:</strong> ${calculation.oneTimeCost}</p>`;
+                html += '</div>';
+                
+                // 检查兼容性结构（summary对象）
+                if (calculation.summary) {
+                    html += '<div class="test-result success">';
+                    html += '<h3>✅ 兼容性结构检查 (summary对象)</h3>';
+                    html += `<p><strong>summary.periodicTotal:</strong> ${calculation.summary.periodicTotal}</p>`;
+                    html += `<p><strong>summary.yearlyTotal:</strong> ${calculation.summary.yearlyTotal}</p>`;
+                    html += `<p><strong>summary.onceTotal:</strong> ${calculation.summary.onceTotal}</p>`;
+                    html += `<p><strong>summary.grandTotal:</strong> ${calculation.summary.grandTotal}</p>`;
+                    html += '</div>';
+                    
+                    // 验证数值一致性
+                    const periodicMatch = calculation.totalCost === calculation.summary.periodicTotal;
+                    const yearlyMatch = calculation.yearlyTotal === calculation.summary.yearlyTotal;
+                    const onceMatch = calculation.oneTimeCost === calculation.summary.onceTotal;
+                    
+                    html += '<div class="test-result ' + (periodicMatch && yearlyMatch && onceMatch ? 'success' : 'error') + '">';
+                    html += '<h3>🔍 数值一致性检查</h3>';
+                    html += `<p>periodicTotal 一致性: ${periodicMatch ? '✅' : '❌'} (${calculation.totalCost} vs ${calculation.summary.periodicTotal})</p>`;
+                    html += `<p>yearlyTotal 一致性: ${yearlyMatch ? '✅' : '❌'} (${calculation.yearlyTotal} vs ${calculation.summary.yearlyTotal})</p>`;
+                    html += `<p>onceTotal 一致性: ${onceMatch ? '✅' : '❌'} (${calculation.oneTimeCost} vs ${calculation.summary.onceTotal})</p>`;
+                    html += '</div>';
+                    
+                } else {
+                    html += '<div class="test-result error">';
+                    html += '<h3>❌ 兼容性结构缺失</h3>';
+                    html += '<p>calculation.summary 对象不存在</p>';
+                    html += '</div>';
+                }
+                
+                // 模拟原系统的调用方式
+                html += '<div class="test-result">';
+                html += '<h3>🎯 原系统调用模拟</h3>';
+                html += '<div class="code">';
+                html += '// 原系统期望的调用方式：<br>';
+                html += `Math.round(calculation.summary.periodicTotal).toLocaleString()<br>`;
+                html += '// 结果：';
+                
+                try {
+                    const result = Math.round(calculation.summary.periodicTotal).toLocaleString();
+                    html += ` ✅ ${result}`;
+                } catch (error) {
+                    html += ` ❌ ${error.message}`;
+                }
+                html += '</div>';
+                html += '</div>';
+                
+                // 测试错误情况
+                html += '<div class="test-result">';
+                html += '<h3>🚨 错误情况测试</h3>';
+                const errorCalc = adapter.calculateTotalCost(null, 0);
+                if (errorCalc.summary) {
+                    html += '<p>✅ 错误情况下也返回了 summary 对象</p>';
+                    html += `<p>错误时的 periodicTotal: ${errorCalc.summary.periodicTotal}</p>`;
+                } else {
+                    html += '<p>❌ 错误情况下缺少 summary 对象</p>';
+                }
+                html += '</div>';
+                
+            } catch (error) {
+                html += '<div class="test-result error">';
+                html += '<h3>❌ 测试失败</h3>';
+                html += `<p>错误信息: ${error.message}</p>`;
+                html += `<p>错误堆栈: <pre>${error.stack}</pre></p>`;
+                html += '</div>';
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

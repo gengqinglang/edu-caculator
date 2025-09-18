@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>数据验证测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-case { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        .raw-data { background: #e8f4fd; padding: 10px; margin: 10px 0; }
+        .calculated { background: #e8f5e8; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🔍 幼小初费用数据验证测试</h1>
+    
+    <div class="test-case">
+        <h3>测试案例：北京公立小学 - 平衡教育风格</h3>
+        <button onclick="testSpecificCase()">运行测试</button>
+        <div id="testResult"></div>
+    </div>
+
+    <!-- 引入数据文件 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="primary-cost-data.js"></script>
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+
+    <script>
+        function testSpecificCase() {
+            const resultDiv = document.getElementById('testResult');
+            
+            try {
+                // 1. 获取原始数据
+                const cityTier = getCityTier('beijing');
+                const rawData = PRIMARY_COST_DATA[cityTier]['公立'];
+                
+                console.log('原始数据:', rawData);
+                
+                // 2. 使用适配器获取处理后的数据
+                const adapter = new KindergartenPrimaryMiddleAdapter();
+                const processedData = adapter.getCostData('primary', 'public', 'beijing', 'balanced');
+                
+                console.log('处理后数据:', processedData);
+                
+                // 3. 计算期望值（手动计算平均值）
+                const expectedTuition = Math.round((rawData.tuition.min + rawData.tuition.max) / 2);
+                const expectedMeal = Math.round((rawData.meal.min + rawData.meal.max) / 2);
+                const expectedMisc = Math.round((rawData.misc.min + rawData.misc.max) / 2);
+                const expectedExtracurricular = Math.round((rawData.extracurricular.balanced.min + rawData.extracurricular.balanced.max) / 2);
+                
+                // 4. 对比结果
+                let html = '<div class="raw-data">';
+                html += '<h4>📊 原始数据 (primary-cost-data.js)</h4>';
+                html += `<p><strong>城市等级:</strong> ${cityTier}</p>`;
+                html += `<p><strong>学费:</strong> ${rawData.tuition.min} - ${rawData.tuition.max} 元/年</p>`;
+                html += `<p><strong>餐费:</strong> ${rawData.meal.min} - ${rawData.meal.max} 元/年</p>`;
+                html += `<p><strong>杂费:</strong> ${rawData.misc.min} - ${rawData.misc.max} 元/年</p>`;
+                html += `<p><strong>课外费(平衡):</strong> ${rawData.extracurricular.balanced.min} - ${rawData.extracurricular.balanced.max} 元/年</p>`;
+                html += '</div>';
+                
+                html += '<div class="calculated">';
+                html += '<h4>🧮 适配器计算结果</h4>';
+                html += `<p><strong>学费:</strong> ${processedData.costs['学费'].amount} 元/年 (期望: ${expectedTuition})</p>`;
+                html += `<p><strong>餐费:</strong> ${processedData.costs['餐费'].amount} 元/年 (期望: ${expectedMeal})</p>`;
+                html += `<p><strong>杂费:</strong> ${processedData.costs['杂费'].amount} 元/年 (期望: ${expectedMisc})</p>`;
+                html += `<p><strong>课外费:</strong> ${processedData.costs['课外费'].amount} 元/年 (期望: ${expectedExtracurricular})</p>`;
+                html += `<p><strong>教育风格:</strong> ${processedData.educationStyle}</p>`;
+                html += '</div>';
+                
+                // 5. 验证结果
+                const tuitionMatch = processedData.costs['学费'].amount === expectedTuition;
+                const mealMatch = processedData.costs['餐费'].amount === expectedMeal;
+                const miscMatch = processedData.costs['杂费'].amount === expectedMisc;
+                const extracurricularMatch = processedData.costs['课外费'].amount === expectedExtracurricular;
+                
+                html += '<div class="result">';
+                html += '<h4>✅ 验证结果</h4>';
+                html += `<p>学费匹配: ${tuitionMatch ? '✅' : '❌'}</p>`;
+                html += `<p>餐费匹配: ${mealMatch ? '✅' : '❌'}</p>`;
+                html += `<p>杂费匹配: ${miscMatch ? '✅' : '❌'}</p>`;
+                html += `<p>课外费匹配: ${extracurricularMatch ? '✅' : '❌'}</p>`;
+                
+                const allMatch = tuitionMatch && mealMatch && miscMatch && extracurricularMatch;
+                html += `<p><strong>总体结果: ${allMatch ? '✅ 数据完全匹配' : '❌ 存在不匹配'}</strong></p>`;
+                html += '</div>';
+                
+                // 6. 测试不同教育风格
+                html += '<div class="result">';
+                html += '<h4>🎯 不同教育风格的课外费对比</h4>';
+                
+                const relaxedData = adapter.getCostData('primary', 'public', 'beijing', 'relaxed');
+                const balancedData = adapter.getCostData('primary', 'public', 'beijing', 'balanced');
+                const intensiveData = adapter.getCostData('primary', 'public', 'beijing', 'intensive');
+                
+                html += `<p>佛系: ${relaxedData.costs['课外费'].amount} 元/年</p>`;
+                html += `<p>平衡: ${balancedData.costs['课外费'].amount} 元/年</p>`;
+                html += `<p>鸡娃: ${intensiveData.costs['课外费'].amount} 元/年</p>`;
+                
+                const expectedRelaxed = Math.round((rawData.extracurricular.relaxed.min + rawData.extracurricular.relaxed.max) / 2);
+                const expectedIntensive = Math.round((rawData.extracurricular.intensive.min + rawData.extracurricular.intensive.max) / 2);
+                
+                html += `<p>期望值对比:</p>`;
+                html += `<p>- 佛系期望: ${expectedRelaxed} 元/年 ${relaxedData.costs['课外费'].amount === expectedRelaxed ? '✅' : '❌'}</p>`;
+                html += `<p>- 鸡娃期望: ${expectedIntensive} 元/年 ${intensiveData.costs['课外费'].amount === expectedIntensive ? '✅' : '❌'}</p>`;
+                html += '</div>';
+                
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="result" style="color: red;">❌ 测试失败: ${error.message}</div>`;
+                console.error('测试错误:', error);
+            }
+        }
+    </script>
+</body>
+</html>

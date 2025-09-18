@@ -128,7 +128,15 @@ class KindergartenPrimaryMiddleAdapter {
         totalCost: 0,
         yearlyTotal: 0,
         oneTimeCost: 0,
-        details: {}
+        details: {},
+        years: years || 0,
+        // 为了兼容现有系统，添加summary对象
+        summary: {
+          periodicTotal: 0,
+          yearlyTotal: 0,
+          onceTotal: 0,
+          grandTotal: 0
+        }
       };
     }
 
@@ -192,7 +200,14 @@ class KindergartenPrimaryMiddleAdapter {
       yearlyTotal: Math.round(yearlyTotal), 
       oneTimeCost: Math.round(oneTimeCost),
       details: details,
-      years: years
+      years: years,
+      // 为了兼容现有系统，添加summary对象
+      summary: {
+        periodicTotal: Math.round(totalCost),    // 总费用
+        yearlyTotal: Math.round(yearlyTotal),    // 年均费用  
+        onceTotal: Math.round(oneTimeCost),      // 一次性费用
+        grandTotal: Math.round(totalCost)        // 总投资（与periodicTotal相同）
+      }
     };
   }
 
