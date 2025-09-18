@@ -1740,12 +1740,15 @@
     <script src="primary-cost-data.js"></script>
     <script src="middle-cost-data.js"></script>
     <script src="kindergarten-primary-middle-adapter.js"></script>
+    <script src="high-school-cost-data.js"></script>
+    <script src="high-school-adapter.js"></script>
 
     <script>
         // 全局变量
         let educationAPI;
         let dataAdapter;
         let kindergartenPrimaryMiddleAdapter; // 新的幼小初适配器
+        let highSchoolAdapter; // 高中适配器
         let userPlan = {
             currentStage: '',
             currentGrade: '',
@@ -1761,6 +1764,20 @@
             stageEducationStyles: {} // 格式：{ 'primary': 'balanced', 'middle': 'intensive' }
         };
 
+        // 初始化适配器
+        try {
+            kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
+            console.log('✅ 幼小初适配器初始化成功');
+        } catch (error) {
+            console.error('❌ 幼小初适配器初始化失败:', error);
+        }
+
+        try {
+            highSchoolAdapter = new HighSchoolAdapter();
+            console.log('✅ 高中适配器初始化成功');
+        } catch (error) {
+            console.error('❌ 高中适配器初始化失败:', error);
+        }
 
         
         // 获取阶段特定的教育风格
@@ -2994,6 +3011,33 @@
                     );
                     
                     console.log('getCurrentStageCostData - 幼小初适配器返回结果:', costDataResult);
+                    
+                    // 转换为旧格式以保持兼容性
+                    const compatibleData = {
+                        costs: costDataResult.costs,
+                        cityName: costDataResult.cityTier,
+                        stageName: costDataResult.stage,
+                        levelName: costDataResult.level,
+                        educationStyle: costDataResult.educationStyle,
+                        dataSource: costDataResult.dataSource
+                    };
+                    
+                    return compatibleData;
+                }
+                
+                // 检查是否为高中阶段，使用高中适配器
+                if (highSchoolAdapter && highSchoolAdapter.isStageSupported(userPlan.currentStage)) {
+                    console.log('✅ 使用高中适配器获取费用数据');
+                    
+                    const costDataResult = highSchoolAdapter.getCostData(
+                        userPlan.currentStage,
+                        userPlan.currentLevel,
+                        userPlan.currentCity,
+                        userPlan.currentCountry,
+                        userPlan.educationStyle || 'balanced'
+                    );
+                    
+                    console.log('getCurrentStageCostData - 高中适配器返回结果:', costDataResult);
                     
                     // 转换为旧格式以保持兼容性
                     const compatibleData = {
