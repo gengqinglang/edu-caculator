@@ -2935,8 +2935,12 @@
                 console.log('getCurrentStageCostData - userPlan数据:', userPlan);
                 
                 // 检查是否为幼小初阶段，使用新的适配器
+                console.log('🔍 适配器检查 - kindergartenPrimaryMiddleAdapter:', kindergartenPrimaryMiddleAdapter);
+                console.log('🔍 适配器检查 - userPlan.currentStage:', userPlan.currentStage);
+                console.log('🔍 适配器检查 - isStageSupported结果:', kindergartenPrimaryMiddleAdapter ? kindergartenPrimaryMiddleAdapter.isStageSupported(userPlan.currentStage) : 'adapter为空');
+                
                 if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(userPlan.currentStage)) {
-                    console.log('使用新的幼小初适配器获取费用数据');
+                    console.log('✅ 使用新的幼小初适配器获取费用数据');
                     
                     const costDataResult = kindergartenPrimaryMiddleAdapter.getCostData(
                         userPlan.currentStage,
@@ -3100,8 +3104,12 @@
                     }
                     
                     // 检查是否为幼小初阶段，使用新的适配器
+                    console.log(`🔍 未来阶段适配器检查 - stageCode: ${stageCode}`);
+                    console.log('🔍 未来阶段适配器检查 - kindergartenPrimaryMiddleAdapter:', kindergartenPrimaryMiddleAdapter);
+                    console.log(`🔍 未来阶段适配器检查 - isStageSupported结果:`, kindergartenPrimaryMiddleAdapter ? kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode) : 'adapter为空');
+                    
                     if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
-                        console.log(`使用新的幼小初适配器获取${stageCode}阶段费用数据`);
+                        console.log(`✅ 使用新的幼小初适配器获取${stageCode}阶段费用数据`);
                         
                         const costDataResult = kindergartenPrimaryMiddleAdapter.getCostData(
                             stageCode,
