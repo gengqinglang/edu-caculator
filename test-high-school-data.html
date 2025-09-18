@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高中费用数据测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .test-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .test-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 8px;
+        }
+        
+        .test-case {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .test-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .test-button:hover {
+            background: #2980b9;
+        }
+        
+        .test-result {
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 12px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            margin-top: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .success { color: #27ae60; font-weight: 600; }
+        .error { color: #e74c3c; font-weight: 600; }
+        .info { color: #3498db; font-weight: 600; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 高中费用数据测试</h1>
+    
+    <div class="test-section">
+        <div class="test-title">📋 测试说明</div>
+        <p>本页面用于测试新创建的高中费用数据文件，包括：</p>
+        <ul>
+            <li><strong>数据文件加载</strong>：验证high-school-cost-data.js正确加载</li>
+            <li><strong>适配器功能</strong>：验证HighSchoolAdapter正常工作</li>
+            <li><strong>费用计算</strong>：验证不同学校类型和教育风格的费用计算</li>
+            <li><strong>海外高中</strong>：验证海外高中费用数据</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">🔍 1. 数据文件加载测试</div>
+        
+        <div class="test-case">
+            <div class="test-label">测试数据文件和依赖是否正确加载</div>
+            <button class="test-button" onclick="testDataLoading()">测试数据加载</button>
+            <div id="dataLoadingResult" class="test-result"></div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">🏫 2. 国内高中费用测试</div>
+        
+        <div class="test-case">
+            <div class="test-label">测试公立高中费用数据</div>
+            <button class="test-button" onclick="testDomesticPublic()">测试公立高中</button>
+            <div id="domesticPublicResult" class="test-result"></div>
+        </div>
+        
+        <div class="test-case">
+            <div class="test-label">测试国际部/国际高中费用数据</div>
+            <button class="test-button" onclick="testInternationalSchools()">测试国际教育</button>
+            <div id="internationalResult" class="test-result"></div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">🌍 3. 海外高中费用测试</div>
+        
+        <div class="test-case">
+            <div class="test-label">测试不同国家的海外高中费用</div>
+            <button class="test-button" onclick="testOverseasSchools()">测试海外高中</button>
+            <div id="overseasResult" class="test-result"></div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">🎯 4. 教育风格影响测试</div>
+        
+        <div class="test-case">
+            <div class="test-label">测试教育风格对弹性费用的影响</div>
+            <button class="test-button" onclick="testEducationStyleImpact()">测试教育风格</button>
+            <div id="educationStyleResult" class="test-result"></div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">💰 5. 费用计算验证</div>
+        
+        <div class="test-case">
+            <div class="test-label">测试费用计算逻辑和兼容性</div>
+            <button class="test-button" onclick="testCostCalculation()">测试费用计算</button>
+            <div id="costCalculationResult" class="test-result"></div>
+        </div>
+    </div>
+
+    <!-- 引入必要的JS文件 -->
+    <script src="city-tier-mapping.js"></script>
+    <script src="high-school-cost-data.js"></script>
+    <script src="high-school-adapter.js"></script>
+
+    <script>
+        let highSchoolAdapter;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                highSchoolAdapter = new HighSchoolAdapter();
+                console.log('✅ 高中适配器初始化成功');
+            } catch (error) {
+                console.error('❌ 高中适配器初始化失败:', error);
+            }
+        });
+
+        function testDataLoading() {
+            const result = document.getElementById('dataLoadingResult');
+            try {
+                const tests = {
+                    "HIGH_SCHOOL_COST_DATA加载": typeof HIGH_SCHOOL_COST_DATA !== 'undefined',
+                    "getCityTier函数加载": typeof getCityTier !== 'undefined',
+                    "HighSchoolAdapter类加载": typeof HighSchoolAdapter !== 'undefined',
+                    "适配器实例创建": highSchoolAdapter !== undefined,
+                    "isStageSupported方法": highSchoolAdapter && typeof highSchoolAdapter.isStageSupported === 'function',
+                    "数据结构验证": HIGH_SCHOOL_COST_DATA && HIGH_SCHOOL_COST_DATA.metadata && HIGH_SCHOOL_COST_DATA.一线城市
+                };
+                
+                const success = Object.values(tests).every(v => v === true);
+                result.textContent = JSON.stringify({
+                    "测试结果": success ? "✅ 所有依赖正确加载" : "❌ 部分依赖未加载",
+                    "详细检查": tests,
+                    "数据版本": HIGH_SCHOOL_COST_DATA?.metadata?.version,
+                    "数据来源": HIGH_SCHOOL_COST_DATA?.metadata?.dataSource
+                }, null, 2);
+                result.style.color = success ? '#27ae60' : '#e74c3c';
+            } catch (error) {
+                result.textContent = '❌ 测试失败: ' + error.message;
+                result.style.color = '#e74c3c';
+            }
+        }
+
+        function testDomesticPublic() {
+            const result = document.getElementById('domesticPublicResult');
+            try {
+                if (!highSchoolAdapter) {
+                    throw new Error('适配器未初始化');
+                }
+                
+                const testCases = [
+                    { city: 'beijing', level: 'domesticPublic', style: 'relaxed', desc: '北京公立高中-佛系' },
+                    { city: 'shanghai', level: 'domesticPublic', style: 'balanced', desc: '上海公立高中-平衡' },
+                    { city: 'chengdu', level: 'domesticPublic', style: 'intensive', desc: '成都公立高中-鸡娃' }
+                ];
+                
+                const results = {};
+                
+                testCases.forEach(testCase => {
+                    try {
+                        const costData = highSchoolAdapter.getCostData(
+                            'high',
+                            testCase.level,
+                            testCase.city,
+                            '',
+                            testCase.style
+                        );
+                        
+                        const calculation = highSchoolAdapter.calculateTotalCost(costData, 3);
+                        
+                        results[testCase.desc] = {
+                            "城市等级": costData.cityTier,
+                            "学费": costData.costs?.学费?.amount,
+                            "住宿费": costData.costs?.住宿费?.amount,
+                            "餐费": costData.costs?.餐费?.amount,
+                            "补课辅导费": costData.costs?.补课辅导费?.amount,
+                            "3年总费用": calculation.totalCost,
+                            "年均费用": calculation.yearlyTotal
+                        };
+                    } catch (error) {
+                        results[testCase.desc] = "❌ " + error.message;
+                    }
+                });
+                
+                result.textContent = JSON.stringify(results, null, 2);
+                result.style.color = '#27ae60';
+            } catch (error) {
+                result.textContent = '❌ 测试失败: ' + error.message;
+                result.style.color = '#e74c3c';
+            }
+        }
+
+        function testInternationalSchools() {
+            const result = document.getElementById('internationalResult');
+            try {
+                if (!highSchoolAdapter) {
+                    throw new Error('适配器未初始化');
+                }
+                
+                const testCases = [
+                    { city: 'beijing', level: 'internationalPublic', style: 'balanced', desc: '北京公立国际部-平衡' },
+                    { city: 'shanghai', level: 'internationalSchool', style: 'intensive', desc: '上海国际高中-鸡娃' }
+                ];
+                
+                const results = {};
+                
+                testCases.forEach(testCase => {
+                    try {
+                        const costData = highSchoolAdapter.getCostData(
+                            'high',
+                            testCase.level,
+                            testCase.city,
+                            '',
+                            testCase.style
+                        );
+                        
+                        const calculation = highSchoolAdapter.calculateTotalCost(costData, 3);
+                        
+                        results[testCase.desc] = {
+                            "城市等级": costData.cityTier,
+                            "学费": costData.costs?.学费?.amount,
+                            "标化考试费": costData.costs?.标化考试费?.amount,
+                            "背景提升费": costData.costs?.背景提升费?.amount,
+                            "留学中介费": costData.costs?.留学中介费?.amount,
+                            "3年总费用": calculation.totalCost,
+                            "年均费用": calculation.yearlyTotal
+                        };
+                    } catch (error) {
+                        results[testCase.desc] = "❌ " + error.message;
+                    }
+                });
+                
+                result.textContent = JSON.stringify(results, null, 2);
+                result.style.color = '#27ae60';
+            } catch (error) {
+                result.textContent = '❌ 测试失败: ' + error.message;
+                result.style.color = '#e74c3c';
+            }
+        }
+
+        function testOverseasSchools() {
+            const result = document.getElementById('overseasResult');
+            try {
+                if (!highSchoolAdapter) {
+                    throw new Error('适配器未初始化');
+                }
+                
+                const countries = ['usa', 'uk', 'canada', 'australia', 'singapore'];
+                const results = {};
+                
+                countries.forEach(country => {
+                    try {
+                        const costData = highSchoolAdapter.getCostData(
+                            'high',
+                            'overseas',
+                            '',
+                            country,
+                            'balanced'
+                        );
+                        
+                        const calculation = highSchoolAdapter.calculateTotalCost(costData, 3);
+                        
+                        results[costData.level] = {
+                            "学费": costData.costs?.学费?.amount,
+                            "住宿费": costData.costs?.住宿费?.amount,
+                            "医疗保险": costData.costs?.医疗保险费?.amount,
+                            "监护人费": costData.costs?.监护人费?.amount,
+                            "生活费": costData.costs?.生活费?.amount,
+                            "3年总费用": calculation.totalCost,
+                            "年均费用": calculation.yearlyTotal
+                        };
+                    } catch (error) {
+                        results[country] = "❌ " + error.message;
+                    }
+                });
+                
+                result.textContent = JSON.stringify(results, null, 2);
+                result.style.color = '#27ae60';
+            } catch (error) {
+                result.textContent = '❌ 测试失败: ' + error.message;
+                result.style.color = '#e74c3c';
+            }
+        }
+
+        function testEducationStyleImpact() {
+            const result = document.getElementById('educationStyleResult');
+            try {
+                if (!highSchoolAdapter) {
+                    throw new Error('适配器未初始化');
+                }
+                
+                const styles = ['relaxed', 'balanced', 'intensive'];
+                const results = {};
+                
+                // 测试公立高中的补课费差异
+                results["公立高中补课费对比"] = {};
+                styles.forEach(style => {
+                    const costData = highSchoolAdapter.getCostData('high', 'domesticPublic', 'beijing', '', style);
+                    results["公立高中补课费对比"][`${style}风格`] = costData.costs?.补课辅导费?.amount;
+                });
+                
+                // 测试国际部的弹性费用差异
+                results["国际部弹性费用对比"] = {};
+                styles.forEach(style => {
+                    const costData = highSchoolAdapter.getCostData('high', 'internationalPublic', 'beijing', '', style);
+                    results["国际部弹性费用对比"][`${style}风格`] = {
+                        "标化考试费": costData.costs?.标化考试费?.amount,
+                        "背景提升费": costData.costs?.背景提升费?.amount,
+                        "留学中介费": costData.costs?.留学中介费?.amount
+                    };
+                });
+                
+                result.textContent = JSON.stringify(results, null, 2);
+                result.style.color = '#27ae60';
+            } catch (error) {
+                result.textContent = '❌ 测试失败: ' + error.message;
+                result.style.color = '#e74c3c';
+            }
+        }
+
+        function testCostCalculation() {
+            const result = document.getElementById('costCalculationResult');
+            try {
+                if (!highSchoolAdapter) {
+                    throw new Error('适配器未初始化');
+                }
+                
+                // 测试计算功能和兼容性
+                const costData = highSchoolAdapter.getCostData('high', 'internationalSchool', 'beijing', '', 'intensive');
+                const calculation = highSchoolAdapter.calculateTotalCost(costData, 3);
+                
+                const tests = {
+                    "费用数据获取": !!costData.costs,
+                    "总费用计算": typeof calculation.totalCost === 'number',
+                    "年均费用计算": typeof calculation.yearlyTotal === 'number',
+                    "一次性费用计算": typeof calculation.oneTimeCost === 'number',
+                    "详细费用明细": !!calculation.details,
+                    "兼容性summary对象": !!calculation.summary,
+                    "兼容性breakdown对象": !!calculation.breakdown,
+                    "元数据包含": !!calculation.metadata,
+                    "periodicTotal一致性": calculation.summary.periodicTotal === calculation.totalCost,
+                    "费用项数量合理": Object.keys(costData.costs).length >= 4
+                };
+                
+                const success = Object.values(tests).every(v => v === true);
+                
+                const results = {
+                    "兼容性测试": success ? "✅ 通过" : "❌ 失败",
+                    "测试详情": tests,
+                    "示例计算结果": {
+                        "学校类型": costData.level,
+                        "城市等级": costData.cityTier,
+                        "教育风格": costData.educationStyle,
+                        "费用项目数": Object.keys(costData.costs).length,
+                        "3年总费用": calculation.totalCost,
+                        "年均费用": calculation.yearlyTotal
+                    }
+                };
+                
+                result.textContent = JSON.stringify(results, null, 2);
+                result.style.color = success ? '#27ae60' : '#e74c3c';
+            } catch (error) {
+                result.textContent = '❌ 测试失败: ' + error.message;
+                result.style.color = '#e74c3c';
+            }
+        }
+    </script>
+</body>
+</html>
