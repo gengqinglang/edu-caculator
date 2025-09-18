@@ -32,9 +32,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 3600, max: 4800 },
       misc: { min: 1000, max: 2000 },
       extracurricular: {
-        relaxed: { min: 3000, max: 7500 },
-        balanced: { min: 9000, max: 30000 },
-        intensive: { min: 22500, max: 45000 }
+        relaxed: { min: 12000, max: 20000 },
+        balanced: { min: 30000, max: 50000 },
+        intensive: { min: 80000, max: 120000 }
       }
     },
     "私立(中档)": {
@@ -42,9 +42,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 5000, max: 7000 },
       misc: { min: 3000, max: 6000 },
       extracurricular: {
-        relaxed: { min: 3000, max: 7500 },
-        balanced: { min: 9000, max: 30000 },
-        intensive: { min: 22500, max: 45000 }
+        relaxed: { min: 12000, max: 20000 },
+        balanced: { min: 30000, max: 50000 },
+        intensive: { min: 80000, max: 120000 }
       }
     },
     "私立(高档)": {
@@ -52,9 +52,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 5000, max: 7000 },
       misc: { min: 8000, max: 15000 },
       extracurricular: {
-        relaxed: { min: 3000, max: 7500 },
-        balanced: { min: 9000, max: 30000 },
-        intensive: { min: 22500, max: 45000 }
+        relaxed: { min: 12000, max: 20000 },
+        balanced: { min: 30000, max: 50000 },
+        intensive: { min: 80000, max: 120000 }
       }
     }
   },
@@ -66,9 +66,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 3000, max: 4500 },
       misc: { min: 800, max: 1500 },
       extracurricular: {
-        relaxed: { min: 2200, max: 5500 },
-        balanced: { min: 6600, max: 22000 },
-        intensive: { min: 16500, max: 33000 }
+        relaxed: { min: 7200, max: 12000 },
+        balanced: { min: 18000, max: 30000 },
+        intensive: { min: 48000, max: 72000 }
       }
     },
     "私立(中档)": {
@@ -76,9 +76,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 4500, max: 6000 },
       misc: { min: 2500, max: 5000 },
       extracurricular: {
-        relaxed: { min: 2200, max: 5500 },
-        balanced: { min: 6600, max: 22000 },
-        intensive: { min: 16500, max: 33000 }
+        relaxed: { min: 7200, max: 12000 },
+        balanced: { min: 18000, max: 30000 },
+        intensive: { min: 48000, max: 72000 }
       }
     },
     "私立(高档)": {
@@ -86,9 +86,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 4500, max: 6000 },
       misc: { min: 6000, max: 12000 },
       extracurricular: {
-        relaxed: { min: 2200, max: 5500 },
-        balanced: { min: 6600, max: 22000 },
-        intensive: { min: 16500, max: 33000 }
+        relaxed: { min: 7200, max: 12000 },
+        balanced: { min: 18000, max: 30000 },
+        intensive: { min: 48000, max: 72000 }
       }
     }
   },
@@ -100,9 +100,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 2500, max: 3500 },
       misc: { min: 600, max: 1200 },
       extracurricular: {
-        relaxed: { min: 1700, max: 4250 },
-        balanced: { min: 5100, max: 17000 },
-        intensive: { min: 12750, max: 25500 }
+        relaxed: { min: 4800, max: 8000 },
+        balanced: { min: 12000, max: 20000 },
+        intensive: { min: 32000, max: 48000 }
       }
     },
     "私立(中档)": {
@@ -110,9 +110,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 3500, max: 5000 },
       misc: { min: 2000, max: 4000 },
       extracurricular: {
-        relaxed: { min: 1700, max: 4250 },
-        balanced: { min: 5100, max: 17000 },
-        intensive: { min: 12750, max: 25500 }
+        relaxed: { min: 4800, max: 8000 },
+        balanced: { min: 12000, max: 20000 },
+        intensive: { min: 32000, max: 48000 }
       }
     },
     "私立(高档)": {
@@ -120,9 +120,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 3500, max: 5000 },
       misc: { min: 5000, max: 10000 },
       extracurricular: {
-        relaxed: { min: 1700, max: 4250 },
-        balanced: { min: 5100, max: 17000 },
-        intensive: { min: 12750, max: 25500 }
+        relaxed: { min: 4800, max: 8000 },
+        balanced: { min: 12000, max: 20000 },
+        intensive: { min: 32000, max: 48000 }
       }
     }
   },
@@ -134,9 +134,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 2000, max: 3000 },
       misc: { min: 500, max: 1000 },
       extracurricular: {
-        relaxed: { min: 1300, max: 3250 },
-        balanced: { min: 3900, max: 13000 },
-        intensive: { min: 9750, max: 19500 }
+        relaxed: { min: 4800, max: 8000 },
+        balanced: { min: 12000, max: 20000 },
+        intensive: { min: 32000, max: 48000 }
       }
     },
     "私立(中档)": {
@@ -144,9 +144,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 3000, max: 4000 },
       misc: { min: 1500, max: 3000 },
       extracurricular: {
-        relaxed: { min: 1300, max: 3250 },
-        balanced: { min: 3900, max: 13000 },
-        intensive: { min: 9750, max: 19500 }
+        relaxed: { min: 4800, max: 8000 },
+        balanced: { min: 12000, max: 20000 },
+        intensive: { min: 32000, max: 48000 }
       }
     },
     "私立(高档)": {
@@ -154,9 +154,9 @@ const PRIMARY_COST_DATA = {
       meal: { min: 3000, max: 4000 },
       misc: { min: 4000, max: 8000 },
       extracurricular: {
-        relaxed: { min: 1300, max: 3250 },
-        balanced: { min: 3900, max: 13000 },
-        intensive: { min: 9750, max: 19500 }
+        relaxed: { min: 4800, max: 8000 },
+        balanced: { min: 12000, max: 20000 },
+        intensive: { min: 32000, max: 48000 }
       }
     }
   }

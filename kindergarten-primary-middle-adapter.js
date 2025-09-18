@@ -92,7 +92,10 @@ class KindergartenPrimaryMiddleAdapter {
           description: '杂费'
         },
         课外费: {
-          amount: this.getAverageCost(baseCostData.extracurricular[educationStyle]),
+          amount: this.applyPrivateSchoolCoefficient(
+            this.getAverageCost(baseCostData.extracurricular[educationStyle]),
+            level
+          ),
           unit: 'year',
           currency: 'CNY',
           description: '课外费',
@@ -354,6 +357,30 @@ class KindergartenPrimaryMiddleAdapter {
       isValid: errors.length === 0,
       errors: errors
     };
+  }
+
+  /**
+   * 应用私立学校系数到课外费
+   * 基于市场调研：私立中档1.4倍，私立高档2.2倍
+   * @param {number} baseAmount - 公立学校基础金额
+   * @param {string} level - 学校类型 (public, private_mid, private_high)
+   * @returns {number} - 应用系数后的金额
+   */
+  applyPrivateSchoolCoefficient(baseAmount, level) {
+    console.log(`应用私立学校系数 - 基础金额: ${baseAmount}, 学校类型: ${level}`);
+    
+    const coefficients = {
+      'public': 1.0,           // 公立学校：基准，无系数
+      'private_mid': 1.4,      // 私立中档：1.4倍（基于调研84%参与率vs47%全国平均）
+      'private_high': 2.2      // 私立高档：2.2倍（基于实际案例8-12万vs4万支出比例）
+    };
+    
+    const coefficient = coefficients[level] || 1.0;
+    const finalAmount = Math.round(baseAmount * coefficient);
+    
+    console.log(`私立学校系数计算 - 系数: ${coefficient}, 最终金额: ${finalAmount}`);
+    
+    return finalAmount;
   }
 }
 

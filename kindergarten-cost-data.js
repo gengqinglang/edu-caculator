@@ -32,9 +32,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 5400, max: 7200 },
       misc: { min: 600, max: 1000 },
       extracurricular: {
-        relaxed: { min: 1500, max: 4500 },
-        balanced: { min: 6000, max: 18000 },
-        intensive: { min: 15000, max: 30000 }
+        relaxed: { min: 8000, max: 15000 },
+        balanced: { min: 20000, max: 35000 },
+        intensive: { min: 50000, max: 80000 }
       }
     },
     "私立(中档)": {
@@ -42,9 +42,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 5400, max: 7200 },
       misc: { min: 2000, max: 4000 },
       extracurricular: {
-        relaxed: { min: 1500, max: 4500 },
-        balanced: { min: 6000, max: 18000 },
-        intensive: { min: 15000, max: 30000 }
+        relaxed: { min: 8000, max: 15000 },
+        balanced: { min: 20000, max: 35000 },
+        intensive: { min: 50000, max: 80000 }
       }
     },
     "私立(高档)": {
@@ -52,9 +52,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 5400, max: 7200 },
       misc: { min: 5000, max: 10000 },
       extracurricular: {
-        relaxed: { min: 1500, max: 4500 },
-        balanced: { min: 6000, max: 18000 },
-        intensive: { min: 15000, max: 30000 }
+        relaxed: { min: 8000, max: 15000 },
+        balanced: { min: 20000, max: 35000 },
+        intensive: { min: 50000, max: 80000 }
       }
     }
   },
@@ -66,9 +66,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 4800, max: 6600 },
       misc: { min: 500, max: 800 },
       extracurricular: {
-        relaxed: { min: 1100, max: 3300 },
-        balanced: { min: 4400, max: 13200 },
-        intensive: { min: 11000, max: 22000 }
+        relaxed: { min: 4800, max: 9000 },
+        balanced: { min: 12000, max: 21000 },
+        intensive: { min: 30000, max: 48000 }
       }
     },
     "私立(中档)": {
@@ -76,9 +76,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 4800, max: 6600 },
       misc: { min: 1500, max: 3000 },
       extracurricular: {
-        relaxed: { min: 1100, max: 3300 },
-        balanced: { min: 4400, max: 13200 },
-        intensive: { min: 11000, max: 22000 }
+        relaxed: { min: 4800, max: 9000 },
+        balanced: { min: 12000, max: 21000 },
+        intensive: { min: 30000, max: 48000 }
       }
     },
     "私立(高档)": {
@@ -86,9 +86,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 4800, max: 6600 },
       misc: { min: 4000, max: 8000 },
       extracurricular: {
-        relaxed: { min: 1100, max: 3300 },
-        balanced: { min: 4400, max: 13200 },
-        intensive: { min: 11000, max: 22000 }
+        relaxed: { min: 4800, max: 9000 },
+        balanced: { min: 12000, max: 21000 },
+        intensive: { min: 30000, max: 48000 }
       }
     }
   },
@@ -100,9 +100,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 3600, max: 5000 },
       misc: { min: 300, max: 600 },
       extracurricular: {
-        relaxed: { min: 850, max: 2550 },
-        balanced: { min: 3400, max: 10200 },
-        intensive: { min: 8500, max: 17000 }
+        relaxed: { min: 3200, max: 6000 },
+        balanced: { min: 8000, max: 14000 },
+        intensive: { min: 20000, max: 32000 }
       }
     },
     "私立(中档)": {
@@ -110,9 +110,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 3600, max: 5000 },
       misc: { min: 1000, max: 2000 },
       extracurricular: {
-        relaxed: { min: 850, max: 2550 },
-        balanced: { min: 3400, max: 10200 },
-        intensive: { min: 8500, max: 17000 }
+        relaxed: { min: 3200, max: 6000 },
+        balanced: { min: 8000, max: 14000 },
+        intensive: { min: 20000, max: 32000 }
       }
     },
     "私立(高档)": {
@@ -120,9 +120,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 3600, max: 5000 },
       misc: { min: 3000, max: 6000 },
       extracurricular: {
-        relaxed: { min: 850, max: 2550 },
-        balanced: { min: 3400, max: 10200 },
-        intensive: { min: 8500, max: 17000 }
+        relaxed: { min: 3200, max: 6000 },
+        balanced: { min: 8000, max: 14000 },
+        intensive: { min: 20000, max: 32000 }
       }
     }
   },
@@ -134,9 +134,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 3000, max: 4200 },
       misc: { min: 200, max: 500 },
       extracurricular: {
-        relaxed: { min: 650, max: 1950 },
-        balanced: { min: 2600, max: 7800 },
-        intensive: { min: 6500, max: 13000 }
+        relaxed: { min: 3200, max: 6000 },
+        balanced: { min: 8000, max: 14000 },
+        intensive: { min: 20000, max: 32000 }
       }
     },
     "私立(中档)": {
@@ -144,9 +144,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 3000, max: 4200 },
       misc: { min: 800, max: 1500 },
       extracurricular: {
-        relaxed: { min: 650, max: 1950 },
-        balanced: { min: 2600, max: 7800 },
-        intensive: { min: 6500, max: 13000 }
+        relaxed: { min: 3200, max: 6000 },
+        balanced: { min: 8000, max: 14000 },
+        intensive: { min: 20000, max: 32000 }
       }
     },
     "私立(高档)": {
@@ -154,9 +154,9 @@ const KINDERGARTEN_COST_DATA = {
       meal: { min: 3000, max: 4200 },
       misc: { min: 2000, max: 4000 },
       extracurricular: {
-        relaxed: { min: 650, max: 1950 },
-        balanced: { min: 2600, max: 7800 },
-        intensive: { min: 6500, max: 13000 }
+        relaxed: { min: 3200, max: 6000 },
+        balanced: { min: 8000, max: 14000 },
+        intensive: { min: 20000, max: 32000 }
       }
     }
   }
