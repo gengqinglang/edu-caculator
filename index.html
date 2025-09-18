@@ -1795,6 +1795,58 @@
             initializeAdapters();
         });
 
+        // 验证输入函数
+        function validateInputs() {
+            const stage = document.getElementById('currentStage').value;
+            const grade = document.getElementById('currentGrade').value;
+            const level = document.getElementById('currentLevel').value;
+            const city = document.getElementById('currentCity').value;
+            const educationStyle = document.getElementById('educationStyle').value;
+            const startBtn = document.getElementById('startPlanning');
+            
+            let isValid = stage && grade && level && city && educationStyle;
+            
+            if (startBtn) {
+                startBtn.disabled = !isValid;
+            }
+            
+            return isValid;
+        }
+
+        // 处理教育风格变化
+        function handleEducationStyleChange() {
+            console.log('🎯 教育风格变化，重新计算费用');
+            
+            // 获取当前选择的教育风格
+            const educationStyleSelect = document.getElementById('educationStyle');
+            if (!educationStyleSelect) return;
+            
+            const newStyle = educationStyleSelect.value;
+            console.log('📊 新教育风格:', newStyle);
+            
+            // 如果已经开始了教育规划，重新计算当前阶段费用
+            if (window.stageCostData && Object.keys(window.stageCostData).length > 0) {
+                console.log('🔄 重新计算当前阶段费用');
+                
+                // 触发重新计算
+                // 这里可以调用重新计算的函数
+                recalculateCurrentStageCosts();
+            }
+        }
+
+        // 重新计算当前阶段费用
+        function recalculateCurrentStageCosts() {
+            // 简单的重新计算：重新点击开始按钮的逻辑
+            const startBtn = document.getElementById('startPlanning');
+            if (startBtn && !startBtn.disabled) {
+                console.log('🔄 自动重新开始计算');
+                // 模拟点击开始按钮
+                if (typeof startEducationPlanning === 'function') {
+                    startEducationPlanning();
+                }
+            }
+        }
+
         
         // 获取阶段特定的教育风格
         function getStageEducationStyle(stageCode) {
