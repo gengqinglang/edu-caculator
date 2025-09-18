@@ -52,8 +52,8 @@ class KindergartenPrimaryMiddleAdapter {
    */
   getCostData(stage, level, city, educationStyle = 'balanced') {
     try {
-      // 1. 获取城市等级
-      const cityTier = this.getCityTier(city);
+      // 1. 获取城市等级（如果没有城市，会默认返回"四线及以下"）
+      const cityTier = this.getCityTier(city || '');
       
       // 2. 转换阶段名称
       const stageName = this.mapStageToChineseName(stage);

@@ -2658,56 +2658,6 @@
             }
         }
 
-        // 更新未来阶段的地区选择选项
-        function updateFutureStageLocationOptions(stageCode, levelCode) {
-            const citySelector = document.getElementById(`citySelector-${stageCode}`);
-            const countrySelector = document.getElementById(`countrySelector-${stageCode}`);
-            const citySelect = document.getElementById(`city-${stageCode}`);
-            const countrySelect = document.getElementById(`country-${stageCode}`);
-            
-            // 重置和隐藏所有地区选择器
-            citySelector.style.display = 'none';
-            countrySelector.style.display = 'none';
-            citySelect.disabled = true;
-            countrySelect.disabled = true;
-            citySelect.value = '';
-            countrySelect.value = '';
-            
-            // 隐藏费用相关区域
-            const costSummary = document.getElementById(`costSummary-${stageCode}`);
-            const costDetails = document.getElementById(`costDetails-${stageCode}`);
-            if (costSummary) costSummary.classList.add('hidden');
-            if (costDetails) costDetails.classList.add('hidden');
-            
-            if (!levelCode) {
-                return;
-            }
-            
-            // 根据教育水平的方向决定显示哪个选择器
-            const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(stageCode);
-            const levelInfo = stageInfo.educationLevels.find(level => level.code === levelCode);
-            
-            if (levelInfo) {
-                if (levelInfo.direction === 'domestic') {
-                    // 国内方向：自动继承当前阶段的城市，不显示选择器
-                    if (userPlan.currentCity) {
-                        citySelect.value = userPlan.currentCity;
-                        updateStageCard(stageCode);
-                    } else {
-                        // 如果没有城市信息，显示城市选择器
-                        citySelector.style.display = 'block';
-                        citySelect.disabled = false;
-                    }
-                } else if (levelInfo.direction === 'overseas') {
-                    // 海外方向：显示国家选择器
-                    countrySelector.style.display = 'block';
-                    countrySelect.disabled = false;
-                } else {
-                    // 其他方向（如国际、双语等）：直接更新卡片
-                    updateStageCard(stageCode);
-                }
-            }
-        }
 
         // 更新阶段卡片 - 支持城市和国家选择
         // 更新阶段卡片 - 统一函数的别名
@@ -3418,7 +3368,7 @@
             `;
         }
 
-        // 更新未来阶段的地区选择选项（第二个实例）
+        // 更新未来阶段的地区选择选项
         function updateFutureStageLocationOptions(stageCode, levelCode) {
             const citySelector = document.getElementById(`citySelector-${stageCode}`);
             const countrySelector = document.getElementById(`countrySelector-${stageCode}`);
@@ -3433,7 +3383,7 @@
             citySelect.value = '';
             countrySelect.value = '';
             
-            // 隐藏费用信息
+            // 暂时隐藏费用信息
             costSummary.classList.add('hidden');
             costDetails.classList.add('hidden');
             
@@ -3445,13 +3395,28 @@
             const levelInfo = stageInfo?.educationLevels?.find(level => level.code === levelCode);
             
             if (levelInfo) {
+                // 🎯 特殊处理：检查是否为幼小初阶段
+                const isKMPStage = kindergartenPrimaryMiddleAdapter && 
+                                 kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode);
+                
                 if (levelInfo.direction === 'domestic') {
-                    // 国内方向 - 检查是否有当前城市可以继承
-                    if (userPlan.currentCity) {
-                        citySelect.value = userPlan.currentCity;
+                    if (isKMPStage) {
+                        // 🚀 幼小初阶段：直接计算费用，无需等待城市选择
+                        console.log(`🎯 ${stageCode}为幼小初阶段，直接计算费用`);
+                        
+                        // 如果有当前城市，使用当前城市；否则使用默认城市进行计算
+                        if (userPlan.currentCity) {
+                            citySelect.value = userPlan.currentCity;
+                        }
                         updateStageCard(stageCode);
                     } else {
-                        citySelector.style.display = 'block';
+                        // 其他阶段：传统逻辑
+                        if (userPlan.currentCity) {
+                            citySelect.value = userPlan.currentCity;
+                            updateStageCard(stageCode);
+                        } else {
+                            citySelector.style.display = 'block';
+                        }
                     }
                 } else if (levelInfo.direction === 'overseas') {
                     // 海外方向 - 显示国家选择
