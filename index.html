@@ -205,6 +205,22 @@
             grid-template-columns: 1fr 1fr 1fr;
         }
         
+        /* 确保3个卡片时，标题和金额能够正确显示 */
+        .cost-summary.has-onetime .summary-card {
+            min-width: 0; /* 允许flex项目缩小 */
+        }
+        
+        .cost-summary.has-onetime .summary-card h4 {
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .cost-summary.has-onetime .summary-card .amount {
+            font-size: 1.3rem;
+        }
+        
         /* 移动端确保卡片显示为一行 */
         @media (max-width: 768px) {
             .cost-summary {
@@ -215,6 +231,19 @@
             .cost-summary.has-onetime {
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: 8px;
+            }
+            
+            .cost-summary.has-onetime .summary-card {
+                padding: 16px 8px;
+                min-width: 0;
+            }
+            
+            .cost-summary.has-onetime .summary-card h4 {
+                font-size: 0.8rem;
+            }
+            
+            .cost-summary.has-onetime .summary-card .amount {
+                font-size: 1.2rem;
             }
             
             .summary-card {
@@ -244,6 +273,19 @@
             .cost-summary.has-onetime {
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: 6px;
+            }
+            
+            .cost-summary.has-onetime .summary-card {
+                padding: 14px 6px;
+                min-width: 0;
+            }
+            
+            .cost-summary.has-onetime .summary-card h4 {
+                font-size: 0.75rem;
+            }
+            
+            .cost-summary.has-onetime .summary-card .amount {
+                font-size: 1.1rem;
             }
             
             .summary-card {
@@ -1393,6 +1435,18 @@
                 gap: 8px;
             }
             
+            .cost-summary.has-onetime .summary-card {
+                min-width: 0;
+            }
+            
+            .cost-summary.has-onetime .summary-card h4 {
+                font-size: 0.9rem;
+            }
+            
+            .cost-summary.has-onetime .summary-card .amount {
+                font-size: 1.1rem;
+            }
+            
             .summary-card .amount {
                 font-size: 1.2rem;
             }
@@ -2204,7 +2258,7 @@
             if (hasOnetimeCost) {
                 summaryHTML += `
                     <div class="summary-card">
-                        <h4>一次性总金额</h4>
+                        <h4>一次性费用</h4>
                         <div class="amount">¥${Math.round(calculation.summary.onceTotal).toLocaleString()}</div>
                     </div>
                 `;
@@ -2307,7 +2361,7 @@
             if (hasOnetimeCost) {
                 summaryHTML += `
                     <div class="summary-card">
-                        <h4>一次性总金额</h4>
+                        <h4>一次性费用</h4>
                         <div class="amount">¥${Math.round(calculation.summary.onceTotal).toLocaleString()}</div>
                     </div>
                 `;
