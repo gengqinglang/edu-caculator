@@ -200,11 +200,21 @@
             margin-bottom: 30px;
         }
         
-        /* 移动端确保两个卡片显示为一行 */
+        /* 当有一次性费用时，显示3个卡片 */
+        .cost-summary.has-onetime {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        
+        /* 移动端确保卡片显示为一行 */
         @media (max-width: 768px) {
             .cost-summary {
                 grid-template-columns: 1fr 1fr;
                 gap: 10px;
+            }
+            
+            .cost-summary.has-onetime {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 8px;
             }
             
             .summary-card {
@@ -229,6 +239,11 @@
             .cost-summary {
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
+            }
+            
+            .cost-summary.has-onetime {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 6px;
             }
             
             .summary-card {
@@ -1373,6 +1388,11 @@
                 gap: 10px;
             }
             
+            .cost-summary.has-onetime {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 8px;
+            }
+            
             .summary-card .amount {
                 font-size: 1.2rem;
             }
@@ -2159,7 +2179,17 @@
         function displayCostSummary(calculation, years) {
             const summaryContainer = document.getElementById('currentCostSummary');
             
-            const summaryHTML = `
+            // 检查是否有一次性费用
+            const hasOnetimeCost = calculation.summary.onceTotal && calculation.summary.onceTotal > 0;
+            
+            // 根据是否有一次性费用来决定CSS类
+            if (hasOnetimeCost) {
+                summaryContainer.className = 'cost-summary has-onetime';
+            } else {
+                summaryContainer.className = 'cost-summary';
+            }
+            
+            let summaryHTML = `
                 <div class="summary-card">
                     <h4>总费用</h4>
                     <div class="amount">¥${Math.round(calculation.summary.periodicTotal).toLocaleString()}</div>
@@ -2169,6 +2199,16 @@
                     <div class="amount">¥${Math.round(calculation.summary.yearlyTotal).toLocaleString()}/年</div>
                 </div>
             `;
+            
+            // 如果有一次性费用，添加第三个卡片
+            if (hasOnetimeCost) {
+                summaryHTML += `
+                    <div class="summary-card">
+                        <h4>一次性总金额</h4>
+                        <div class="amount">¥${Math.round(calculation.summary.onceTotal).toLocaleString()}</div>
+                    </div>
+                `;
+            }
             
             summaryContainer.innerHTML = summaryHTML;
         }
@@ -2249,7 +2289,10 @@
         
         // 创建费用汇总卡片HTML - 与当前阶段保持一致
         function createCostSummaryCards(calculation, years) {
-            return `
+            // 检查是否有一次性费用
+            const hasOnetimeCost = calculation.summary.onceTotal && calculation.summary.onceTotal > 0;
+            
+            let summaryHTML = `
                 <div class="summary-card">
                     <h4>总费用</h4>
                     <div class="amount">¥${Math.round(calculation.summary.periodicTotal).toLocaleString()}</div>
@@ -2259,6 +2302,18 @@
                     <div class="amount">¥${Math.round(calculation.summary.yearlyTotal).toLocaleString()}/年</div>
                 </div>
             `;
+            
+            // 如果有一次性费用，添加第三个卡片
+            if (hasOnetimeCost) {
+                summaryHTML += `
+                    <div class="summary-card">
+                        <h4>一次性总金额</h4>
+                        <div class="amount">¥${Math.round(calculation.summary.onceTotal).toLocaleString()}</div>
+                    </div>
+                `;
+            }
+            
+            return summaryHTML;
         }
         
         // 创建费用表格行HTML
@@ -2782,6 +2837,9 @@
                 // 未来阶段：更新阶段卡片内的汇总显示
                 const costSummary = document.getElementById(`costSummary-${stageCode}`);
                 if (costSummary) {
+                    // 检查是否有一次性费用并应用相应的CSS类
+                    const hasOnetimeCost = newCalculation.summary.onceTotal && newCalculation.summary.onceTotal > 0;
+                    costSummary.className = hasOnetimeCost ? 'cost-summary has-onetime' : 'cost-summary';
                     costSummary.innerHTML = createCostSummaryCards(newCalculation, stageData.years);
                 }
                 
@@ -3353,6 +3411,9 @@
                     // 未来阶段的处理
                     const costSummary = document.getElementById(`costSummary-${stageCode}`);
                     if (costSummary) {
+                        // 检查是否有一次性费用并应用相应的CSS类
+                        const hasOnetimeCost = calculation.summary.onceTotal && calculation.summary.onceTotal > 0;
+                        costSummary.className = hasOnetimeCost ? 'cost-summary has-onetime' : 'cost-summary';
                         costSummary.innerHTML = createCostSummaryCards(calculation, years);
                         costSummary.classList.remove('hidden');
                     }
