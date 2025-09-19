@@ -89,15 +89,10 @@ const EDUCATION_STAGES_CONFIG = {
       educationLevels: [
         { code: "domesticPublic", name: "国内公立大学", direction: "domestic" },
         { code: "domesticPrivate", name: "国内民办大学", direction: "domestic" },
-        { code: "usa", name: "美国", direction: "overseas" },
-        { code: "uk", name: "英国", direction: "overseas" },
-        { code: "australia", name: "澳洲", direction: "overseas" },
-        { code: "hongkong", name: "香港", direction: "overseas" },
-        { code: "singapore", name: "新加坡", direction: "overseas" },
-        { code: "japan", name: "日本", direction: "overseas" },
-        { code: "canada", name: "加拿大", direction: "overseas" },
-        { code: "europeOthers", name: "欧洲其他", direction: "overseas" }
+        { code: "overseas", name: "海外大学", direction: "overseas" }
       ],
+      // 海外国家选项将从数据文件动态获取
+      overseasCountries: ["usa", "uk", "australia", "hongkong", "singapore", "japan", "canada", "europeOthers"],
       nextStage: "graduate"
     },
     
@@ -112,15 +107,10 @@ const EDUCATION_STAGES_CONFIG = {
       educationLevels: [
         { code: "domesticAcademic", name: "国内学术型硕士", direction: "domestic" },
         { code: "domesticProfessional", name: "国内专业型硕士", direction: "domestic" },
-        { code: "usa", name: "美国", direction: "overseas" },
-        { code: "uk", name: "英国", direction: "overseas" },
-        { code: "australia", name: "澳洲", direction: "overseas" },
-        { code: "hongkong", name: "香港", direction: "overseas" },
-        { code: "singapore", name: "新加坡", direction: "overseas" },
-        { code: "japan", name: "日本", direction: "overseas" },
-        { code: "canada", name: "加拿大", direction: "overseas" },
-        { code: "europeOthers", name: "欧洲其他", direction: "overseas" }
+        { code: "overseas", name: "海外硕士", direction: "overseas" }
       ],
+      // 海外国家选项将从数据文件动态获取
+      overseasCountries: ["usa", "uk", "australia", "hongkong", "singapore", "japan", "canada", "europeOthers"],
       nextStage: "phd"
     },
     
@@ -134,16 +124,11 @@ const EDUCATION_STAGES_CONFIG = {
         { code: "grade4", name: "博四", year: 4 }
       ],
       educationLevels: [
-        { code: "domesticPublic", name: "国内博士", direction: "domestic" },
-        { code: "usa", name: "美国", direction: "overseas" },
-        { code: "uk", name: "英国", direction: "overseas" },
-        { code: "australia", name: "澳洲", direction: "overseas" },
-        { code: "hongkong", name: "香港", direction: "overseas" },
-        { code: "singapore", name: "新加坡", direction: "overseas" },
-        { code: "japan", name: "日本", direction: "overseas" },
-        { code: "canada", name: "加拿大", direction: "overseas" },
-        { code: "europeOthers", name: "欧洲其他", direction: "overseas" }
+        { code: "domestic", name: "国内博士", direction: "domestic" },
+        { code: "overseas", name: "海外博士", direction: "overseas" }
       ],
+      // 海外国家选项将从数据文件动态获取
+      overseasCountries: ["usa", "uk", "australia", "hongkong", "singapore", "japan", "canada", "europeOthers"],
       nextStage: null // 最终阶段
     }
   },
@@ -181,6 +166,34 @@ const EDUCATION_STAGES_CONFIG = {
     if (!gradeInfo) return stageInfo.totalYears;
     
     return stageInfo.totalYears - gradeInfo.year + 1;
+  },
+
+  // 获取海外国家选项
+  getOverseasCountries: function(stageCode) {
+    const stage = this.stages[stageCode];
+    if (!stage || !stage.overseasCountries) {
+      return [];
+    }
+    
+    // 根据阶段类型获取对应的国家枚举
+    let countryLabels = {};
+    
+    try {
+      if (stageCode === 'university' && window.UNIVERSITY_EDUCATION_LEVELS) {
+        countryLabels = window.UNIVERSITY_EDUCATION_LEVELS;
+      } else if (stageCode === 'graduate' && window.GRADUATE_EDUCATION_LEVELS) {
+        countryLabels = window.GRADUATE_EDUCATION_LEVELS;
+      } else if (stageCode === 'phd' && window.PHD_EDUCATION_LEVELS) {
+        countryLabels = window.PHD_EDUCATION_LEVELS;
+      }
+    } catch (error) {
+      console.warn('无法获取国家标签，使用默认标签');
+    }
+    
+    return stage.overseasCountries.map(code => ({
+      code: code,
+      name: countryLabels[code] || code
+    }));
   },
 
   // 获取后续教育阶段

@@ -1608,10 +1608,7 @@
                     <label for="currentCountry">留学国家</label>
                     <select id="currentCountry" disabled onchange="validateInputs()">
                         <option value="">请选择国家</option>
-                        <option value="usa">美国</option>
-                        <option value="uk">英国</option>
-                        <option value="canada">加拿大</option>
-                        <option value="australia">澳洲</option>
+                        <!-- 国家选项将根据当前教育阶段动态填充 -->
                     </select>
                 </div>
 
@@ -2033,8 +2030,8 @@
                 return adapter.getCostData(stageCode, levelCode, options.city || '', options.country || '', options.educationStyle || 'balanced');
             } else {
                 // 大学、研究生、博士适配器
-                // 参数: (stage, grade, level, city, educationStyle)
-                return adapter.getCostData(stageCode, options.grade || '', levelCode, options.city || '', options.educationStyle || '');
+                // 参数: (stage, grade, level, city, country)
+                return adapter.getCostData(stageCode, options.grade || '', levelCode, options.city || '', options.country || '');
             }
         }
 
@@ -2152,7 +2149,21 @@
                     citySelector.style.display = 'block';
                     citySelect.disabled = false;
                 } else if (levelInfo.direction === 'overseas') {
-                    // 海外方向：显示国家选择器
+                    // 海外方向：显示国家选择器并动态填充选项
+                    console.log(`🌍 ${selectedStage}为海外方向，动态填充国家选项`);
+                    
+                    // 清空现有选项
+                    countrySelect.innerHTML = '<option value="">请选择国家</option>';
+                    
+                    // 从配置文件获取国家选项
+                    const countries = EDUCATION_STAGES_CONFIG.getOverseasCountries(selectedStage);
+                    countries.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country.code;
+                        option.textContent = country.name;
+                        countrySelect.appendChild(option);
+                    });
+                    
                     countrySelector.style.display = 'block';
                     countrySelect.disabled = false;
                 }
@@ -3484,10 +3495,7 @@
                         <label for="${countrySelectId}">留学国家</label>
                         <select id="${countrySelectId}" onchange="updateStageCard('${stage.code}')">
                             <option value="">请选择国家</option>
-                            <option value="usa">美国</option>
-                            <option value="uk">英国</option>
-                            <option value="canada">加拿大</option>
-                            <option value="australia">澳洲</option>
+                            <!-- 国家选项将根据阶段动态填充 -->
                         </select>
                     </div>
                 </div>
@@ -3577,7 +3585,21 @@
                         }
                     }
                 } else if (levelInfo.direction === 'overseas') {
-                    // 海外方向 - 显示国家选择
+                    // 海外方向 - 显示国家选择器并动态填充选项
+                    console.log(`🌍 ${stageCode}为海外方向，显示国家选择器`);
+                    
+                    // 清空现有选项
+                    countrySelect.innerHTML = '<option value="">请选择国家</option>';
+                    
+                    // 从配置文件获取国家选项
+                    const countries = EDUCATION_STAGES_CONFIG.getOverseasCountries(stageCode);
+                    countries.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country.code;
+                        option.textContent = country.name;
+                        countrySelect.appendChild(option);
+                    });
+                    
                     countrySelector.style.display = 'block';
                 } else {
                     // 其他方向 - 直接更新卡片
