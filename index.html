@@ -1616,7 +1616,7 @@
                 </div>
 
                 <!-- 教育风格选择 -->
-                <div class="input-group">
+                <div class="input-group" id="educationStyleGroup">
                     <label for="educationStyle">教育风格</label>
                     <select id="educationStyle" onchange="validateInputs(); handleEducationStyleChange()">
                         <option value="">请选择教育风格</option>
@@ -1856,7 +1856,9 @@
             const educationStyle = document.getElementById('educationStyle').value;
             const startBtn = document.getElementById('startPlanning');
             
-            let isValid = stage && grade && level && city && educationStyle;
+            // 大学/研究生/博士阶段不需要教育风格
+            const needsEducationStyle = stage && !['university', 'graduate', 'phd'].includes(stage);
+            let isValid = stage && grade && level && city && (!needsEducationStyle || educationStyle);
             
             if (startBtn) {
                 startBtn.disabled = !isValid;
@@ -1944,14 +1946,19 @@
             // 清空现有设置
             userPlan.stageEducationStyles = {};
             
-            // 更新所有未来阶段选择器的值
+            // 更新所有未来阶段选择器的值（仅对需要教育风格的阶段）
             const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
             const futureStages = subsequentStages.slice(1);
             
             futureStages.forEach(stage => {
-                const educationStyleSelect = document.getElementById(`educationStyle-${stage.code}`);
-                if (educationStyleSelect) {
-                    educationStyleSelect.value = defaultStyle;
+                // 只对小学、初中、高中设置教育风格
+                const needsEducationStyle = !['university', 'graduate', 'phd'].includes(stage.code);
+                if (needsEducationStyle) {
+                    const educationStyleSelect = document.getElementById(`educationStyle-${stage.code}`);
+                    if (educationStyleSelect) {
+                        educationStyleSelect.value = defaultStyle;
+                        console.log(`🎯 重置${stage.code}阶段教育风格为:`, defaultStyle);
+                    }
                 }
             });
         }
@@ -1963,12 +1970,16 @@
             const futureStages = subsequentStages.slice(1);
             
             futureStages.forEach(stage => {
-                const educationStyleSelect = document.getElementById(`educationStyle-${stage.code}`);
-                if (educationStyleSelect) {
-                    // 设置默认值
-                    const stageStyle = getStageEducationStyle(stage.code);
-                    educationStyleSelect.value = stageStyle;
-                    console.log(`📋 初始化${stage.code}阶段教育风格:`, stageStyle);
+                // 只对需要教育风格的阶段进行初始化
+                const needsEducationStyle = !['university', 'graduate', 'phd'].includes(stage.code);
+                if (needsEducationStyle) {
+                    const educationStyleSelect = document.getElementById(`educationStyle-${stage.code}`);
+                    if (educationStyleSelect) {
+                        // 设置默认值
+                        const stageStyle = getStageEducationStyle(stage.code);
+                        educationStyleSelect.value = stageStyle;
+                        console.log(`📋 初始化${stage.code}阶段教育风格:`, stageStyle);
+                    }
                 }
             });
         }
@@ -2010,6 +2021,8 @@
             const stageSelect = document.getElementById('currentStage');
             const gradeSelect = document.getElementById('currentGrade');
             const levelSelect = document.getElementById('currentLevel');
+            const educationStyleGroup = document.getElementById('educationStyleGroup');
+            const educationStyleSelect = document.getElementById('educationStyle');
             
             const selectedStage = stageSelect.value;
             
@@ -2018,6 +2031,17 @@
             levelSelect.innerHTML = '<option value="">请先选择年级</option>';
             gradeSelect.disabled = !selectedStage;
             levelSelect.disabled = true;
+            
+            // 控制教育风格选择器的显示/隐藏
+            const needsEducationStyle = selectedStage && !['university', 'graduate', 'phd'].includes(selectedStage);
+            if (educationStyleGroup) {
+                educationStyleGroup.style.display = needsEducationStyle ? 'block' : 'none';
+                if (educationStyleSelect) {
+                    if (!needsEducationStyle) {
+                        educationStyleSelect.value = ''; // 清空不需要的教育风格
+                    }
+                }
+            }
             
             if (!selectedStage) {
                 validateInputs();
@@ -2830,9 +2854,10 @@
                 
                 console.log('📝 用户输入:', { city, stage, grade, level, country, educationStyle });
                 
-                // 验证输入
-                if (!city || !stage || !grade || !level || !educationStyle) {
-                    console.error('❌ 输入验证失败:', { city: !!city, stage: !!stage, grade: !!grade, level: !!level, educationStyle: !!educationStyle });
+                // 验证输入（大学/研究生/博士阶段不需要教育风格）
+                const needsEducationStyle = stage && !['university', 'graduate', 'phd'].includes(stage);
+                if (!city || !stage || !grade || !level || (needsEducationStyle && !educationStyle)) {
+                    console.error('❌ 输入验证失败:', { city: !!city, stage: !!stage, grade: !!grade, level: !!level, educationStyle: !!educationStyle, needsEducationStyle });
                     return;
                 }
                 
@@ -3332,6 +3357,18 @@
             const citySelectId = `city-${stage.code}`;
             const countrySelectId = `country-${stage.code}`;
             
+            // 判断是否需要教育风格选择器
+            const needsEducationStyle = !['university', 'graduate', 'phd'].includes(stage.code);
+            const educationStyleSection = needsEducationStyle ? `
+                    <div class="input-group">
+                        <label for="educationStyle-${stage.code}">教育风格</label>
+                        <select id="educationStyle-${stage.code}" onchange="updateStageCard('${stage.code}')">
+                            <option value="relaxed">佛系</option>
+                            <option value="balanced">平衡</option>
+                            <option value="intensive">鸡娃</option>
+                        </select>
+                    </div>` : '';
+            
             return `
                 <div class="stage-config">
                     <div class="input-group">
@@ -3344,14 +3381,7 @@
                         </select>
                     </div>
                     
-                    <div class="input-group">
-                        <label for="educationStyle-${stage.code}">教育风格</label>
-                        <select id="educationStyle-${stage.code}" onchange="updateStageCard('${stage.code}')">
-                            <option value="relaxed">佛系</option>
-                            <option value="balanced">平衡</option>
-                            <option value="intensive">鸡娃</option>
-                        </select>
-                    </div>
+                    ${educationStyleSection}
                     
                     <div class="input-group" id="citySelector-${stage.code}" style="display: none;">
                         <label for="${citySelectId}">所在城市</label>

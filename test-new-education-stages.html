@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大学、研究生、博士阶段功能测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .test-case {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            border-radius: 4px;
+        }
+        .test-case.error {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <h1>🎓 大学、研究生、博士阶段功能测试</h1>
+    
+    <div class="test-section">
+        <h2 class="test-title">📋 测试控制面板</h2>
+        <button onclick="runAllTests()">🚀 运行所有测试</button>
+        <button onclick="testUniversityStage()">🎓 测试大学阶段</button>
+        <button onclick="testGraduateStage()">📚 测试研究生阶段</button>
+        <button onclick="testPhdStage()">🔬 测试博士阶段</button>
+        <button onclick="clearResults()">🗑️ 清除结果</button>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">📊 测试结果</h2>
+        <div id="test-results"></div>
+    </div>
+
+    <!-- 引入所有必要的数据文件和适配器 -->
+    <script src="education-stages-config.js"></script>
+    <script src="university-cost-data.js"></script>
+    <script src="university-adapter.js"></script>
+    <script src="graduate-cost-data.js"></script>
+    <script src="graduate-adapter.js"></script>
+    <script src="phd-cost-data.js"></script>
+    <script src="phd-adapter.js"></script>
+
+    <script>
+        // 全局变量
+        let universityAdapter;
+        let graduateAdapter;
+        let phdAdapter;
+        const testResults = [];
+
+        // 初始化适配器
+        function initializeAdapters() {
+            try {
+                universityAdapter = new UniversityAdapter();
+                console.log('✅ 大学适配器初始化成功');
+                
+                graduateAdapter = new GraduateAdapter();
+                console.log('✅ 研究生适配器初始化成功');
+                
+                phdAdapter = new PhdAdapter();
+                console.log('✅ 博士适配器初始化成功');
+                
+                return true;
+            } catch (error) {
+                console.error('❌ 适配器初始化失败:', error);
+                return false;
+            }
+        }
+
+        // 添加测试结果
+        function addTestResult(title, success, details, data = null) {
+            const result = {
+                title,
+                success,
+                details,
+                data,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            
+            testResults.push(result);
+            displayTestResult(result);
+        }
+
+        // 显示测试结果
+        function displayTestResult(result) {
+            const resultsDiv = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-case ${result.success ? '' : 'error'}`;
+            
+            let dataHtml = '';
+            if (result.data) {
+                dataHtml = `<div class="test-result">${JSON.stringify(result.data, null, 2)}</div>`;
+            }
+            
+            resultDiv.innerHTML = `
+                <strong class="${result.success ? 'success' : 'error'}">
+                    ${result.success ? '✅' : '❌'} ${result.title}
+                </strong>
+                <div class="info">${result.timestamp}</div>
+                <div>${result.details}</div>
+                ${dataHtml}
+            `;
+            
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        // 清除结果
+        function clearResults() {
+            document.getElementById('test-results').innerHTML = '';
+            testResults.length = 0;
+        }
+
+        // 测试大学阶段
+        function testUniversityStage() {
+            console.log('🎓 开始测试大学阶段');
+            
+            // 测试国内公立大学
+            try {
+                const result1 = universityAdapter.getCostData('university', 'grade1', 'domesticPublic', '', '');
+                if (result1 && result1.costs) {
+                    addTestResult(
+                        '大学阶段 - 国内公立大学', 
+                        true, 
+                        `成功获取费用数据，总费用: ¥${result1.totalCost.toLocaleString()}`, 
+                        result1
+                    );
+                } else {
+                    addTestResult('大学阶段 - 国内公立大学', false, '未获取到费用数据');
+                }
+            } catch (error) {
+                addTestResult('大学阶段 - 国内公立大学', false, `错误: ${error.message}`);
+            }
+
+            // 测试美国大学
+            try {
+                const result2 = universityAdapter.getCostData('university', 'grade1', 'usa', '', '');
+                if (result2 && result2.costs) {
+                    addTestResult(
+                        '大学阶段 - 美国大学', 
+                        true, 
+                        `成功获取费用数据，总费用: ¥${result2.totalCost.toLocaleString()}`, 
+                        result2
+                    );
+                } else {
+                    addTestResult('大学阶段 - 美国大学', false, '未获取到费用数据');
+                }
+            } catch (error) {
+                addTestResult('大学阶段 - 美国大学', false, `错误: ${error.message}`);
+            }
+
+            // 测试教育水平选项
+            try {
+                const options = universityAdapter.getEducationLevelOptions();
+                addTestResult(
+                    '大学阶段 - 教育水平选项', 
+                    options.length > 0, 
+                    `获取到 ${options.length} 个教育水平选项`, 
+                    options
+                );
+            } catch (error) {
+                addTestResult('大学阶段 - 教育水平选项', false, `错误: ${error.message}`);
+            }
+        }
+
+        // 测试研究生阶段
+        function testGraduateStage() {
+            console.log('📚 开始测试研究生阶段');
+            
+            // 测试国内学术型硕士
+            try {
+                const result1 = graduateAdapter.getCostData('graduate', 'grade1', 'domesticAcademic', '', '');
+                if (result1 && result1.costs) {
+                    addTestResult(
+                        '研究生阶段 - 国内学术型硕士', 
+                        true, 
+                        `成功获取费用数据，总费用: ¥${result1.totalCost.toLocaleString()}`, 
+                        result1
+                    );
+                } else {
+                    addTestResult('研究生阶段 - 国内学术型硕士', false, '未获取到费用数据');
+                }
+            } catch (error) {
+                addTestResult('研究生阶段 - 国内学术型硕士', false, `错误: ${error.message}`);
+            }
+
+            // 测试英国硕士
+            try {
+                const result2 = graduateAdapter.getCostData('graduate', 'grade1', 'uk', '', '');
+                if (result2 && result2.costs) {
+                    addTestResult(
+                        '研究生阶段 - 英国硕士', 
+                        true, 
+                        `成功获取费用数据，总费用: ¥${result2.totalCost.toLocaleString()}`, 
+                        result2
+                    );
+                } else {
+                    addTestResult('研究生阶段 - 英国硕士', false, '未获取到费用数据');
+                }
+            } catch (error) {
+                addTestResult('研究生阶段 - 英国硕士', false, `错误: ${error.message}`);
+            }
+        }
+
+        // 测试博士阶段
+        function testPhdStage() {
+            console.log('🔬 开始测试博士阶段');
+            
+            // 测试国内博士
+            try {
+                const result1 = phdAdapter.getCostData('phd', 'grade1', 'domesticPublic', '', '');
+                if (result1 && result1.costs) {
+                    addTestResult(
+                        '博士阶段 - 国内博士', 
+                        true, 
+                        `成功获取费用数据，总费用: ¥${result1.totalCost.toLocaleString()}`, 
+                        result1
+                    );
+                } else {
+                    addTestResult('博士阶段 - 国内博士', false, '未获取到费用数据');
+                }
+            } catch (error) {
+                addTestResult('博士阶段 - 国内博士', false, `错误: ${error.message}`);
+            }
+
+            // 测试加拿大博士
+            try {
+                const result2 = phdAdapter.getCostData('phd', 'grade1', 'canada', '', '');
+                if (result2 && result2.costs) {
+                    addTestResult(
+                        '博士阶段 - 加拿大博士', 
+                        true, 
+                        `成功获取费用数据，总费用: ¥${result2.totalCost.toLocaleString()}`, 
+                        result2
+                    );
+                } else {
+                    addTestResult('博士阶段 - 加拿大博士', false, '未获取到费用数据');
+                }
+            } catch (error) {
+                addTestResult('博士阶段 - 加拿大博士', false, `错误: ${error.message}`);
+            }
+        }
+
+        // 运行所有测试
+        function runAllTests() {
+            clearResults();
+            
+            addTestResult('测试开始', true, '开始执行所有测试用例...');
+            
+            // 初始化适配器测试
+            const initSuccess = initializeAdapters();
+            addTestResult('适配器初始化', initSuccess, initSuccess ? '所有适配器初始化成功' : '适配器初始化失败');
+            
+            if (initSuccess) {
+                testUniversityStage();
+                testGraduateStage();
+                testPhdStage();
+                
+                addTestResult('测试完成', true, `所有测试执行完毕，共 ${testResults.length} 个测试用例`);
+            }
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('load', function() {
+            console.log('🚀 页面加载完成，准备测试');
+            addTestResult('页面初始化', true, '测试页面加载完成，点击按钮开始测试');
+        });
+    </script>
+</body>
+</html>
