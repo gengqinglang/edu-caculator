@@ -51,6 +51,13 @@ class HighSchoolAdapter {
    */
   getCostData(stage, level, city, country, educationStyle = 'balanced') {
     try {
+      console.log('🔍 高中适配器 getCostData 调试信息:');
+      console.log('  - stage:', stage);
+      console.log('  - level:', level);
+      console.log('  - city:', city);
+      console.log('  - country:', country);
+      console.log('  - educationStyle:', educationStyle);
+      
       // 判断是否为海外高中
       if (level && level.includes('overseas')) {
         return this.getOverseasCostData(level, country, educationStyle);
@@ -59,6 +66,9 @@ class HighSchoolAdapter {
       // 国内高中逻辑
       const cityTier = this.getCityTier(city || '');
       const levelName = this.mapLevelToChineseName(level);
+      
+      console.log('  - cityTier (计算结果):', cityTier);
+      console.log('  - levelName (映射结果):', levelName);
       
       const stageData = this.costData[cityTier];
       const baseCostData = stageData?.[levelName];
