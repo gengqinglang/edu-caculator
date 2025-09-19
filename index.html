@@ -2992,6 +2992,18 @@
             try {
                 console.log('🚀 开始教育规划...');
                 
+                // 🧹 清除所有缓存数据，防止跨轮次污染
+                console.log('🧹 清除缓存数据，防止跨轮次污染');
+                if (window.stageCostData) {
+                    console.log('  - 清除前缓存大小:', Object.keys(window.stageCostData).length);
+                    window.stageCostData = {};
+                    console.log('  - 清除后缓存大小:', Object.keys(window.stageCostData).length);
+                }
+                if (window.customCostItems) {
+                    console.log('  - 清除自定义费用项缓存');
+                    window.customCostItems = {};
+                }
+                
                 // 获取用户输入
                 const city = document.getElementById('currentCity').value;
                 const stage = document.getElementById('currentStage').value;
@@ -3617,7 +3629,7 @@
                 <div class="stage-config">
                     <div class="input-group">
                         <label for="level-${stage.code}">教育水平</label>
-                        <select id="level-${stage.code}" onchange="updateFutureStageLocationOptions('${stage.code}', this.value)">
+                        <select id="level-${stage.code}" onchange="console.log('🔄 未来阶段教育水平变更:', '${stage.code}', this.value); updateFutureStageLocationOptions('${stage.code}', this.value)">
                             <option value="">请选择教育水平</option>
                             ${stage.educationLevels.map(level => 
                                 `<option value="${level.code}">${level.name}</option>`
@@ -3687,6 +3699,14 @@
 
         // 更新未来阶段的地区选择选项
         function updateFutureStageLocationOptions(stageCode, levelCode) {
+            console.log('🔄 updateFutureStageLocationOptions 调用:', stageCode, levelCode);
+            
+            // 🧹 清除该阶段的缓存数据，防止使用旧的教育水平数据
+            if (window.stageCostData && window.stageCostData[stageCode]) {
+                console.log(`🧹 清除 ${stageCode} 阶段的缓存数据`);
+                delete window.stageCostData[stageCode];
+            }
+            
             const citySelector = document.getElementById(`citySelector-${stageCode}`);
             const countrySelector = document.getElementById(`countrySelector-${stageCode}`);
             const citySelect = document.getElementById(`city-${stageCode}`);
