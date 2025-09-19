@@ -248,13 +248,11 @@ class HighSchoolAdapter {
     const mapping = {
       // 完整名称映射
       'domesticPublic': '公立高中',
-      'domesticPrivate': '私立高中',
       'internationalPublic': '公立国际部',
       'internationalSchool': '国际高中',
       'overseas': '海外高中',
       // 简化名称映射
       'public': '公立高中',
-      'private': '私立高中',
       'international': '公立国际部'
     };
     return mapping[level] || level;

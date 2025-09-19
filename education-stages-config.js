@@ -69,7 +69,6 @@ const EDUCATION_STAGES_CONFIG = {
       ],
       educationLevels: [
         { code: "domesticPublic", name: "国内方向-公立高中", direction: "domestic" },
-        { code: "domesticPrivate", name: "国内方向-私立高中", direction: "domestic" },
         { code: "internationalPublic", name: "出国方向-公立国际部", direction: "international" },
         { code: "internationalSchool", name: "出国方向-国际学校", direction: "international" },
         { code: "overseas", name: "海外高中", direction: "overseas" }
