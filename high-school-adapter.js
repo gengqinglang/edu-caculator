@@ -208,7 +208,7 @@ class HighSchoolAdapter {
     };
 
     // 根据学校类型添加特定费用项
-    if (level === 'domesticPublic') {
+    if (level === 'domesticPublic' || level === 'public') {
       // 公立高中：补课/辅导费
       costs.补课辅导费 = {
         amount: this.getAverageCost(baseCostData.tutoring[educationStyle]),
@@ -216,7 +216,7 @@ class HighSchoolAdapter {
         currency: 'CNY',
         description: '补课/辅导费'
       };
-    } else if (level === 'internationalPublic' || level === 'internationalSchool') {
+    } else if (level === 'internationalPublic' || level === 'internationalSchool' || level === 'international') {
       // 国际部/国际高中：标化考试费、背景提升活动费、留学中介服务费
       costs.标化考试费 = {
         amount: this.getAverageCost(baseCostData.standardizedTest[educationStyle]),
