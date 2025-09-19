@@ -194,16 +194,16 @@
 
         .cost-summary {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
             margin-top: 25px;
             margin-bottom: 30px;
         }
         
-        /* 移动端确保三个卡片显示为一行 */
+        /* 移动端确保两个卡片显示为一行 */
         @media (max-width: 768px) {
             .cost-summary {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: 1fr 1fr;
                 gap: 10px;
             }
             
@@ -227,7 +227,7 @@
         
         @media (max-width: 480px) {
             .cost-summary {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: 1fr 1fr;
                 gap: 8px;
             }
             
@@ -1369,7 +1369,7 @@
             }
             
             .cost-summary {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: 1fr 1fr;
                 gap: 10px;
             }
             
