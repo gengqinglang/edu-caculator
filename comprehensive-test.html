@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 页面交互规则和数据一致性综合测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .test-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+        .test-title {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        .test-case {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            border-radius: 6px;
+        }
+        .test-case.pending {
+            border-left-color: #ffc107;
+            background: #fff8e1;
+        }
+        .test-case.error {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        .test-instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.success {
+            background: #28a745;
+        }
+        button.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        .success { color: #28a745; font-weight: bold; }
+        .error { color: #dc3545; font-weight: bold; }
+        .info { color: #17a2b8; }
+        .warning { color: #ffc107; }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>🔍 页面交互规则和数据一致性综合测试</h1>
+        <p>验证所有需求是否正确实现</p>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">📋 测试控制面板</h2>
+        <div class="control-panel">
+            <button onclick="openMainPage()">🏠 打开主页面</button>
+            <button onclick="runEducationStyleTests()" class="success">🎨 教育风格显示测试</button>
+            <button onclick="runInteractionTests()" class="warning">⚡ 交互规则测试</button>
+            <button onclick="runDataConsistencyTests()" class="secondary">📊 数据一致性测试</button>
+            <button onclick="clearResults()">🗑️ 清除结果</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">🎯 测试一：教育风格选择器显示规则</h2>
+        <div class="test-instructions">
+            <strong>测试目标：</strong>验证当前阶段和未来阶段是否正确显示/隐藏教育风格选择器
+            <br><br>
+            <strong>测试步骤：</strong>
+            <ol>
+                <li>在主页面选择不同的当前教育阶段</li>
+                <li>观察教育风格选择器是否正确显示/隐藏</li>
+                <li>点击开始，观察未来阶段卡片中教育风格选择器</li>
+            </ol>
+        </div>
+        <div id="education-style-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">⚡ 测试二：页面交互规则</h2>
+        <div class="test-instructions">
+            <strong>测试目标：</strong>验证当前阶段修改不实时计算，未来阶段修改实时计算
+            <br><br>
+            <strong>测试步骤：</strong>
+            <ol>
+                <li>填写基本信息，点击开始</li>
+                <li>修改当前阶段任意字段，观察是否实时计算</li>
+                <li>在未来阶段卡片修改教育水平，观察是否实时计算</li>
+                <li>修改当前阶段教育风格，观察未来阶段是否自动更新</li>
+            </ol>
+        </div>
+        <div id="interaction-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">📊 测试三：数据一致性</h2>
+        <div class="test-instructions">
+            <strong>测试目标：</strong>验证页面显示的教育水平选项与底层数据文件一致
+            <br><br>
+            <strong>测试步骤：</strong>
+            <ol>
+                <li>选择大学阶段，检查教育水平选项</li>
+                <li>选择研究生阶段，检查教育水平选项</li>
+                <li>选择博士阶段，检查教育水平选项</li>
+                <li>验证费用项目是否正确显示</li>
+            </ol>
+        </div>
+        <div id="data-consistency-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">🖥️ 实时测试环境</h2>
+        <div class="iframe-container">
+            <iframe id="test-iframe" src="index.html"></iframe>
+        </div>
+        <div style="text-align: center; margin-top: 15px;">
+            <button onclick="refreshIframe()" class="secondary">🔄 刷新页面</button>
+            <button onclick="openInNewTab()" class="success">🔗 在新标签页打开</button>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+
+        // 打开主页面
+        function openMainPage() {
+            window.open('index.html', '_blank');
+        }
+
+        // 刷新iframe
+        function refreshIframe() {
+            document.getElementById('test-iframe').src = 'index.html?' + Date.now();
+        }
+
+        // 在新标签页打开
+        function openInNewTab() {
+            window.open('index.html', '_blank');
+        }
+
+        // 添加测试结果
+        function addTestResult(section, title, status, details, instructions = '') {
+            const result = {
+                section,
+                title,
+                status, // 'success', 'error', 'pending', 'info'
+                details,
+                instructions,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            
+            testResults.push(result);
+            displayTestResult(result);
+        }
+
+        // 显示测试结果
+        function displayTestResult(result) {
+            const sectionId = result.section + '-results';
+            const resultsDiv = document.getElementById(sectionId);
+            if (!resultsDiv) return;
+
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-case ${result.status}`;
+            
+            const statusIcon = {
+                'success': '✅',
+                'error': '❌',
+                'pending': '⏳',
+                'info': 'ℹ️',
+                'warning': '⚠️'
+            }[result.status] || '📝';
+
+            const instructionsHtml = result.instructions ? 
+                `<div class="test-instructions">${result.instructions}</div>` : '';
+            
+            resultDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong class="${result.status}">
+                        ${statusIcon} ${result.title}
+                    </strong>
+                    <span class="info" style="font-size: 0.9em;">${result.timestamp}</span>
+                </div>
+                <div style="margin-top: 8px;">${result.details}</div>
+                ${instructionsHtml}
+            `;
+            
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        // 清除结果
+        function clearResults() {
+            ['education-style', 'interaction', 'data-consistency'].forEach(section => {
+                const resultsDiv = document.getElementById(section + '-results');
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = '';
+                }
+            });
+            testResults.length = 0;
+        }
+
+        // 教育风格显示测试
+        function runEducationStyleTests() {
+            addTestResult('education-style', '开始教育风格显示测试', 'info', 
+                '请按照以下步骤进行测试...');
+
+            addTestResult('education-style', '测试1: 幼儿园阶段教育风格显示', 'pending',
+                '在主页面选择当前阶段为"幼儿园"，教育风格选择器应该<span class="highlight">显示</span>',
+                '操作：选择教育阶段 → 幼儿园，观察教育风格选择器是否显示');
+
+            addTestResult('education-style', '测试2: 大学阶段教育风格隐藏', 'pending',
+                '在主页面选择当前阶段为"大学"，教育风格选择器应该<span class="highlight">隐藏</span>',
+                '操作：选择教育阶段 → 大学，观察教育风格选择器是否隐藏');
+
+            addTestResult('education-style', '测试3: 未来阶段教育风格控制', 'pending',
+                '当前阶段选择幼儿园，点击开始后，高中阶段应该有教育风格选择器，大学阶段应该没有',
+                '操作：幼儿园 → 开始 → 观察未来阶段卡片中的教育风格选择器');
+
+            addTestResult('education-style', '测试4: 教育风格自动填充', 'pending',
+                '当前阶段选择教育风格后，应该自动填充到小学、初中、高中阶段',
+                '操作：选择教育风格 → 开始 → 观察未来阶段默认教育风格');
+        }
+
+        // 交互规则测试
+        function runInteractionTests() {
+            addTestResult('interaction', '开始交互规则测试', 'info', 
+                '请按照以下步骤进行测试...');
+
+            addTestResult('interaction', '测试1: 当前阶段修改不实时计算', 'pending',
+                '修改当前阶段的城市或教育水平，费用应该<span class="highlight">不会</span>实时更新',
+                '操作：填写基本信息 → 开始 → 修改城市 → 观察费用是否变化');
+
+            addTestResult('interaction', '测试2: 教育风格修改行为', 'pending',
+                '修改当前阶段教育风格，应该更新未来阶段默认值，但<span class="highlight">不重新计算</span>当前费用',
+                '操作：开始后 → 修改教育风格 → 观察当前费用和未来阶段默认值');
+
+            addTestResult('interaction', '测试3: 未来阶段修改实时计算', 'pending',
+                '在未来阶段卡片中修改教育水平，应该<span class="highlight">立即</span>显示该阶段费用',
+                '操作：选择未来阶段教育水平 → 观察费用是否立即显示');
+
+            addTestResult('interaction', '测试4: 重新点击开始按钮', 'pending',
+                '修改当前阶段信息后，重新点击开始按钮，应该重新计算当前阶段费用',
+                '操作：修改当前阶段信息 → 重新点击开始 → 观察费用更新');
+        }
+
+        // 数据一致性测试
+        function runDataConsistencyTests() {
+            addTestResult('data-consistency', '开始数据一致性测试', 'info', 
+                '请按照以下步骤进行测试...');
+
+            addTestResult('data-consistency', '测试1: 大学教育水平选项', 'pending',
+                '大学阶段应该有：国内公立大学、国内民办大学、美国、英国、澳洲、香港、新加坡、日本、加拿大、欧洲其他',
+                '操作：选择大学阶段 → 观察教育水平选项');
+
+            addTestResult('data-consistency', '测试2: 研究生教育水平选项', 'pending',
+                '研究生阶段应该有：国内学术型硕士、国内专业型硕士、美国、英国、澳洲、香港、新加坡、日本、加拿大、欧洲其他',
+                '操作：选择研究生阶段 → 观察教育水平选项');
+
+            addTestResult('data-consistency', '测试3: 博士教育水平选项', 'pending',
+                '博士阶段应该有：国内博士、美国、英国、澳洲、香港、新加坡、日本、加拿大、欧洲其他',
+                '操作：选择博士阶段 → 观察教育水平选项');
+
+            addTestResult('data-consistency', '测试4: 费用项目正确性', 'pending',
+                '国内大学应该有4个费用项，海外大学应该有5个费用项（含医疗保险）',
+                '操作：选择不同教育水平 → 开始 → 观察费用明细项目');
+
+            addTestResult('data-consistency', '测试5: 阶段动态生成', 'pending',
+                '当前阶段为大学时，未来阶段应该只有研究生和博士',
+                '操作：选择大学阶段 → 开始 → 观察生成的未来阶段卡片');
+        }
+
+        // 页面加载完成后的初始化
+        window.addEventListener('load', function() {
+            addTestResult('education-style', '测试环境初始化完成', 'success', 
+                '页面已加载，可以开始进行各项测试。请点击上方按钮开始具体测试。');
+        });
+    </script>
+</body>
+</html>

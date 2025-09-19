@@ -1728,11 +1728,7 @@
     </div>
 
     <!-- 引入所有必要的数据和API文件 -->
-    <script src="education-cost-data.js"></script>
-    <script src="education-cost-data-extended.js"></script>
-    <script src="education-cost-api.js"></script>
     <script src="education-stages-config.js"></script>
-    <script src="education-data-adapter.js"></script>
     
     <!-- 新的幼小初费用数据和适配器 -->
     <script src="city-tier-mapping.js"></script>
@@ -1753,8 +1749,6 @@
 
     <script>
         // 全局变量
-        let educationAPI;
-        let dataAdapter;
         let kindergartenPrimaryMiddleAdapter; // 新的幼小初适配器
         let highSchoolAdapter; // 高中适配器
         let universityAdapter; // 大学适配器
@@ -1833,12 +1827,7 @@
                 console.error('❌ 博士适配器初始化失败:', error);
             }
 
-            try {
-                dataAdapter = new EducationDataAdapter();
-                console.log('✅ 原有数据适配器初始化成功');
-            } catch (error) {
-                console.error('❌ 原有数据适配器初始化失败:', error);
-            }
+            console.log('✅ 所有新适配器初始化完成');
         }
 
         // 页面加载完成后初始化适配器
@@ -1988,31 +1977,63 @@
 
         // 初始化应用
         document.addEventListener('DOMContentLoaded', function() {
-            try {
-                educationAPI = new EducationCostAPI();
-                dataAdapter = new EducationDataAdapter(educationAPI, EDUCATION_STAGES_CONFIG);
-                kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
-                console.log('✅ 教育规划计算器初始化成功');
-                
-                // 显示系统信息
-                displaySystemInfo();
-            } catch (error) {
-                showError('系统初始化失败: ' + error.message);
-            }
+            console.log('✅ 教育规划计算器页面加载完成');
         });
 
         // 显示系统信息
         function displaySystemInfo() {
             console.log('📊 系统信息:');
             console.log('- 教育阶段配置:', EDUCATION_STAGES_CONFIG);
-            console.log('- 数据适配器:', dataAdapter);
-            console.log('- 教育API:', educationAPI);
-            
-            const validation = educationAPI.validateData();
-            if (validation.isValid) {
-                console.log('📊 数据验证通过，系统就绪');
+            console.log('- 幼小初适配器:', kindergartenPrimaryMiddleAdapter);
+            console.log('- 高中适配器:', highSchoolAdapter);
+            console.log('- 大学适配器:', universityAdapter);
+            console.log('- 研究生适配器:', graduateAdapter);
+            console.log('- 博士适配器:', phdAdapter);
+            console.log('📊 所有新适配器系统就绪');
+        }
+
+        // 统一的适配器路由函数
+        function getAdapterForStage(stageCode) {
+            if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
+                return kindergartenPrimaryMiddleAdapter;
+            } else if (highSchoolAdapter && highSchoolAdapter.isStageSupported(stageCode)) {
+                return highSchoolAdapter;
+            } else if (universityAdapter && universityAdapter.isStageSupported(stageCode)) {
+                return universityAdapter;
+            } else if (graduateAdapter && graduateAdapter.isStageSupported(stageCode)) {
+                return graduateAdapter;
+            } else if (phdAdapter && phdAdapter.isStageSupported(stageCode)) {
+                return phdAdapter;
+            }
+            return null;
+        }
+
+        // 统一的费用计算函数
+        function calculateStageTotal(stageCode, costData, years) {
+            const adapter = getAdapterForStage(stageCode);
+            if (adapter) {
+                return adapter.calculateTotalCost(costData, years);
+            }
+            console.error(`❌ 未找到计算器支持阶段: ${stageCode}`);
+            return null;
+        }
+
+        // 统一的数据获取函数
+        function getStageCostData(stageCode, levelCode, options = {}) {
+            const adapter = getAdapterForStage(stageCode);
+            if (!adapter) {
+                console.error(`❌ 未找到适配器支持阶段: ${stageCode}`);
+                return null;
+            }
+
+            // 根据不同适配器的参数需求调用getCostData
+            if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
+                return adapter.getCostData(stageCode, levelCode, options.city || '', options.educationStyle || 'balanced');
+            } else if (highSchoolAdapter && highSchoolAdapter.isStageSupported(stageCode)) {
+                return adapter.getCostData(stageCode, levelCode, options.city || '', options.country || '', options.educationStyle || 'balanced');
             } else {
-                console.warn('⚠️ 数据验证警告:', validation.errors);
+                // 大学、研究生、博士适配器
+                return adapter.getCostData(stageCode, '', levelCode, '', '');
             }
         }
 
@@ -2322,7 +2343,7 @@
             
             // 重新计算并更新显示
             const remainingYears = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
-            const calculation = dataAdapter.calculateTotalCost(userPlan.currentCosts, remainingYears);
+            const calculation = calculateStageTotal(userPlan.currentStage, userPlan.currentCosts, remainingYears);
             
             // 更新汇总卡片
             displayCostSummary(calculation, remainingYears);
@@ -2394,7 +2415,7 @@
                     const remainingYears = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
                     const currentStageData = window.stageCostData[userPlan.currentStage];
                     if (currentStageData && currentStageData.costData) {
-                        const currentCalculation = dataAdapter.calculateTotalCost(currentStageData.costData, remainingYears);
+                        const currentCalculation = calculateStageTotal(userPlan.currentStage, currentStageData.costData, remainingYears);
                         currentStageCost = currentCalculation.summary.grandTotal;
                     }
                     
@@ -2425,8 +2446,8 @@
                                 stageCost = calculation.summary.grandTotal;
                             } else {
                                 // 如果没有修改过，使用原始数据
-                                costData = dataAdapter.getStageCostData(stage.code, levelSelect.value);
-                                calculation = dataAdapter.calculateTotalCost(costData, stage.config.totalYears);
+                                costData = getStageCostData(stage.code, levelSelect.value);
+                                calculation = calculateStageTotal(stage.code, costData, stage.config.totalYears);
                                 stageCost = calculation.summary.grandTotal;
                             }
                             
@@ -2729,7 +2750,7 @@
             const isModified = numValue !== originalValue;
             
             // 重新计算费用
-            const newCalculation = dataAdapter.calculateTotalCost(stageData.costData, stageData.years);
+            const newCalculation = calculateStageTotal(stageCode, stageData.costData, stageData.years);
             stageData.calculation = newCalculation;
             
             // 更新当前项目的总计显示
@@ -3078,37 +3099,9 @@
                 }
                 
                 // 对于其他阶段，使用原有适配器
-                console.log('使用原有适配器获取费用数据');
-                
-                // 构造选项对象，包含城市和国家信息
-                const options = {};
-                
-                if (userPlan.currentCity) {
-                    options.city = userPlan.currentCity;
-                    console.log('getCurrentStageCostData - 设置city:', userPlan.currentCity);
-                }
-                
-                if (userPlan.currentCountry) {
-                    options.country = userPlan.currentCountry;
-                    console.log('getCurrentStageCostData - 设置country:', userPlan.currentCountry);
-                }
-                
-                console.log('getCurrentStageCostData - options对象:', options);
-                console.log('getCurrentStageCostData - 即将调用getStageCostData参数:', {
-                    stage: userPlan.currentStage,
-                    level: userPlan.currentLevel,
-                    options: options
-                });
-                
-                // 使用数据适配器获取费用数据
-                const costData = dataAdapter.getStageCostData(
-                    userPlan.currentStage, 
-                    userPlan.currentLevel, 
-                    options
-                );
-                
-                console.log('getCurrentStageCostData - getStageCostData返回结果:', costData);
-                return costData;
+                // 如果没有找到对应的适配器，返回错误
+                console.error(`❌ 未找到支持当前阶段的适配器: ${userPlan.currentStage}`);
+                return null;
             } catch (error) {
                 console.error('获取当前阶段费用数据失败:', error);
                 console.error('错误详情:', error.stack);
@@ -3215,13 +3208,70 @@
                             educationStyle: costDataResult.educationStyle,
                             dataSource: costDataResult.dataSource
                         };
-                    } else {
-                        // 对于其他阶段，使用原有适配器
-                        const dataOptions = {};
-                        if (cityCode) dataOptions.city = cityCode;
-                        if (countryCode) dataOptions.country = countryCode;
+                    } else if (highSchoolAdapter && highSchoolAdapter.isStageSupported(stageCode)) {
+                        // 高中阶段
+                        console.log(`✅ 使用高中适配器获取${stageCode}阶段费用数据`);
                         
-                        baseCostData = dataAdapter.getStageCostData(stageCode, levelCode, dataOptions);
+                        const stageEducationStyle = getStageEducationStyle(stageCode);
+                        const costDataResult = highSchoolAdapter.getCostData(
+                            stageCode,
+                            levelCode,
+                            cityCode,
+                            countryCode,
+                            stageEducationStyle
+                        );
+                        
+                        baseCostData = {
+                            costs: costDataResult.costs,
+                            cityName: costDataResult.cityTier,
+                            stageName: costDataResult.stage,
+                            levelName: costDataResult.level,
+                            educationStyle: costDataResult.educationStyle,
+                            dataSource: costDataResult.dataSource
+                        };
+                    } else if (universityAdapter && universityAdapter.isStageSupported(stageCode)) {
+                        // 大学阶段
+                        console.log(`✅ 使用大学适配器获取${stageCode}阶段费用数据`);
+                        
+                        const costDataResult = universityAdapter.getCostData(
+                            stageCode,
+                            '',
+                            levelCode,
+                            '',
+                            ''
+                        );
+                        
+                        baseCostData = costDataResult;
+                    } else if (graduateAdapter && graduateAdapter.isStageSupported(stageCode)) {
+                        // 研究生阶段
+                        console.log(`✅ 使用研究生适配器获取${stageCode}阶段费用数据`);
+                        
+                        const costDataResult = graduateAdapter.getCostData(
+                            stageCode,
+                            '',
+                            levelCode,
+                            '',
+                            ''
+                        );
+                        
+                        baseCostData = costDataResult;
+                    } else if (phdAdapter && phdAdapter.isStageSupported(stageCode)) {
+                        // 博士阶段
+                        console.log(`✅ 使用博士适配器获取${stageCode}阶段费用数据`);
+                        
+                        const costDataResult = phdAdapter.getCostData(
+                            stageCode,
+                            '',
+                            levelCode,
+                            '',
+                            ''
+                        );
+                        
+                        baseCostData = costDataResult;
+                    } else {
+                        console.error(`❌ 未找到适配器支持阶段: ${stageCode}`);
+                        showError(`不支持的教育阶段: ${stageCode}`);
+                        return;
                     }
                     
                     if (!baseCostData) {
@@ -3237,12 +3287,11 @@
                 const mergedCostData = getMergedCostData(stageCode, baseCostData);
                 console.log('updateStageDisplay - mergedCostData:', mergedCostData);
                 
-                // 根据阶段选择合适的计算器
-                let calculation;
-                if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
-                    calculation = kindergartenPrimaryMiddleAdapter.calculateTotalCost(mergedCostData, years);
-                } else {
-                    calculation = dataAdapter.calculateTotalCost(mergedCostData, years);
+                // 使用统一的费用计算函数
+                const calculation = calculateStageTotal(stageCode, mergedCostData, years);
+                if (!calculation) {
+                    console.error(`❌ 费用计算失败: ${stageCode}`);
+                    return;
                 }
                 console.log('updateStageDisplay - calculation result:', calculation);
                 
@@ -3517,7 +3566,7 @@
                     // 使用window.stageCostData中的数据而不是userPlan.currentCosts
                     const currentStageData = window.stageCostData[userPlan.currentStage];
                     if (currentStageData && currentStageData.costData) {
-                        const currentCalculation = dataAdapter.calculateTotalCost(currentStageData.costData, remainingYears);
+                        const currentCalculation = calculateStageTotal(userPlan.currentStage, currentStageData.costData, remainingYears);
                         currentStageCost = currentCalculation.summary.periodicTotal;
                     } else {
                         console.error('updateTotalSummary: 当前阶段数据不可用，跳过计算');
@@ -3562,8 +3611,8 @@
                                     options.country = countrySelect.value;
                                 }
                                 
-                                costData = dataAdapter.getStageCostData(stage.code, levelSelect.value, options);
-                                calculation = dataAdapter.calculateTotalCost(costData, stage.totalYears);
+                                costData = getStageCostData(stage.code, levelSelect.value, options);
+                                calculation = calculateStageTotal(stage.code, costData, stage.totalYears);
                                 stageCost = calculation.summary.periodicTotal;
                             }
                             
