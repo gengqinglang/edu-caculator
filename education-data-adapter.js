@@ -389,9 +389,12 @@ class EducationDataAdapter {
       const educationStyleSelect = document.getElementById('educationStyle');
       if (educationStyleSelect && educationStyleSelect.value) {
         currentEducationStyle = educationStyleSelect.value;
+        console.log('✅ 成功获取教育风格选择器值:', currentEducationStyle);
+      } else {
+        console.log('⚠️ 教育风格选择器未找到或无值，使用默认值:', currentEducationStyle);
       }
     } catch (error) {
-      console.warn('无法获取教育风格选择器值:', error);
+      console.warn('❌ 无法获取教育风格选择器值:', error);
     }
     console.log('calculateTotalCost - 当前教育风格:', currentEducationStyle);
 
@@ -448,19 +451,17 @@ class EducationDataAdapter {
       const rate = exchangeRates[cost.currency] || 1;
       let amountInCNY = cost.amount * rate;
 
-      // 动态调整补课/辅导费用根据教育风格
+      // 动态调整补课/辅导费用根据教育风格（基于high-school-cost-data.js的一线城市数据）
       if (key === 'tutoring' && cost.description && cost.description.includes('补课')) {
-        const styleMultipliers = {
-          'relaxed': 1.0,    // 佛系：基础费用
-          'balanced': 1.67,  // 平衡：25000 / 15000 = 1.67
-          'intensive': 4.0   // 鸡娃：60000 / 15000 = 4.0
+        const styleAmounts = {
+          'relaxed': 25000,   // 佛系：(20000 + 30000) / 2 = 25000
+          'balanced': 47500,  // 平衡：(35000 + 60000) / 2 = 47500  
+          'intensive': 115000 // 鸡娃：(80000 + 150000) / 2 = 115000
         };
         
-        const multiplier = styleMultipliers[currentEducationStyle] || styleMultipliers['balanced'];
-        const baseAmount = 15000; // 一线城市佛系基础费用
-        amountInCNY = baseAmount * multiplier;
+        amountInCNY = styleAmounts[currentEducationStyle] || styleAmounts['balanced'];
         
-        console.log(`📊 补课费用动态调整: ${currentEducationStyle} -> ${amountInCNY}元 (倍数: ${multiplier})`);
+        console.log(`📊 补课费用动态调整: ${currentEducationStyle} -> ${amountInCNY}元`);
       }
 
       let itemTotal = 0;

@@ -1827,23 +1827,35 @@
             // 如果已经开始了教育规划，重新计算当前阶段费用
             if (window.stageCostData && Object.keys(window.stageCostData).length > 0) {
                 console.log('🔄 重新计算当前阶段费用');
-                
-                // 触发重新计算
-                // 这里可以调用重新计算的函数
                 recalculateCurrentStageCosts();
             }
         }
 
         // 重新计算当前阶段费用
         function recalculateCurrentStageCosts() {
-            // 简单的重新计算：重新点击开始按钮的逻辑
-            const startBtn = document.getElementById('startPlanning');
-            if (startBtn && !startBtn.disabled) {
-                console.log('🔄 自动重新开始计算');
-                // 模拟点击开始按钮
-                if (typeof startEducationPlanning === 'function') {
-                    startEducationPlanning();
+            try {
+                // 清除可能的缓存数据
+                if (window.stageCostData) {
+                    console.log('🧹 清除缓存数据');
+                    window.stageCostData = {};
                 }
+                
+                // 直接模拟点击开始按钮
+                const startBtn = document.getElementById('startPlanning');
+                if (startBtn) {
+                    console.log('🔄 模拟点击开始计算按钮');
+                    startBtn.click();
+                } else {
+                    console.warn('⚠️ 找不到开始计算按钮');
+                    
+                    // 如果找不到按钮，尝试直接刷新页面内容
+                    console.log('🔄 尝试直接刷新费用显示');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 100);
+                }
+            } catch (error) {
+                console.error('❌ 重新计算失败:', error);
             }
         }
 
