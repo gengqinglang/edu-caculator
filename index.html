@@ -3194,6 +3194,24 @@
             console.log('🔄 按用户要求：任何录入栏位变化都重新计算，不使用缓存');
             mergedCostData = JSON.parse(JSON.stringify(baseCostData));
             
+            // 🔧 重要修复：保留用户对默认费用项的修改（金额和单位）
+            if (cachedData && cachedData.costData && cachedData.costData.costs) {
+                console.log('🔄 保留用户对默认费用项的修改');
+                for (const [key, cachedCost] of Object.entries(cachedData.costData.costs)) {
+                    // 只保留默认费用项的修改，不包括自定义费用项
+                    if (mergedCostData.costs[key] && !cachedCost.isCustom) {
+                        console.log(`保留费用项 ${key} 的用户修改:`, {
+                            原始金额: mergedCostData.costs[key].amount,
+                            修改金额: cachedCost.amount,
+                            原始单位: mergedCostData.costs[key].unit,
+                            修改单位: cachedCost.unit
+                        });
+                        mergedCostData.costs[key].amount = cachedCost.amount;
+                        mergedCostData.costs[key].unit = cachedCost.unit;
+                    }
+                }
+            }
+            
             // 添加当前的自定义费用项
             if (window.customCostItems[stageCode]) {
                 const customItems = window.customCostItems[stageCode];
