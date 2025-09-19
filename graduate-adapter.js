@@ -171,8 +171,15 @@ class GraduateAdapter {
    */
   calculateTotalCost(costData, years) {
     try {
-      if (!costData || !costData.costs) {
-        console.warn('GraduateAdapter.calculateTotalCost: 无效的费用数据');
+      console.log('🎓 GraduateAdapter.calculateTotalCost 调用参数:', { costData, years });
+      
+      if (!costData) {
+        console.warn('GraduateAdapter.calculateTotalCost: costData为null/undefined');
+        return this.getEmptyCalculationResult(years);
+      }
+      
+      if (!costData.costs) {
+        console.warn('GraduateAdapter.calculateTotalCost: costData.costs为null/undefined, costData结构:', costData);
         return this.getEmptyCalculationResult(years);
       }
 

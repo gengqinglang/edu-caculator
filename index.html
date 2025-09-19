@@ -4030,12 +4030,22 @@
             console.log('未来阶段:', futureStages.map(s => s.code));
             
             futureStages.forEach(stage => {
-                if (window.stageCostData[stage.code]) {
+                if (window.stageCostData && window.stageCostData[stage.code]) {
                     const stageData = window.stageCostData[stage.code];
-                    if (stageData.calculation && stageData.calculation.summary) {
+                    console.log(`检查${stage.code}阶段数据:`, stageData);
+                    
+                    if (stageData.calculation && stageData.calculation.summary && stageData.calculation.summary.periodicTotal) {
                         totalCost += stageData.calculation.summary.periodicTotal;
                         console.log(`${stage.code}阶段费用:`, stageData.calculation.summary.periodicTotal);
+                    } else {
+                        console.warn(`${stage.code}阶段calculation数据不完整:`, {
+                            hasCalculation: !!stageData.calculation,
+                            hasSummary: !!(stageData.calculation && stageData.calculation.summary),
+                            hasPeriodicTotal: !!(stageData.calculation && stageData.calculation.summary && stageData.calculation.summary.periodicTotal)
+                        });
                     }
+                } else {
+                    console.log(`${stage.code}阶段未配置，跳过费用计算`);
                 }
             });
             
