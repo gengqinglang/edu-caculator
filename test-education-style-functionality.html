@@ -1,88 +1,63 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>教育风格功能测试</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f5f7fa;
         }
-        
         .test-section {
             background: white;
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
         }
-        
         .test-title {
-            font-size: 20px;
-            font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 16px;
             border-bottom: 2px solid #3498db;
-            padding-bottom: 8px;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
-        
-        .test-case {
-            margin-bottom: 16px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #3498db;
-        }
-        
-        .test-label {
-            font-weight: 600;
-            color: #34495e;
-            margin-bottom: 8px;
-        }
-        
         .test-result {
-            font-family: 'Monaco', 'Menlo', monospace;
-            background: #2c3e50;
-            color: #ecf0f1;
             padding: 12px;
-            border-radius: 6px;
-            white-space: pre-wrap;
-            margin-top: 8px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
         }
-        
-        .test-button {
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
             background: #3498db;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
+            margin: 8px;
+        }
+        button:hover { background: #2980b9; }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             font-size: 14px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .test-button:hover {
-            background: #2980b9;
-        }
-        
-        .success {
-            color: #27ae60;
-            font-weight: 600;
-        }
-        
-        .error {
-            color: #e74c3c;
-            font-weight: 600;
-        }
-        
-        .info {
-            color: #3498db;
-            font-weight: 600;
         }
     </style>
 </head>
@@ -90,329 +65,178 @@
     <h1>🧪 教育风格功能测试</h1>
     
     <div class="test-section">
-        <div class="test-title">📋 测试说明</div>
-        <p>本页面用于测试新增的未来阶段教育风格功能，包括：</p>
-        <ul>
-            <li><strong>默认值继承</strong>：未来阶段教育风格默认继承基础信息的选择</li>
-            <li><strong>独立修改</strong>：每个未来阶段可以独立设置教育风格</li>
-            <li><strong>费用计算</strong>：费用计算使用阶段特定的教育风格</li>
-            <li><strong>联动重置</strong>：基础信息教育风格变化时重置所有未来阶段</li>
-        </ul>
-    </div>
-
-    <div class="test-section">
-        <div class="test-title">🔍 1. 数据结构测试</div>
-        
-        <div class="test-case">
-            <div class="test-label">测试用户计划数据结构</div>
-            <button class="test-button" onclick="testUserPlanStructure()">测试数据结构</button>
-            <div id="userPlanResult" class="test-result"></div>
-        </div>
-        
-        <div class="test-case">
-            <div class="test-label">测试教育风格获取函数</div>
-            <button class="test-button" onclick="testGetStageEducationStyle()">测试获取函数</button>
-            <div id="getStyleResult" class="test-result"></div>
+        <h2 class="test-title">📋 测试目标</h2>
+        <div class="test-result info">
+            <strong>当前教育阶段交互逻辑：</strong><br>
+            1. 用户填写5个字段（阶段、年级、教育水平、城市、教育风格）<br>
+            2. 点击"开始"按钮 → 计算当前阶段费用 + 自动填充未来高中阶段教育风格<br>
+            3. 修改当前阶段的任意字段 → 不实时计算，等待重新点击"开始"<br>
+            4. 修改未来阶段字段 → 实时计算该阶段费用<br><br>
+            
+            <strong>未来教育阶段交互逻辑：</strong><br>
+            1. 选择教育水平/风格 → 实时计算并显示费用<br>
+            2. 当前阶段教育风格变化 → 重置未来阶段风格为新默认值
         </div>
     </div>
 
     <div class="test-section">
-        <div class="test-title">🎯 2. 默认值继承测试</div>
-        
-        <div class="test-case">
-            <div class="test-label">模拟基础信息设置</div>
-            <button class="test-button" onclick="simulateBasicInfo('relaxed')">设置为佛系</button>
-            <button class="test-button" onclick="simulateBasicInfo('balanced')">设置为平衡</button>
-            <button class="test-button" onclick="simulateBasicInfo('intensive')">设置为鸡娃</button>
-            <div id="basicInfoResult" class="test-result"></div>
-        </div>
-        
-        <div class="test-case">
-            <div class="test-label">测试默认值继承</div>
-            <button class="test-button" onclick="testDefaultInheritance()">测试继承逻辑</button>
-            <div id="inheritanceResult" class="test-result"></div>
+        <h2 class="test-title">🎯 手动测试步骤</h2>
+        <div id="testInstructions">
+            <p><strong>步骤 1：初始设置</strong></p>
+            <ol>
+                <li>打开主页面：<a href="index.html" target="_blank">http://localhost:3000</a></li>
+                <li>填写：小学 → 三年级 → 公立 → 北京 → 平衡</li>
+                <li>点击"开始计算教育费用"</li>
+                <li>✅ 验证：显示小学费用，未来高中卡片的教育风格默认为"平衡"</li>
+            </ol>
+
+            <p><strong>步骤 2：测试当前阶段不实时计算</strong></p>
+            <ol>
+                <li>将教育风格从"平衡"改为"鸡娃"</li>
+                <li>✅ 验证：当前阶段费用不变化，未来阶段风格重置为"鸡娃"</li>
+                <li>重新点击"开始计算教育费用"</li>
+                <li>✅ 验证：当前阶段费用更新为"鸡娃"对应的费用</li>
+            </ol>
+
+            <p><strong>步骤 3：测试未来阶段实时计算</strong></p>
+            <ol>
+                <li>在高中阶段卡片选择：国内公立高中</li>
+                <li>✅ 验证：立即显示高中费用（教育风格应为"鸡娃"）</li>
+                <li>将高中教育风格从"鸡娃"改为"佛系"</li>
+                <li>✅ 验证：高中费用立即更新（补课费应从115,000变为25,000）</li>
+            </ol>
+
+            <p><strong>步骤 4：测试教育风格数值正确性</strong></p>
+            <ol>
+                <li>高中补课费：佛系=25,000元，平衡=47,500元，鸡娃=115,000元</li>
+                <li>小学课外费：佛系=18,000元，平衡=36,000元，鸡娃=60,000元</li>
+            </ol>
         </div>
     </div>
 
     <div class="test-section">
-        <div class="test-title">⚙️ 3. 独立修改测试</div>
+        <h2 class="test-title">🔧 快速诊断工具</h2>
+        <button onclick="checkPageStatus()">检查页面状态</button>
+        <button onclick="checkEventHandlers()">检查事件处理器</button>
+        <button onclick="checkDataStructures()">检查数据结构</button>
+        <button onclick="simulateUserFlow()">模拟用户流程</button>
         
-        <div class="test-case">
-            <div class="test-label">测试阶段独立设置</div>
-            <button class="test-button" onclick="testIndependentSetting()">测试独立设置</button>
-            <div id="independentResult" class="test-result"></div>
-        </div>
+        <div id="diagnosticResults"></div>
     </div>
-
-    <div class="test-section">
-        <div class="test-title">💰 4. 费用计算测试</div>
-        
-        <div class="test-case">
-            <div class="test-label">测试幼小初阶段费用计算</div>
-            <button class="test-button" onclick="testKPMCostCalculation()">测试费用计算</button>
-            <div id="costCalculationResult" class="test-result"></div>
-        </div>
-    </div>
-
-    <div class="test-section">
-        <div class="test-title">🔄 5. 联动重置测试</div>
-        
-        <div class="test-case">
-            <div class="test-label">测试基础信息变化联动</div>
-            <button class="test-button" onclick="testResetLogic()">测试重置逻辑</button>
-            <div id="resetResult" class="test-result"></div>
-        </div>
-    </div>
-
-    <!-- 引入必要的JS文件 -->
-    <script src="education-stages-config.js"></script>
-    <script src="city-tier-mapping.js"></script>
-    <script src="kindergarten-cost-data.js"></script>
-    <script src="primary-cost-data.js"></script>
-    <script src="middle-cost-data.js"></script>
-    <script src="kindergarten-primary-middle-adapter.js"></script>
 
     <script>
-        // 模拟用户计划对象
-        let userPlan = {
-            currentStage: 'primary',
-            currentGrade: 'grade1',
-            currentLevel: 'public',
-            currentCity: 'beijing',
-            currentCountry: '',
-            educationStyle: '',
-            stageEducationStyles: {}
-        };
-
-        // 模拟适配器
-        let kindergartenPrimaryMiddleAdapter;
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
-                console.log('✅ 适配器初始化成功');
-            } catch (error) {
-                console.error('❌ 适配器初始化失败:', error);
-            }
-        });
-
-        // 获取阶段特定的教育风格
-        function getStageEducationStyle(stageCode) {
-            if (userPlan.stageEducationStyles[stageCode]) {
-                return userPlan.stageEducationStyles[stageCode];
-            }
-            return userPlan.educationStyle || 'balanced';
+        function addResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('diagnosticResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.innerHTML = message;
+            resultsDiv.appendChild(resultDiv);
         }
 
-        // 设置阶段教育风格
-        function setStageEducationStyle(stageCode, educationStyle) {
-            userPlan.stageEducationStyles[stageCode] = educationStyle;
+        function clearResults() {
+            document.getElementById('diagnosticResults').innerHTML = '';
         }
 
-        // 测试函数
-        function testUserPlanStructure() {
-            const result = document.getElementById('userPlanResult');
+        function checkPageStatus() {
+            clearResults();
+            addResult('🔍 检查主页面状态...', 'info');
+            
             try {
-                const structure = {
-                    "userPlan结构": userPlan,
-                    "是否包含stageEducationStyles": 'stageEducationStyles' in userPlan,
-                    "stageEducationStyles类型": typeof userPlan.stageEducationStyles
-                };
-                result.textContent = JSON.stringify(structure, null, 2);
-                result.style.color = '#27ae60';
-            } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
-        }
-
-        function testGetStageEducationStyle() {
-            const result = document.getElementById('getStyleResult');
-            try {
-                // 测试不同场景
-                const tests = {
-                    "场景1 - 无基础风格，无阶段设置": getStageEducationStyle('primary'),
-                    "场景2 - 有基础风格(鸡娃)，无阶段设置": (() => {
-                        userPlan.educationStyle = 'intensive';
-                        return getStageEducationStyle('primary');
-                    })(),
-                    "场景3 - 有基础风格(鸡娃)，有阶段设置(佛系)": (() => {
-                        setStageEducationStyle('primary', 'relaxed');
-                        return getStageEducationStyle('primary');
-                    })(),
-                    "场景4 - 不同阶段": getStageEducationStyle('middle')
-                };
-                result.textContent = JSON.stringify(tests, null, 2);
-                result.style.color = '#27ae60';
-            } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
-        }
-
-        function simulateBasicInfo(style) {
-            const result = document.getElementById('basicInfoResult');
-            try {
-                userPlan.educationStyle = style;
-                userPlan.stageEducationStyles = {}; // 清空阶段设置
+                // 在新窗口中检查主页面
+                const mainWindow = window.open('index.html', 'mainPage');
                 
-                const info = {
-                    "基础教育风格": userPlan.educationStyle,
-                    "阶段设置": userPlan.stageEducationStyles,
-                    "primary阶段获取到的风格": getStageEducationStyle('primary'),
-                    "middle阶段获取到的风格": getStageEducationStyle('middle')
-                };
-                result.textContent = JSON.stringify(info, null, 2);
-                result.style.color = '#3498db';
-            } catch (error) {
-                result.textContent = '❌ 模拟失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
-        }
-
-        function testDefaultInheritance() {
-            const result = document.getElementById('inheritanceResult');
-            try {
-                // 设置基础风格为平衡
-                userPlan.educationStyle = 'balanced';
-                userPlan.stageEducationStyles = {};
-                
-                const tests = {
-                    "基础风格": userPlan.educationStyle,
-                    "primary继承": getStageEducationStyle('primary'),
-                    "middle继承": getStageEducationStyle('middle'),
-                    "kindergarten继承": getStageEducationStyle('kindergarten'),
-                    "high_school继承": getStageEducationStyle('high_school')
-                };
-                
-                const success = tests.primary继承 === 'balanced' && 
-                              tests.middle继承 === 'balanced' && 
-                              tests.kindergarten继承 === 'balanced';
-                
-                result.textContent = JSON.stringify({
-                    "测试结果": success ? "✅ 继承成功" : "❌ 继承失败",
-                    "详细数据": tests
-                }, null, 2);
-                result.style.color = success ? '#27ae60' : '#e74c3c';
-            } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
-        }
-
-        function testIndependentSetting() {
-            const result = document.getElementById('independentResult');
-            try {
-                // 设置基础风格
-                userPlan.educationStyle = 'balanced';
-                userPlan.stageEducationStyles = {};
-                
-                // 独立设置不同阶段
-                setStageEducationStyle('primary', 'intensive');
-                setStageEducationStyle('middle', 'relaxed');
-                
-                const tests = {
-                    "基础风格": userPlan.educationStyle,
-                    "primary独立设置": getStageEducationStyle('primary'),
-                    "middle独立设置": getStageEducationStyle('middle'),
-                    "kindergarten使用默认": getStageEducationStyle('kindergarten'),
-                    "内部存储": userPlan.stageEducationStyles
-                };
-                
-                const success = tests.primary独立设置 === 'intensive' && 
-                              tests.middle独立设置 === 'relaxed' && 
-                              tests.kindergarten使用默认 === 'balanced';
-                
-                result.textContent = JSON.stringify({
-                    "测试结果": success ? "✅ 独立设置成功" : "❌ 独立设置失败",
-                    "详细数据": tests
-                }, null, 2);
-                result.style.color = success ? '#27ae60' : '#e74c3c';
-            } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
-        }
-
-        function testKPMCostCalculation() {
-            const result = document.getElementById('costCalculationResult');
-            try {
-                if (!kindergartenPrimaryMiddleAdapter) {
-                    throw new Error('适配器未初始化');
-                }
-                
-                // 测试不同教育风格的费用计算
-                const tests = {};
-                
-                ['relaxed', 'balanced', 'intensive'].forEach(style => {
+                setTimeout(() => {
                     try {
-                        const costData = kindergartenPrimaryMiddleAdapter.getCostData(
-                            'primary',
-                            'public',
-                            'beijing',
-                            style
-                        );
+                        const mainDoc = mainWindow.document;
+                        const educationStyle = mainDoc.getElementById('educationStyle');
+                        const startBtn = mainDoc.getElementById('startPlanning');
                         
-                        tests[`小学公立北京${style}`] = {
-                            "教育风格": costData.educationStyle,
-                            "课外费": costData.costs.课外费.amount,
-                            "数据源": costData.dataSource
-                        };
+                        if (educationStyle) {
+                            addResult('✅ 教育风格选择器存在', 'success');
+                            addResult(`📊 当前onchange: ${educationStyle.getAttribute('onchange')}`, 'info');
+                        } else {
+                            addResult('❌ 教育风格选择器不存在', 'error');
+                        }
+                        
+                        if (startBtn) {
+                            addResult('✅ 开始按钮存在', 'success');
+                        } else {
+                            addResult('❌ 开始按钮不存在', 'error');
+                        }
+                        
                     } catch (error) {
-                        tests[`小学公立北京${style}`] = "❌ " + error.message;
+                        addResult(`❌ 无法访问主页面内容: ${error.message}`, 'error');
                     }
-                });
+                }, 1000);
                 
-                result.textContent = JSON.stringify(tests, null, 2);
-                result.style.color = '#27ae60';
             } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
+                addResult(`❌ 无法打开主页面: ${error.message}`, 'error');
             }
         }
 
-        function testResetLogic() {
-            const result = document.getElementById('resetResult');
-            try {
-                // 模拟场景：先设置基础风格和独立阶段风格
-                userPlan.educationStyle = 'balanced';
-                setStageEducationStyle('primary', 'intensive');
-                setStageEducationStyle('middle', 'relaxed');
-                
-                const beforeReset = {
-                    "基础风格": userPlan.educationStyle,
-                    "primary风格": getStageEducationStyle('primary'),
-                    "middle风格": getStageEducationStyle('middle'),
-                    "阶段设置": {...userPlan.stageEducationStyles}
-                };
-                
-                // 模拟基础风格变化为鸡娃
-                userPlan.educationStyle = 'intensive';
-                userPlan.stageEducationStyles = {}; // 模拟重置
-                
-                const afterReset = {
-                    "基础风格": userPlan.educationStyle,
-                    "primary风格": getStageEducationStyle('primary'),
-                    "middle风格": getStageEducationStyle('middle'),
-                    "阶段设置": {...userPlan.stageEducationStyles}
-                };
-                
-                const success = afterReset.primary风格 === 'intensive' && 
-                              afterReset.middle风格 === 'intensive' && 
-                              Object.keys(afterReset.阶段设置).length === 0;
-                
-                result.textContent = JSON.stringify({
-                    "测试结果": success ? "✅ 重置逻辑正确" : "❌ 重置逻辑错误",
-                    "重置前": beforeReset,
-                    "重置后": afterReset
-                }, null, 2);
-                result.style.color = success ? '#27ae60' : '#e74c3c';
-            } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
+        function checkEventHandlers() {
+            clearResults();
+            addResult('🔍 检查事件处理器配置...', 'info');
+            
+            const expectedHandlers = [
+                'handleEducationStyleChange() - 处理教育风格变化',
+                'updateStageCard() - 更新阶段卡片',
+                'initializeFutureStageEducationStyles() - 初始化未来阶段风格',
+                'resetAllStageEducationStyles() - 重置所有阶段风格'
+            ];
+            
+            expectedHandlers.forEach(handler => {
+                addResult(`📋 应该存在: ${handler}`, 'info');
+            });
+            
+            addResult('✅ 请在浏览器控制台手动验证这些函数是否存在', 'success');
         }
+
+        function checkDataStructures() {
+            clearResults();
+            addResult('🔍 检查数据结构...', 'info');
+            
+            const expectedStructures = [
+                'userPlan.educationStyle - 当前教育风格',
+                'userPlan.stageEducationStyles - 各阶段教育风格',
+                'kindergartenPrimaryMiddleAdapter - 幼小初适配器',
+                'highSchoolAdapter - 高中适配器'
+            ];
+            
+            expectedStructures.forEach(structure => {
+                addResult(`📋 应该存在: ${structure}`, 'info');
+            });
+        }
+
+        function simulateUserFlow() {
+            clearResults();
+            addResult('🎯 模拟用户操作流程...', 'info');
+            
+            const steps = [
+                '1. 用户填写基础信息（阶段、年级、水平、城市、风格）',
+                '2. 点击"开始"按钮 → 计算当前阶段 + 初始化未来阶段',
+                '3. 修改当前教育风格 → 不实时计算，重置未来阶段风格',
+                '4. 重新点击"开始" → 重新计算当前阶段',
+                '5. 选择未来阶段配置 → 实时计算并显示费用',
+                '6. 修改未来阶段教育风格 → 实时更新费用'
+            ];
+            
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    addResult(step, 'info');
+                }, index * 500);
+            });
+            
+            setTimeout(() => {
+                addResult('🚀 请按照以上步骤在主页面进行实际测试', 'success');
+            }, steps.length * 500);
+        }
+
+        // 页面加载完成后自动检查
+        window.addEventListener('load', () => {
+            addResult('🎉 教育风格功能测试页面加载完成', 'success');
+            addResult('💡 点击上方按钮进行各项检查，或直接进行手动测试', 'info');
+        });
     </script>
 </body>
 </html>

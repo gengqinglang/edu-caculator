@@ -1,314 +1,232 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>未来阶段费用显示修复测试</title>
+    <title>未来阶段费用显示测试</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f7fa;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
         }
-        
-        .test-section {
+        .test-container {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .test-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 16px;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 8px;
-        }
-        
-        .test-case {
-            margin-bottom: 16px;
-            padding: 12px;
-            background: #f8f9fa;
+            padding: 20px;
             border-radius: 8px;
-            border-left: 4px solid #3498db;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
-        .test-button {
-            background: #3498db;
+        .result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
+            background: #007bff;
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
-            margin-right: 10px;
-            margin-bottom: 10px;
+            margin: 5px;
         }
-        
-        .test-button:hover {
-            background: #2980b9;
-        }
-        
-        .test-result {
-            font-family: 'Monaco', 'Menlo', monospace;
-            background: #2c3e50;
-            color: #ecf0f1;
-            padding: 12px;
-            border-radius: 6px;
-            white-space: pre-wrap;
-            margin-top: 8px;
-        }
-        
-        .success {
-            color: #27ae60;
-            font-weight: 600;
-        }
-        
-        .error {
-            color: #e74c3c;
-            font-weight: 600;
-        }
-        
-        .info {
-            color: #3498db;
-            font-weight: 600;
+        button:hover { background: #0056b3; }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <h1>🧪 未来阶段费用显示修复测试</h1>
     
-    <div class="test-section">
-        <div class="test-title">📋 修复内容说明</div>
-        <ul>
-            <li><strong>问题</strong>：选择教育水平后，未来阶段卡片没有显示费用汇总和明细</li>
-            <li><strong>根因</strong>：幼小初阶段需要等待城市选择才显示费用，但实际应该直接计算</li>
-            <li><strong>修复</strong>：为幼小初阶段添加特殊处理逻辑，支持直接计算费用</li>
-        </ul>
-    </div>
-
-    <div class="test-section">
-        <div class="test-title">🔍 测试场景</div>
-        
-        <div class="test-case">
-            <strong>测试1：检查修复函数是否正确加载</strong>
-            <br>
-            <button class="test-button" onclick="testFunctionLoaded()">测试函数加载</button>
-            <div id="functionResult" class="test-result"></div>
-        </div>
-        
-        <div class="test-case">
-            <strong>测试2：模拟幼小初阶段识别</strong>
-            <br>
-            <button class="test-button" onclick="testKMPStageDetection()">测试阶段识别</button>
-            <div id="stageResult" class="test-result"></div>
-        </div>
-        
-        <div class="test-case">
-            <strong>测试3：模拟费用数据获取</strong>
-            <br>
-            <button class="test-button" onclick="testCostDataRetrieval()">测试费用获取</button>
-            <div id="costResult" class="test-result"></div>
-        </div>
-        
-        <div class="test-case">
-            <strong>测试4：模拟城市处理逻辑</strong>
-            <br>
-            <button class="test-button" onclick="testCityHandling()">测试城市处理</button>
-            <div id="cityResult" class="test-result"></div>
+    <div class="test-container">
+        <h2>📋 测试目标</h2>
+        <div class="result info">
+            <strong>验证修复：</strong>选择未来阶段的教育水平后，费用汇总和详情应该立即显示<br>
+            <strong>测试路径：</strong>幼儿园 → 小学 → 初中 → 高中<br>
+            <strong>预期结果：</strong>选择高中教育水平后，立即显示对应的费用信息
         </div>
     </div>
 
-    <div class="test-section">
-        <div class="test-title">🎯 实际测试指导</div>
-        <div class="test-case">
-            <p><strong>请按以下步骤在主页面测试：</strong></p>
-            <ol>
-                <li>访问 <code>http://localhost:3000/</code></li>
-                <li>填写基础信息：北京、小学、一年级、公立小学、鸡娃</li>
-                <li>点击"开始计算教育费用"</li>
-                <li>在未来阶段卡片中，选择"初中" → "公立初中"</li>
-                <li><strong>预期结果</strong>：立即显示费用汇总卡片和详细费用清单</li>
-                <li><strong>关键指标</strong>：课外费应该显示为鸡娃风格的金额（较高）</li>
-            </ol>
-        </div>
+    <div class="test-container">
+        <h2>🎯 测试步骤</h2>
+        <ol>
+            <li><strong>填写基础信息：</strong>幼儿园 → 大班 → 公立 → 北京 → 平衡</li>
+            <li><strong>点击开始：</strong>应该显示幼儿园费用和未来阶段卡片</li>
+            <li><strong>选择高中教育水平：</strong>在高中卡片中选择"国内公立高中"</li>
+            <li><strong>验证结果：</strong>应该立即显示高中费用汇总和详情</li>
+            <li><strong>切换教育风格：</strong>将高中教育风格改为"鸡娃"</li>
+            <li><strong>验证更新：</strong>补课费应该从47,500变为115,000</li>
+        </ol>
+        
+        <button onclick="runAutomatedTest()">🤖 运行自动化测试</button>
+        <button onclick="openMainPage()">🌐 打开主页面</button>
+        <button onclick="checkConsoleErrors()">🔍 检查控制台错误</button>
+        
+        <div id="testResults"></div>
     </div>
 
-    <!-- 引入必要的JS文件 -->
-    <script src="education-stages-config.js"></script>
-    <script src="city-tier-mapping.js"></script>
-    <script src="kindergarten-cost-data.js"></script>
-    <script src="primary-cost-data.js"></script>
-    <script src="middle-cost-data.js"></script>
-    <script src="kindergarten-primary-middle-adapter.js"></script>
+    <div class="test-container">
+        <h2>🖥️ 嵌入式测试页面</h2>
+        <iframe src="index.html" id="testFrame"></iframe>
+    </div>
 
     <script>
-        // 模拟全局变量
-        let kindergartenPrimaryMiddleAdapter;
-        let userPlan = {
-            currentStage: 'primary',
-            currentCity: 'beijing',
-            educationStyle: 'intensive'
-        };
-
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
-                console.log('✅ 适配器初始化成功');
-            } catch (error) {
-                console.error('❌ 适配器初始化失败:', error);
-            }
-        });
-
-        function testFunctionLoaded() {
-            const result = document.getElementById('functionResult');
-            try {
-                const tests = {
-                    "EDUCATION_STAGES_CONFIG加载": typeof EDUCATION_STAGES_CONFIG !== 'undefined',
-                    "getCityTier函数加载": typeof getCityTier !== 'undefined',
-                    "KindergartenPrimaryMiddleAdapter加载": typeof KindergartenPrimaryMiddleAdapter !== 'undefined',
-                    "适配器实例创建": kindergartenPrimaryMiddleAdapter !== undefined,
-                    "isStageSupported方法": kindergartenPrimaryMiddleAdapter && typeof kindergartenPrimaryMiddleAdapter.isStageSupported === 'function'
-                };
-                
-                const success = Object.values(tests).every(v => v === true);
-                result.textContent = JSON.stringify({
-                    "测试结果": success ? "✅ 所有函数正确加载" : "❌ 部分函数未加载",
-                    "详细检查": tests
-                }, null, 2);
-                result.style.color = success ? '#27ae60' : '#e74c3c';
-            } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
+        function addResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = message;
+            resultsDiv.appendChild(resultDiv);
         }
 
-        function testKMPStageDetection() {
-            const result = document.getElementById('stageResult');
-            try {
-                if (!kindergartenPrimaryMiddleAdapter) {
-                    throw new Error('适配器未初始化');
-                }
-                
-                const stages = ['kindergarten', 'primary', 'middle', 'high', 'university'];
-                const tests = {};
-                
-                stages.forEach(stage => {
-                    tests[`${stage}阶段识别`] = kindergartenPrimaryMiddleAdapter.isStageSupported(stage);
-                });
-                
-                const kmpCorrect = tests['kindergarten阶段识别'] && tests['primary阶段识别'] && tests['middle阶段识别'];
-                const otherCorrect = !tests['high阶段识别'] && !tests['university阶段识别'];
-                const success = kmpCorrect && otherCorrect;
-                
-                result.textContent = JSON.stringify({
-                    "测试结果": success ? "✅ 阶段识别正确" : "❌ 阶段识别错误",
-                    "详细结果": tests
-                }, null, 2);
-                result.style.color = success ? '#27ae60' : '#e74c3c';
-            } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = '';
         }
 
-        function testCostDataRetrieval() {
-            const result = document.getElementById('costResult');
+        function openMainPage() {
+            window.open('index.html', '_blank');
+        }
+
+        function runAutomatedTest() {
+            clearResults();
+            addResult('🚀 开始自动化测试...', 'info');
+            
+            const frame = document.getElementById('testFrame');
+            
             try {
-                if (!kindergartenPrimaryMiddleAdapter) {
-                    throw new Error('适配器未初始化');
-                }
+                const frameDoc = frame.contentDocument || frame.contentWindow.document;
                 
-                // 测试不同场景的费用获取
-                const testCases = [
-                    { stage: 'middle', level: 'public', city: 'beijing', style: 'intensive' },
-                    { stage: 'primary', level: 'private_mid', city: 'shanghai', style: 'balanced' },
-                    { stage: 'kindergarten', level: 'public', city: '', style: 'relaxed' } // 空城市测试
-                ];
-                
-                const results = {};
-                
-                testCases.forEach((testCase, index) => {
+                // 等待页面加载
+                setTimeout(() => {
                     try {
-                        const costData = kindergartenPrimaryMiddleAdapter.getCostData(
-                            testCase.stage,
-                            testCase.level,
-                            testCase.city,
-                            testCase.style
-                        );
+                        // 步骤1：填写基础信息
+                        addResult('📝 步骤1：填写基础信息', 'info');
+                        const stage = frameDoc.getElementById('currentStage');
+                        const grade = frameDoc.getElementById('currentGrade');
+                        const level = frameDoc.getElementById('currentLevel');
+                        const city = frameDoc.getElementById('currentCity');
+                        const educationStyle = frameDoc.getElementById('educationStyle');
                         
-                        results[`测试${index + 1}`] = {
-                            "输入": testCase,
-                            "成功": true,
-                            "课外费": costData.costs?.课外费?.amount,
-                            "城市等级": costData.cityTier,
-                            "教育风格": costData.educationStyle
-                        };
+                        if (stage && grade && level && city && educationStyle) {
+                            stage.value = 'kindergarten';
+                            stage.dispatchEvent(new Event('change'));
+                            
+                            setTimeout(() => {
+                                grade.value = 'senior';
+                                grade.dispatchEvent(new Event('change'));
+                                
+                                level.value = 'public';
+                                level.dispatchEvent(new Event('change'));
+                                
+                                city.value = 'beijing';
+                                city.dispatchEvent(new Event('change'));
+                                
+                                educationStyle.value = 'balanced';
+                                educationStyle.dispatchEvent(new Event('change'));
+                                
+                                addResult('✅ 基础信息填写完成', 'success');
+                                
+                                // 步骤2：点击开始按钮
+                                setTimeout(() => {
+                                    const startBtn = frameDoc.getElementById('startPlanning');
+                                    if (startBtn && !startBtn.disabled) {
+                                        addResult('📝 步骤2：点击开始按钮', 'info');
+                                        startBtn.click();
+                                        
+                                        // 步骤3：检查未来阶段卡片
+                                        setTimeout(() => {
+                                            const highSchoolCard = frameDoc.querySelector('[id*="high"]');
+                                            if (highSchoolCard) {
+                                                addResult('✅ 找到高中阶段卡片', 'success');
+                                                
+                                                // 步骤4：选择高中教育水平
+                                                const highSchoolLevel = frameDoc.getElementById('level-high');
+                                                if (highSchoolLevel) {
+                                                    addResult('📝 步骤4：选择高中教育水平', 'info');
+                                                    highSchoolLevel.value = 'domesticPublic';
+                                                    highSchoolLevel.dispatchEvent(new Event('change'));
+                                                    
+                                                    // 步骤5：检查费用显示
+                                                    setTimeout(() => {
+                                                        const costSummary = frameDoc.getElementById('costSummary-high');
+                                                        const costDetails = frameDoc.getElementById('costDetails-high');
+                                                        
+                                                        if (costSummary && !costSummary.classList.contains('hidden')) {
+                                                            addResult('✅ 高中费用汇总显示正常', 'success');
+                                                        } else {
+                                                            addResult('❌ 高中费用汇总未显示', 'error');
+                                                        }
+                                                        
+                                                        if (costDetails && !costDetails.classList.contains('hidden')) {
+                                                            addResult('✅ 高中费用详情显示正常', 'success');
+                                                        } else {
+                                                            addResult('❌ 高中费用详情未显示', 'error');
+                                                        }
+                                                        
+                                                        // 步骤6：测试教育风格切换
+                                                        const educationStyleSelect = frameDoc.getElementById('educationStyle-high');
+                                                        if (educationStyleSelect) {
+                                                            addResult('📝 步骤6：测试教育风格切换', 'info');
+                                                            educationStyleSelect.value = 'intensive';
+                                                            educationStyleSelect.dispatchEvent(new Event('change'));
+                                                            
+                                                            setTimeout(() => {
+                                                                addResult('🎉 自动化测试完成！请查看上方结果', 'success');
+                                                            }, 1000);
+                                                        } else {
+                                                            addResult('❌ 未找到高中教育风格选择器', 'error');
+                                                        }
+                                                    }, 1000);
+                                                } else {
+                                                    addResult('❌ 未找到高中教育水平选择器', 'error');
+                                                }
+                                            } else {
+                                                addResult('❌ 未找到高中阶段卡片', 'error');
+                                            }
+                                        }, 2000);
+                                    } else {
+                                        addResult('❌ 开始按钮不可用或不存在', 'error');
+                                    }
+                                }, 500);
+                            }, 500);
+                        } else {
+                            addResult('❌ 基础信息表单元素缺失', 'error');
+                        }
                     } catch (error) {
-                        results[`测试${index + 1}`] = {
-                            "输入": testCase,
-                            "成功": false,
-                            "错误": error.message
-                        };
+                        addResult(`❌ 测试执行错误: ${error.message}`, 'error');
                     }
-                });
+                }, 2000);
                 
-                const success = Object.values(results).every(r => r.成功);
-                result.textContent = JSON.stringify({
-                    "测试结果": success ? "✅ 费用获取正常" : "❌ 费用获取异常",
-                    "详细结果": results
-                }, null, 2);
-                result.style.color = success ? '#27ae60' : '#e74c3c';
             } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
+                addResult(`❌ 无法访问iframe内容: ${error.message}`, 'error');
+                addResult('💡 请手动在新窗口中进行测试', 'info');
             }
         }
 
-        function testCityHandling() {
-            const result = document.getElementById('cityResult');
-            try {
-                // 测试不同城市输入的处理
-                const testCities = ['beijing', 'shanghai', '', null, undefined, 'unknown_city'];
-                const results = {};
-                
-                testCities.forEach(city => {
-                    try {
-                        const tier = getCityTier(city);
-                        results[`城市"${city}"`] = {
-                            "输入": city,
-                            "城市等级": tier,
-                            "成功": true
-                        };
-                    } catch (error) {
-                        results[`城市"${city}"`] = {
-                            "输入": city,
-                            "错误": error.message,
-                            "成功": false
-                        };
-                    }
-                });
-                
-                const success = Object.values(results).every(r => r.成功);
-                const hasDefaultTier = results['城市""'].城市等级 === "四线及以下";
-                
-                result.textContent = JSON.stringify({
-                    "测试结果": success && hasDefaultTier ? "✅ 城市处理正常" : "❌ 城市处理异常",
-                    "空城市默认处理": hasDefaultTier ? "✅ 正确" : "❌ 错误",
-                    "详细结果": results
-                }, null, 2);
-                result.style.color = success && hasDefaultTier ? '#27ae60' : '#e74c3c';
-            } catch (error) {
-                result.textContent = '❌ 测试失败: ' + error.message;
-                result.style.color = '#e74c3c';
-            }
+        function checkConsoleErrors() {
+            clearResults();
+            addResult('🔍 请在浏览器开发者工具的Console标签页中检查是否有错误信息', 'info');
+            addResult('常见错误类型：', 'info');
+            addResult('• TypeError: Cannot read properties of undefined', 'info');
+            addResult('• ReferenceError: function is not defined', 'info');
+            addResult('• 数据加载失败相关错误', 'info');
         }
+
+        // 页面加载完成后的提示
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                addResult('💡 页面加载完成，可以开始测试', 'success');
+                addResult('建议先运行自动化测试，然后在新窗口中手动验证', 'info');
+            }, 1000);
+        });
     </script>
 </body>
 </html>

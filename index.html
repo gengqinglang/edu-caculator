@@ -1813,9 +1813,9 @@
             return isValid;
         }
 
-        // 处理教育风格变化
+        // 处理教育风格变化（当前阶段不实时计算，等待重新点击开始按钮）
         function handleEducationStyleChange() {
-            console.log('🎯 教育风格变化，重新计算费用');
+            console.log('🎯 教育风格变化');
             
             // 获取当前选择的教育风格
             const educationStyleSelect = document.getElementById('educationStyle');
@@ -1824,11 +1824,19 @@
             const newStyle = educationStyleSelect.value;
             console.log('📊 新教育风格:', newStyle);
             
-            // 如果已经开始了教育规划，重新计算当前阶段费用
-            if (window.stageCostData && Object.keys(window.stageCostData).length > 0) {
-                console.log('🔄 重新计算当前阶段费用');
-                recalculateCurrentStageCosts();
+            // 更新用户计划中的教育风格
+            if (userPlan) {
+                userPlan.educationStyle = newStyle;
+                console.log('💾 已更新用户计划中的教育风格:', newStyle);
             }
+            
+            // 重置所有未来阶段的教育风格为新的默认值
+            resetAllStageEducationStyles();
+            
+            // 初始化未来阶段教育风格选择器
+            initializeFutureStageEducationStyles();
+            
+            console.log('⚠️ 当前阶段教育风格已更新，需要重新点击"开始"按钮以重新计算费用');
         }
 
         // 重新计算当前阶段费用
@@ -1913,40 +1921,7 @@
             });
         }
 
-        // 处理基础信息教育风格变化
-        function handleEducationStyleChange() {
-            const educationStyleSelect = document.getElementById('educationStyle');
-            if (!educationStyleSelect || !educationStyleSelect.value) {
-                return;
-            }
-            
-            const newEducationStyle = educationStyleSelect.value;
-            console.log('🔄 基础信息教育风格变化为:', newEducationStyle);
-            
-            // 更新用户计划中的教育风格
-            userPlan.educationStyle = newEducationStyle;
-            
-            // 如果已经开始规划（有未来阶段），重置所有未来阶段的教育风格
-            if (userPlan.currentStage && document.getElementById('futureStagesSection')) {
-                const futureStagesSection = document.getElementById('futureStagesSection');
-                if (!futureStagesSection.classList.contains('hidden')) {
-                    console.log('🔄 重置所有未来阶段教育风格并重新计算费用');
-                    resetAllStageEducationStyles();
-                    
-                    // 重新计算所有未来阶段的费用
-                    const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
-                    const futureStages = subsequentStages.slice(1);
-                    
-                    futureStages.forEach(stage => {
-                        const levelSelect = document.getElementById(`level-${stage.code}`);
-                        if (levelSelect && levelSelect.value) {
-                            // 如果该阶段已经有选择，重新计算费用
-                            updateStageCard(stage.code);
-                        }
-                    });
-                }
-            }
-        }
+        // 已删除重复的handleEducationStyleChange函数，使用前面改进的版本
 
         // 初始化应用
         document.addEventListener('DOMContentLoaded', function() {
@@ -2088,82 +2063,9 @@
             validateInputs();
         }
 
-        // 验证输入完整性
-        function validateInputs() {
-            const stage = document.getElementById('currentStage').value;
-            const grade = document.getElementById('currentGrade').value;
-            const level = document.getElementById('currentLevel').value;
-            const countrySelector = document.getElementById('countrySelector');
-            const city = document.getElementById('currentCity').value;
-            const country = document.getElementById('currentCountry').value;
-            const educationStyle = document.getElementById('educationStyle').value;
-            const startBtn = document.getElementById('startPlanning');
-            
-            let isValid = stage && grade && level && city && educationStyle;
-            
-            // 检查是否需要额外的国家选择（针对海外教育）
-            if (countrySelector && countrySelector.style.display !== 'none') {
-                isValid = isValid && country;
-            }
-            
-            startBtn.disabled = !isValid;
-            
-            if (isValid) {
-                hideError();
-            }
-        }
+        // 已删除重复的validateInputs函数，使用前面版本
 
-        // 开始教育规划
-        function startEducationPlanning() {
-            try {
-                const stage = document.getElementById('currentStage').value;
-                const grade = document.getElementById('currentGrade').value;
-                const level = document.getElementById('currentLevel').value;
-                const city = document.getElementById('currentCity').value;
-                const country = document.getElementById('currentCountry').value;
-                
-                if (!stage || !grade || !level) {
-                    return;
-                }
-                
-                // 检查是否需要地区选择
-                const citySelector = document.getElementById('citySelector');
-                const countrySelector = document.getElementById('countrySelector');
-                
-                if (citySelector.style.display !== 'none' && !city) {
-                    return;
-                }
-                
-                if (countrySelector.style.display !== 'none' && !country) {
-                    return;
-                }
-                
-                // 保存用户选择
-                userPlan.currentStage = stage;
-                userPlan.currentGrade = grade;
-                userPlan.currentLevel = level;
-                userPlan.currentCity = city;
-                userPlan.currentCountry = country;
-                
-                // 显示当前阶段费用
-                displayCurrentStageCosts();
-                
-                // 生成后续阶段卡片
-                generateFutureStageCards();
-                
-                // 显示后续阶段区域
-                document.getElementById('futureStagesSection').classList.remove('hidden');
-                
-                // 滚动到结果区域
-                document.getElementById('currentStageSection').scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-                
-            } catch (error) {
-                showError('规划生成失败: ' + error.message);
-            }
-        }
+        // 已删除重复的startEducationPlanning函数，使用后面完整版本
 
 
         // 获取当前阶段费用数据
@@ -2193,25 +2095,7 @@
         // 显示费用详情表格
 
         // 生成后续阶段卡片
-        function generateFutureStageCards() {
-            const stagesGrid = document.getElementById("stagesGrid");
-            const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
-            
-            // 排除当前阶段，只显示未来阶段
-            const futureStages = subsequentStages.slice(1);
-            
-            stagesGrid.innerHTML = "";
-            
-            futureStages.forEach((stage) => {
-                const cardHTML = createStageCard(stage, false); // 都是未来阶段，不是当前阶段
-                stagesGrid.insertAdjacentHTML("beforeend", cardHTML);
-            });
-            
-            // 如果已经是最后阶段，显示完成提示
-            if (userPlan.currentStage === "phd") {
-                document.getElementById("educationComplete").classList.remove("hidden");
-            }
-        }
+        // 已删除重复的generateFutureStageCards函数，使用后面包含initializeFutureStageEducationStyles的版本
         // 创建阶段卡片HTML
         function createStageCard(stage, isCurrent) {
             const stageId = `stage-${stage.code}`;
@@ -2271,77 +2155,7 @@
             `;
         }
 
-        // 创建未来阶段卡片内容 - 与当前教育阶段保持完全一致
-        function createFutureStageContent(stage) {
-            const selectId = `level-${stage.code}`;
-            const citySelectId = `city-${stage.code}`;
-            const countrySelectId = `country-${stage.code}`;
-            const currentDirection = getCurrentDirection();
-            const suggestedLevels = EDUCATION_STAGES_CONFIG.suggestEducationLevels(stage.code, currentDirection);
-            
-            let optionsHTML = '<option value="">请选择教育水平</option>';
-            suggestedLevels.forEach(level => {
-                optionsHTML += `<option value="${level.code}">${level.name}</option>`;
-            });
-            
-            return `
-                <div class="level-selector">
-                    <label for="${selectId}">选择教育水平:</label>
-                    <select id="${selectId}" onchange="updateFutureStageLocationOptions('${stage.code}', this.value)">
-                        ${optionsHTML}
-                    </select>
-                </div>
-
-                <div class="input-group" id="citySelector-${stage.code}" style="display: none;">
-                    <label for="${citySelectId}">所在城市:</label>
-                    <select id="${citySelectId}" disabled onchange="updateStageCard('${stage.code}')">
-                        <option value="">请选择城市</option>
-                        <option value="beijing">北京</option>
-                        <option value="shanghai">上海</option>
-                        <option value="guangzhou">广州</option>
-                        <option value="shenzhen">深圳</option>
-                        <option value="hangzhou">杭州</option>
-                        <option value="nanjing">南京</option>
-                        <option value="chengdu">成都</option>
-                        <option value="wuhan">武汉</option>
-                    </select>
-                </div>
-
-                <div class="input-group" id="countrySelector-${stage.code}" style="display: none;">
-                    <label for="${countrySelectId}">留学国家:</label>
-                    <select id="${countrySelectId}" disabled onchange="updateStageCard('${stage.code}')">
-                        <option value="">请选择国家</option>
-                        <option value="usa">美国</option>
-                        <option value="uk">英国</option>
-                        <option value="canada">加拿大</option>
-                        <option value="australia">澳洲</option>
-                    </select>
-                </div>
-                
-                <!-- 费用汇总卡片区域 -->
-                <div id="costSummary-${stage.code}" class="cost-summary hidden">
-                    <!-- 费用汇总卡片将动态生成 -->
-                </div>
-                
-                <!-- 费用详情表格区域 -->
-                <div id="costDetails-${stage.code}" class="cost-details hidden">
-                    <h3>💰 详细费用清单</h3>
-                    <table id="costTable-${stage.code}" class="cost-table">
-                        <thead>
-                            <tr>
-                                <th>费用项目</th>
-                                <th>金额</th>
-                                <th>单位</th>
-                                <th>剩余年限总计</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- 费用项目将动态生成 -->
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
+        // 已删除重复的createFutureStageContent函数，使用后面包含教育风格选择器的版本
 
         // 获取当前方向
         function getCurrentDirection() {
