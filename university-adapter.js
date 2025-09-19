@@ -27,6 +27,8 @@ class UniversityAdapter {
    */
   getCostData(stage, grade, level, city = '', country = '') {
     try {
+      console.log(`🎓 UniversityAdapter.getCostData 调用参数:`, { stage, grade, level, city, country });
+      
       if (!this.isStageSupported(stage)) {
         console.warn(`UniversityAdapter: 不支持的教育阶段: ${stage}`);
         return null;
@@ -34,6 +36,7 @@ class UniversityAdapter {
 
       // 解析教育水平，传递国家参数
       const parsedLevel = this.parseEducationLevel(level, country);
+      console.log(`🔍 解析教育水平结果:`, parsedLevel);
       if (!parsedLevel) {
         console.warn(`UniversityAdapter: 无效的教育水平: ${level}, 国家: ${country}`);
         return null;
@@ -202,11 +205,22 @@ class UniversityAdapter {
         };
       }
 
+      // 创建兼容的breakdown对象
+      const breakdown = {};
+      for (const [key, detail] of Object.entries(details)) {
+        breakdown[key] = {
+          totalForPeriod: detail.itemTotal,
+          yearlyAmount: detail.yearlyAmount,
+          description: detail.description
+        };
+      }
+
       return {
         totalCost: Math.round(totalCost),
         yearlyTotal: Math.round(yearlyTotal),
         oneTimeCost: Math.round(oneTimeCost),
         details: details,
+        breakdown: breakdown, // 添加breakdown兼容性
         years: years,
         summary: {
           periodicTotal: Math.round(totalCost),

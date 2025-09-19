@@ -2662,8 +2662,9 @@
                 
                 let detailsHTML = '';
                 for (const [key, cost] of Object.entries(costData.costs)) {
-                    const calcCost = calculation.breakdown[key];
-                    const totalForPeriod = calcCost ? calcCost.totalForPeriod : cost.amount * years;
+                    // 兼容新旧数据结构：优先使用breakdown，fallback到details
+                    const calcCost = calculation.breakdown ? calculation.breakdown[key] : calculation.details ? calculation.details[key] : null;
+                    const totalForPeriod = calcCost ? (calcCost.totalForPeriod || calcCost.itemTotal) : cost.amount * years;
                     
                     // 转换为人民币显示
                     const rate = exchangeRates[cost.currency] || 1;

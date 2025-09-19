@@ -202,11 +202,22 @@ class GraduateAdapter {
         };
       }
 
+      // 创建兼容的breakdown对象
+      const breakdown = {};
+      for (const [key, detail] of Object.entries(details)) {
+        breakdown[key] = {
+          totalForPeriod: detail.itemTotal,
+          yearlyAmount: detail.yearlyAmount,
+          description: detail.description
+        };
+      }
+
       return {
         totalCost: Math.round(totalCost),
         yearlyTotal: Math.round(yearlyTotal),
         oneTimeCost: Math.round(oneTimeCost),
         details: details,
+        breakdown: breakdown, // 添加breakdown兼容性
         years: years,
         summary: {
           periodicTotal: Math.round(totalCost),
