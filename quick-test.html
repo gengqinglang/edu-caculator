@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 快速功能测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .test-container { background: white; padding: 20px; border-radius: 8px; margin: 10px 0; }
+        .success { color: #28a745; font-weight: bold; }
+        .error { color: #dc3545; font-weight: bold; }
+        .info { color: #17a2b8; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🚀 教育费用计算器 - 快速功能测试</h1>
+    
+    <div class="test-container">
+        <h3>适配器初始化测试</h3>
+        <button onclick="testAdapterInit()">测试适配器初始化</button>
+        <div id="adapter-results"></div>
+    </div>
+
+    <div class="test-container">
+        <h3>各阶段功能测试</h3>
+        <button onclick="testStage('kindergarten', 'public')">测试幼儿园</button>
+        <button onclick="testStage('primary', 'public')">测试小学</button>
+        <button onclick="testStage('middle', 'public')">测试初中</button>
+        <button onclick="testStage('high', 'domesticPublic')">测试高中</button>
+        <button onclick="testStage('university', 'domesticPublic')">测试大学</button>
+        <button onclick="testStage('graduate', 'domesticAcademic')">测试研究生</button>
+        <button onclick="testStage('phd', 'domesticPublic')">测试博士</button>
+        <div id="stage-results"></div>
+    </div>
+
+    <!-- 引入所有必要文件 -->
+    <script src="education-stages-config.js"></script>
+    <script src="city-tier-mapping.js"></script>
+    <script src="kindergarten-cost-data.js"></script>
+    <script src="primary-cost-data.js"></script>
+    <script src="middle-cost-data.js"></script>
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+    <script src="high-school-cost-data.js"></script>
+    <script src="high-school-adapter.js"></script>
+    <script src="university-cost-data.js"></script>
+    <script src="university-adapter.js"></script>
+    <script src="graduate-cost-data.js"></script>
+    <script src="graduate-adapter.js"></script>
+    <script src="phd-cost-data.js"></script>
+    <script src="phd-adapter.js"></script>
+
+    <script>
+        // 全局适配器变量
+        let kindergartenPrimaryMiddleAdapter;
+        let highSchoolAdapter;
+        let universityAdapter;
+        let graduateAdapter;
+        let phdAdapter;
+
+        // 初始化适配器
+        function initializeAdapters() {
+            try {
+                kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
+                highSchoolAdapter = new HighSchoolAdapter();
+                universityAdapter = new UniversityAdapter();
+                graduateAdapter = new GraduateAdapter();
+                phdAdapter = new PhdAdapter();
+                return true;
+            } catch (error) {
+                console.error('适配器初始化失败:', error);
+                return false;
+            }
+        }
+
+        // 统一的适配器路由函数
+        function getAdapterForStage(stageCode) {
+            if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
+                return kindergartenPrimaryMiddleAdapter;
+            } else if (highSchoolAdapter && highSchoolAdapter.isStageSupported(stageCode)) {
+                return highSchoolAdapter;
+            } else if (universityAdapter && universityAdapter.isStageSupported(stageCode)) {
+                return universityAdapter;
+            } else if (graduateAdapter && graduateAdapter.isStageSupported(stageCode)) {
+                return graduateAdapter;
+            } else if (phdAdapter && phdAdapter.isStageSupported(stageCode)) {
+                return phdAdapter;
+            }
+            return null;
+        }
+
+        // 测试适配器初始化
+        function testAdapterInit() {
+            const resultsDiv = document.getElementById('adapter-results');
+            resultsDiv.innerHTML = '';
+
+            const success = initializeAdapters();
+            
+            if (success) {
+                resultsDiv.innerHTML += '<div class="result success">✅ 所有适配器初始化成功</div>';
+                
+                // 测试每个适配器
+                const adapters = [
+                    { name: '幼小初适配器', adapter: kindergartenPrimaryMiddleAdapter },
+                    { name: '高中适配器', adapter: highSchoolAdapter },
+                    { name: '大学适配器', adapter: universityAdapter },
+                    { name: '研究生适配器', adapter: graduateAdapter },
+                    { name: '博士适配器', adapter: phdAdapter }
+                ];
+
+                adapters.forEach(({ name, adapter }) => {
+                    if (adapter) {
+                        resultsDiv.innerHTML += `<div class="result success">✅ ${name}: 已初始化</div>`;
+                    } else {
+                        resultsDiv.innerHTML += `<div class="result error">❌ ${name}: 初始化失败</div>`;
+                    }
+                });
+            } else {
+                resultsDiv.innerHTML += '<div class="result error">❌ 适配器初始化失败</div>';
+            }
+        }
+
+        // 测试单个阶段
+        function testStage(stageCode, levelCode) {
+            const resultsDiv = document.getElementById('stage-results');
+            
+            try {
+                const adapter = getAdapterForStage(stageCode);
+                
+                if (!adapter) {
+                    resultsDiv.innerHTML += `<div class="result error">❌ ${stageCode}: 未找到适配器</div>`;
+                    return;
+                }
+
+                // 测试数据获取
+                let costData;
+                if (stageCode === 'kindergarten' || stageCode === 'primary' || stageCode === 'middle') {
+                    costData = adapter.getCostData(stageCode, levelCode, 'beijing', 'balanced');
+                } else if (stageCode === 'high') {
+                    costData = adapter.getCostData(stageCode, levelCode, 'beijing', '', 'balanced');
+                } else {
+                    costData = adapter.getCostData(stageCode, '', levelCode, '', '');
+                }
+
+                if (costData && costData.costs) {
+                    const totalCost = Object.values(costData.costs).reduce((sum, cost) => sum + cost.amount, 0);
+                    resultsDiv.innerHTML += `<div class="result success">✅ ${stageCode}: 获取数据成功，总费用 ¥${totalCost.toLocaleString()}</div>`;
+                } else {
+                    resultsDiv.innerHTML += `<div class="result error">❌ ${stageCode}: 数据获取失败</div>`;
+                }
+
+            } catch (error) {
+                resultsDiv.innerHTML += `<div class="result error">❌ ${stageCode}: 测试异常 - ${error.message}</div>`;
+                console.error(`${stageCode}测试失败:`, error);
+            }
+        }
+
+        // 页面加载后自动初始化
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                testAdapterInit();
+            }, 100);
+        });
+    </script>
+</body>
+</html>
