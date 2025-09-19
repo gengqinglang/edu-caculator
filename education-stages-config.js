@@ -74,6 +74,8 @@ const EDUCATION_STAGES_CONFIG = {
         { code: "internationalSchool", name: "出国方向-国际学校", direction: "international" },
         { code: "overseas", name: "海外高中", direction: "overseas" }
       ],
+      // 海外国家选项将从数据文件动态获取
+      overseasCountries: ["usa", "uk", "australia", "hongkong", "singapore", "japan", "canada", "europeOthers"],
       nextStage: "university"
     },
     
@@ -179,7 +181,9 @@ const EDUCATION_STAGES_CONFIG = {
     let countryLabels = {};
     
     try {
-      if (stageCode === 'university' && window.UNIVERSITY_EDUCATION_LEVELS) {
+      if (stageCode === 'high' && window.HIGH_SCHOOL_EDUCATION_LEVELS) {
+        countryLabels = window.HIGH_SCHOOL_EDUCATION_LEVELS;
+      } else if (stageCode === 'university' && window.UNIVERSITY_EDUCATION_LEVELS) {
         countryLabels = window.UNIVERSITY_EDUCATION_LEVELS;
       } else if (stageCode === 'graduate' && window.GRADUATE_EDUCATION_LEVELS) {
         countryLabels = window.GRADUATE_EDUCATION_LEVELS;

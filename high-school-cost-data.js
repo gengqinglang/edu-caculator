@@ -426,6 +426,22 @@ function getHighSchoolAverageCost(cityTier, schoolType, costItem, parentingStyle
 }
 
 // 导出配置
+// 高中海外国家/地区枚举
+const HIGH_SCHOOL_EDUCATION_LEVELS = {
+  usa: "美国",
+  uk: "英国", 
+  canada: "加拿大",
+  australia: "澳洲",
+  singapore: "新加坡",
+  japan: "日本",
+  hongkong: "香港",
+  europeOthers: "欧洲其他"
+};
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { HIGH_SCHOOL_COST_DATA, getHighSchoolCostData, getHighSchoolAverageCost };
+  module.exports = { HIGH_SCHOOL_COST_DATA, HIGH_SCHOOL_EDUCATION_LEVELS, getHighSchoolCostData, getHighSchoolAverageCost };
+} else if (typeof window !== 'undefined') {
+  // 浏览器环境下创建全局变量
+  window.HIGH_SCHOOL_COST_DATA = HIGH_SCHOOL_COST_DATA;
+  window.HIGH_SCHOOL_EDUCATION_LEVELS = HIGH_SCHOOL_EDUCATION_LEVELS;
 }
