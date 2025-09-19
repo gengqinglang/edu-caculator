@@ -2994,6 +2994,12 @@
                 const country = document.getElementById('currentCountry').value;
                 const educationStyle = document.getElementById('educationStyle').value;
                 
+                console.log('🔍 调试DOM元素值:');
+                console.log('  - currentCity DOM元素:', document.getElementById('currentCity'));
+                console.log('  - currentCity.value:', document.getElementById('currentCity')?.value);
+                console.log('  - currentCity.selectedIndex:', document.getElementById('currentCity')?.selectedIndex);
+                console.log('  - currentCity.options:', document.getElementById('currentCity')?.options);
+                
                 console.log('📝 用户输入:', { city, stage, grade, level, country, educationStyle });
                 
                 // 验证输入（大学/研究生/博士阶段不需要教育风格）
