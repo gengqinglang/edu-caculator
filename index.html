@@ -2033,7 +2033,8 @@
                 return adapter.getCostData(stageCode, levelCode, options.city || '', options.country || '', options.educationStyle || 'balanced');
             } else {
                 // 大学、研究生、博士适配器
-                return adapter.getCostData(stageCode, '', levelCode, '', '');
+                // 参数: (stage, grade, level, city, educationStyle)
+                return adapter.getCostData(stageCode, options.grade || '', levelCode, options.city || '', options.educationStyle || '');
             }
         }
 
@@ -2446,7 +2447,37 @@
                                 stageCost = calculation.summary.grandTotal;
                             } else {
                                 // 如果没有修改过，使用原始数据
-                                costData = getStageCostData(stage.code, levelSelect.value);
+                                const options = {};
+                                
+                                // 获取城市信息
+                                const citySelect = document.getElementById(`city-${stage.code}`);
+                                if (citySelect && citySelect.value) {
+                                    options.city = citySelect.value;
+                                } else {
+                                    options.city = userPlan.currentCity; // 使用当前城市作为默认值
+                                }
+                                
+                                // 获取国家信息（仅高中阶段需要）
+                                const countrySelect = document.getElementById(`country-${stage.code}`);
+                                if (countrySelect && countrySelect.value) {
+                                    options.country = countrySelect.value;
+                                }
+                                
+                                // 获取教育风格
+                                const educationStyleSelect = document.getElementById(`educationStyle-${stage.code}`);
+                                if (educationStyleSelect && educationStyleSelect.value) {
+                                    options.educationStyle = educationStyleSelect.value;
+                                } else {
+                                    options.educationStyle = userPlan.educationStyle; // 使用当前教育风格作为默认值
+                                }
+                                
+                                // 获取年级信息（大学/研究生/博士阶段需要）
+                                const gradeSelect = document.getElementById(`grade-${stage.code}`);
+                                if (gradeSelect && gradeSelect.value) {
+                                    options.grade = gradeSelect.value;
+                                }
+                                
+                                costData = getStageCostData(stage.code, levelSelect.value, options);
                                 calculation = calculateStageTotal(stage.code, costData, stage.config.totalYears);
                                 stageCost = calculation.summary.grandTotal;
                             }
@@ -2921,12 +2952,15 @@
                 
                 console.log('💾 用户计划已保存:', userPlan);
                 
-                // 检查数据适配器
-                if (!dataAdapter) {
-                    console.error('❌ dataAdapter 未初始化');
-                    showError('系统未正确初始化');
-                    return;
-                }
+                // 检查适配器初始化状态
+                console.log('🔍 检查适配器状态...');
+                console.log('适配器状态:', {
+                    kindergartenPrimaryMiddle: !!kindergartenPrimaryMiddleAdapter,
+                    highSchool: !!highSchoolAdapter,
+                    university: !!universityAdapter,
+                    graduate: !!graduateAdapter,
+                    phd: !!phdAdapter
+                });
                 
                 // 显示当前阶段费用
                 console.log('💰 开始显示当前阶段费用...');

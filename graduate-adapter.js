@@ -135,11 +135,20 @@ class GraduateAdapter {
       };
     });
 
+    const totalCost = this.calculateTotalCost(formattedCosts);
+    
     return {
       displayName,
       costs: formattedCosts,
-      totalCost: this.calculateTotalCost(formattedCosts),
-      dataSource: "系统数据"
+      totalCost: totalCost,
+      dataSource: "系统数据",
+      // 为了兼容现有系统，添加summary对象
+      summary: {
+        periodicTotal: totalCost,
+        grandTotal: totalCost,
+        yearlyTotal: totalCost, // 假设1年制
+        onceTotal: 0
+      }
     };
   }
 
