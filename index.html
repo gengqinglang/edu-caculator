@@ -3278,12 +3278,22 @@
                         // 大学阶段
                         console.log(`✅ 使用大学适配器获取${stageCode}阶段费用数据`);
                         
+                        // 获取年级信息
+                        const gradeSelect = document.getElementById(`grade-${stageCode}`);
+                        const gradeCode = gradeSelect ? gradeSelect.value : '';
+                        
+                        // 获取国家信息（海外大学需要）
+                        const countrySelect = document.getElementById(`country-${stageCode}`);
+                        const countryCode = countrySelect ? countrySelect.value : '';
+                        
+                        console.log(`🌍 大学阶段参数: grade=${gradeCode}, country=${countryCode}`);
+                        
                         const costDataResult = universityAdapter.getCostData(
                             stageCode,
-                            '',
+                            gradeCode,
                             levelCode,
                             '',
-                            ''
+                            countryCode
                         );
                         
                         baseCostData = costDataResult;
@@ -3291,12 +3301,22 @@
                         // 研究生阶段
                         console.log(`✅ 使用研究生适配器获取${stageCode}阶段费用数据`);
                         
+                        // 获取年级信息
+                        const gradeSelect = document.getElementById(`grade-${stageCode}`);
+                        const gradeCode = gradeSelect ? gradeSelect.value : '';
+                        
+                        // 获取国家信息（海外研究生需要）
+                        const countrySelect = document.getElementById(`country-${stageCode}`);
+                        const countryCode = countrySelect ? countrySelect.value : '';
+                        
+                        console.log(`🎓 研究生阶段参数: grade=${gradeCode}, country=${countryCode}`);
+                        
                         const costDataResult = graduateAdapter.getCostData(
                             stageCode,
-                            '',
+                            gradeCode,
                             levelCode,
                             '',
-                            ''
+                            countryCode
                         );
                         
                         baseCostData = costDataResult;
@@ -3304,12 +3324,22 @@
                         // 博士阶段
                         console.log(`✅ 使用博士适配器获取${stageCode}阶段费用数据`);
                         
+                        // 获取年级信息
+                        const gradeSelect = document.getElementById(`grade-${stageCode}`);
+                        const gradeCode = gradeSelect ? gradeSelect.value : '';
+                        
+                        // 获取国家信息（海外博士需要）
+                        const countrySelect = document.getElementById(`country-${stageCode}`);
+                        const countryCode = countrySelect ? countrySelect.value : '';
+                        
+                        console.log(`🔬 博士阶段参数: grade=${gradeCode}, country=${countryCode}`);
+                        
                         const costDataResult = phdAdapter.getCostData(
                             stageCode,
-                            '',
+                            gradeCode,
                             levelCode,
                             '',
-                            ''
+                            countryCode
                         );
                         
                         baseCostData = costDataResult;
