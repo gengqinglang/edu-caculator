@@ -3989,19 +3989,17 @@
             subsequentStages.forEach(stage => {
                 let stageCost = 0;
                 
-                // 首先尝试从缓存获取
+                // 只计算已配置的阶段（缓存中有数据的阶段）
                 if (window.stageCostData && window.stageCostData[stage.code] && 
                     window.stageCostData[stage.code].calculation && 
                     window.stageCostData[stage.code].calculation.summary) {
                     stageCost = window.stageCostData[stage.code].calculation.summary.periodicTotal || 0;
-                    console.log(`${stage.code}阶段（缓存）费用:`, stageCost);
+                    console.log(`${stage.code}阶段（已配置）费用:`, stageCost);
+                    totalCost += stageCost;
                 } else {
-                    // 缓存中没有数据，实时计算默认费用
-                    stageCost = calculateDefaultStageCost(stage.code);
-                    console.log(`${stage.code}阶段（默认）费用:`, stageCost);
+                    // 未配置的阶段跳过，不计算费用
+                    console.log(`${stage.code}阶段未配置，跳过费用计算`);
                 }
-                
-                totalCost += stageCost;
             });
             
             // 更新显示
