@@ -2087,6 +2087,7 @@
 
         // 更新年级选项
         function updateGradeOptions() {
+            console.log('🔄 updateGradeOptions 开始执行');
             const stageSelect = document.getElementById('currentStage');
             const gradeSelect = document.getElementById('currentGrade');
             const levelSelect = document.getElementById('currentLevel');
@@ -2094,6 +2095,11 @@
             const educationStyleSelect = document.getElementById('educationStyle');
             
             const selectedStage = stageSelect.value;
+            console.log('🔍 当前选择的阶段:', selectedStage);
+            console.log('🔍 DOM元素状态:', {
+                stageSelect: stageSelect?.value,
+                stageSelectHTML: stageSelect?.outerHTML?.substring(0, 100) + '...'
+            });
             
             // 重置后续选项
             gradeSelect.innerHTML = '<option value="">请选择年级</option>';
@@ -3319,8 +3325,17 @@
                     const countrySelect = document.getElementById(`country-${stageCode}`);
                     
                     const levelCode = options.levelCode || (levelSelect ? levelSelect.value : '');
-                    const cityCode = options.cityCode || (citySelect ? citySelect.value : '');
+                    const cityCode = options.cityCode || (citySelect ? citySelect.value : '') || userPlan.currentCity || '';
                     const countryCode = options.countryCode || (countrySelect ? countrySelect.value : '');
+                    
+                    console.log('🔍 未来阶段参数获取调试:', {
+                        stageCode: stageCode,
+                        levelCode: levelCode,
+                        cityCode: cityCode,
+                        'citySelect.value': citySelect ? citySelect.value : 'DOM不存在',
+                        'userPlan.currentCity': userPlan.currentCity,
+                        'options.cityCode': options.cityCode
+                    });
                     
                     if (!levelCode) {
                         // 隐藏费用相关区域
