@@ -1742,6 +1742,14 @@
     <script src="kindergarten-primary-middle-adapter.js"></script>
     <script src="high-school-cost-data.js"></script>
     <script src="high-school-adapter.js"></script>
+    
+    <!-- 新增教育阶段数据和适配器 -->
+    <script src="university-cost-data.js"></script>
+    <script src="university-adapter.js"></script>
+    <script src="graduate-cost-data.js"></script>
+    <script src="graduate-adapter.js"></script>
+    <script src="phd-cost-data.js"></script>
+    <script src="phd-adapter.js"></script>
 
     <script>
         // 全局变量
@@ -1749,6 +1757,9 @@
         let dataAdapter;
         let kindergartenPrimaryMiddleAdapter; // 新的幼小初适配器
         let highSchoolAdapter; // 高中适配器
+        let universityAdapter; // 大学适配器
+        let graduateAdapter; // 研究生适配器
+        let phdAdapter; // 博士适配器
         let userPlan = {
             currentStage: '',
             currentGrade: '',
@@ -1786,6 +1797,47 @@
                 }
             } catch (error) {
                 console.error('❌ 高中适配器初始化失败:', error);
+            }
+
+            // 新增适配器初始化
+            try {
+                if (typeof UniversityAdapter !== 'undefined') {
+                    universityAdapter = new UniversityAdapter();
+                    console.log('✅ 大学适配器初始化成功');
+                } else {
+                    console.warn('⚠️ UniversityAdapter 类未找到');
+                }
+            } catch (error) {
+                console.error('❌ 大学适配器初始化失败:', error);
+            }
+
+            try {
+                if (typeof GraduateAdapter !== 'undefined') {
+                    graduateAdapter = new GraduateAdapter();
+                    console.log('✅ 研究生适配器初始化成功');
+                } else {
+                    console.warn('⚠️ GraduateAdapter 类未找到');
+                }
+            } catch (error) {
+                console.error('❌ 研究生适配器初始化失败:', error);
+            }
+
+            try {
+                if (typeof PhdAdapter !== 'undefined') {
+                    phdAdapter = new PhdAdapter();
+                    console.log('✅ 博士适配器初始化成功');
+                } else {
+                    console.warn('⚠️ PhdAdapter 类未找到');
+                }
+            } catch (error) {
+                console.error('❌ 博士适配器初始化失败:', error);
+            }
+
+            try {
+                dataAdapter = new EducationDataAdapter();
+                console.log('✅ 原有数据适配器初始化成功');
+            } catch (error) {
+                console.error('❌ 原有数据适配器初始化失败:', error);
             }
         }
 
@@ -2949,6 +3001,57 @@
                     return compatibleData;
                 }
                 
+                // 检查是否为大学阶段，使用大学适配器
+                if (universityAdapter && universityAdapter.isStageSupported(userPlan.currentStage)) {
+                    console.log('✅ 使用大学适配器获取费用数据');
+                    
+                    const costDataResult = universityAdapter.getCostData(
+                        userPlan.currentStage,
+                        userPlan.currentGrade,
+                        userPlan.currentLevel,
+                        userPlan.currentCity,
+                        userPlan.educationStyle || 'balanced'
+                    );
+                    
+                    console.log('getCurrentStageCostData - 大学适配器返回结果:', costDataResult);
+                    
+                    return costDataResult;
+                }
+                
+                // 检查是否为研究生阶段，使用研究生适配器
+                if (graduateAdapter && graduateAdapter.isStageSupported(userPlan.currentStage)) {
+                    console.log('✅ 使用研究生适配器获取费用数据');
+                    
+                    const costDataResult = graduateAdapter.getCostData(
+                        userPlan.currentStage,
+                        userPlan.currentGrade,
+                        userPlan.currentLevel,
+                        userPlan.currentCity,
+                        userPlan.educationStyle || 'balanced'
+                    );
+                    
+                    console.log('getCurrentStageCostData - 研究生适配器返回结果:', costDataResult);
+                    
+                    return costDataResult;
+                }
+                
+                // 检查是否为博士阶段，使用博士适配器
+                if (phdAdapter && phdAdapter.isStageSupported(userPlan.currentStage)) {
+                    console.log('✅ 使用博士适配器获取费用数据');
+                    
+                    const costDataResult = phdAdapter.getCostData(
+                        userPlan.currentStage,
+                        userPlan.currentGrade,
+                        userPlan.currentLevel,
+                        userPlan.currentCity,
+                        userPlan.educationStyle || 'balanced'
+                    );
+                    
+                    console.log('getCurrentStageCostData - 博士适配器返回结果:', costDataResult);
+                    
+                    return costDataResult;
+                }
+                
                 // 对于其他阶段，使用原有适配器
                 console.log('使用原有适配器获取费用数据');
                 
@@ -3028,7 +3131,7 @@
 
         // 统一的阶段显示函数 - 同时处理当前阶段和未来阶段
         function updateStageDisplay(stageCode, options = {}) {
-            console.log('updateStageDisplay - 开始更新阶段:', stageCode, options);
+            // console.log('updateStageDisplay - 开始更新阶段:', stageCode, options);
             
             try {
                 let baseCostData;
@@ -3168,7 +3271,7 @@
                     updateTotalSummary();
                 }
                 
-                console.log(`updateStageDisplay - 阶段 ${stageCode} 更新完成`);
+                // console.log(`updateStageDisplay - 阶段 ${stageCode} 更新完成`);
                 
             } catch (error) {
                 console.error(`更新阶段 ${stageCode} 失败:`, error);

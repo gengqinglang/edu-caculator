@@ -87,10 +87,16 @@ const EDUCATION_STAGES_CONFIG = {
         { code: "grade4", name: "大四", year: 4 }
       ],
       educationLevels: [
-        { code: "domesticPublic", name: "国内公办大学", direction: "domestic" },
+        { code: "domesticPublic", name: "国内公立大学", direction: "domestic" },
         { code: "domesticPrivate", name: "国内民办大学", direction: "domestic" },
-        { code: "jointProgram", name: "中外合作办学", direction: "bilingual" },
-        { code: "overseas", name: "海外大学", direction: "overseas" }
+        { code: "usa", name: "美国", direction: "overseas" },
+        { code: "uk", name: "英国", direction: "overseas" },
+        { code: "australia", name: "澳洲", direction: "overseas" },
+        { code: "hongkong", name: "香港", direction: "overseas" },
+        { code: "singapore", name: "新加坡", direction: "overseas" },
+        { code: "japan", name: "日本", direction: "overseas" },
+        { code: "canada", name: "加拿大", direction: "overseas" },
+        { code: "europeOthers", name: "欧洲其他", direction: "overseas" }
       ],
       nextStage: "graduate"
     },
@@ -106,7 +112,14 @@ const EDUCATION_STAGES_CONFIG = {
       educationLevels: [
         { code: "domesticAcademic", name: "国内学术型硕士", direction: "domestic" },
         { code: "domesticProfessional", name: "国内专业型硕士", direction: "domestic" },
-        { code: "overseasMaster", name: "海外硕士", direction: "overseas" }
+        { code: "usa", name: "美国", direction: "overseas" },
+        { code: "uk", name: "英国", direction: "overseas" },
+        { code: "australia", name: "澳洲", direction: "overseas" },
+        { code: "hongkong", name: "香港", direction: "overseas" },
+        { code: "singapore", name: "新加坡", direction: "overseas" },
+        { code: "japan", name: "日本", direction: "overseas" },
+        { code: "canada", name: "加拿大", direction: "overseas" },
+        { code: "europeOthers", name: "欧洲其他", direction: "overseas" }
       ],
       nextStage: "phd"
     },
@@ -121,8 +134,15 @@ const EDUCATION_STAGES_CONFIG = {
         { code: "grade4", name: "博四", year: 4 }
       ],
       educationLevels: [
-        { code: "domesticPhd", name: "国内博士", direction: "domestic" },
-        { code: "overseasPhd", name: "海外博士", direction: "overseas" }
+        { code: "domesticPublic", name: "国内博士", direction: "domestic" },
+        { code: "usa", name: "美国", direction: "overseas" },
+        { code: "uk", name: "英国", direction: "overseas" },
+        { code: "australia", name: "澳洲", direction: "overseas" },
+        { code: "hongkong", name: "香港", direction: "overseas" },
+        { code: "singapore", name: "新加坡", direction: "overseas" },
+        { code: "japan", name: "日本", direction: "overseas" },
+        { code: "canada", name: "加拿大", direction: "overseas" },
+        { code: "europeOthers", name: "欧洲其他", direction: "overseas" }
       ],
       nextStage: null // 最终阶段
     }
