@@ -142,4 +142,9 @@ if (typeof module !== 'undefined' && module.exports) {
     UNIVERSITY_COST_ITEMS,
     UNIVERSITY_EDUCATION_LEVELS
   };
+} else if (typeof window !== 'undefined') {
+  // 浏览器环境下创建全局变量
+  window.UNIVERSITY_COST_DATA = UNIVERSITY_COST_DATA;
+  window.UNIVERSITY_COST_ITEMS = UNIVERSITY_COST_ITEMS;
+  window.UNIVERSITY_EDUCATION_LEVELS = UNIVERSITY_EDUCATION_LEVELS;
 }

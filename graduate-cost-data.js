@@ -142,4 +142,9 @@ if (typeof module !== 'undefined' && module.exports) {
     GRADUATE_COST_ITEMS,
     GRADUATE_EDUCATION_LEVELS
   };
+} else if (typeof window !== 'undefined') {
+  // 浏览器环境下创建全局变量
+  window.GRADUATE_COST_DATA = GRADUATE_COST_DATA;
+  window.GRADUATE_COST_ITEMS = GRADUATE_COST_ITEMS;
+  window.GRADUATE_EDUCATION_LEVELS = GRADUATE_EDUCATION_LEVELS;
 }

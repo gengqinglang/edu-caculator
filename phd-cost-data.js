@@ -132,4 +132,9 @@ if (typeof module !== 'undefined' && module.exports) {
     PHD_COST_ITEMS,
     PHD_EDUCATION_LEVELS
   };
+} else if (typeof window !== 'undefined') {
+  // 浏览器环境下创建全局变量
+  window.PHD_COST_DATA = PHD_COST_DATA;
+  window.PHD_COST_ITEMS = PHD_COST_ITEMS;
+  window.PHD_EDUCATION_LEVELS = PHD_EDUCATION_LEVELS;
 }
