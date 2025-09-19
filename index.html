@@ -2794,6 +2794,14 @@
         // 更新阶段卡片 - 支持城市和国家选择
         // 更新阶段卡片 - 统一函数的别名
         function updateStageCard(stageCode) {
+            console.log('🔄 updateStageCard 调用:', stageCode);
+            
+            // 🧹 清除该阶段的缓存数据，确保使用最新参数重新计算
+            if (window.stageCostData && window.stageCostData[stageCode]) {
+                console.log(`🧹 清除 ${stageCode} 阶段的缓存数据（实时计算触发）`);
+                delete window.stageCostData[stageCode];
+            }
+            
             // 获取并保存该阶段的教育风格选择
             const educationStyleSelect = document.getElementById(`educationStyle-${stageCode}`);
             if (educationStyleSelect && educationStyleSelect.value) {
