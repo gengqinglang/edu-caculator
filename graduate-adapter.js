@@ -68,6 +68,13 @@ class GraduateAdapter {
     if (level === 'domesticProfessional' || level === 'professional') {
       return { type: 'domestic', subType: 'professional' };
     }
+    // 兼容通用名称 - 默认映射到学术型
+    if (level === 'public' || level === 'domestic') {
+      return { type: 'domestic', subType: 'academic' };
+    }
+    if (level === 'private') {
+      return { type: 'domestic', subType: 'professional' };
+    }
 
     // 海外研究生 - 新的逻辑：教育水平为overseas，国家信息单独传递
     if (level === 'overseas') {
