@@ -200,22 +200,6 @@ const EDUCATION_STAGES_CONFIG = {
     }));
   },
 
-  // 获取后续教育阶段
-  getSubsequentStages: function(currentStage) {
-    const stages = [];
-    let stage = currentStage;
-    
-    while (stage && this.stages[stage]) {
-      stages.push({
-        code: stage,
-        name: this.stages[stage].name,
-        config: this.stages[stage]
-      });
-      stage = this.stages[stage].nextStage;
-    }
-    
-    return stages;
-  },
 
   // 根据方向推荐教育水平
   suggestEducationLevels: function(stage, previousDirection) {

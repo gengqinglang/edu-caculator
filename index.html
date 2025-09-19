@@ -4045,7 +4045,7 @@
                 }
                 
                 // 计算总费用
-                const calculation = calculateStageTotal(stageCode, costData, stageInfo.duration);
+                const calculation = calculateStageTotal(stageCode, costData, stageInfo.totalYears);
                 if (calculation && calculation.summary && calculation.summary.periodicTotal) {
                     return calculation.summary.periodicTotal;
                 }
