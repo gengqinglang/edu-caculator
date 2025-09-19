@@ -366,3 +366,39 @@
 ::1 - - [19/Sep/2025 14:01:52] "GET /graduate-adapter.js HTTP/1.1" 200 -
 ::1 - - [19/Sep/2025 14:01:52] "GET /phd-cost-data.js HTTP/1.1" 200 -
 ::1 - - [19/Sep/2025 14:01:52] "GET /phd-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /index.html HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /education-stages-config.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /city-tier-mapping.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /kindergarten-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /primary-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /university-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /kindergarten-primary-middle-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /high-school-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /high-school-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /middle-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /university-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /phd-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /graduate-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /graduate-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] "GET /phd-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:02] code 404, message File not found
+::1 - - [19/Sep/2025 14:04:02] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [19/Sep/2025 14:04:53] "GET /index.html HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /education-stages-config.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /primary-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /kindergarten-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /city-tier-mapping.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /kindergarten-primary-middle-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /middle-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /high-school-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /high-school-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /university-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /graduate-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /graduate-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /university-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /phd-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] "GET /phd-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 14:04:53] code 404, message File not found
+::1 - - [19/Sep/2025 14:04:53] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [19/Sep/2025 14:05:06] code 404, message File not found
+::1 - - [19/Sep/2025 14:05:06] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -

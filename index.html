@@ -2329,7 +2329,7 @@
             displayCostSummary(calculation, remainingYears);
             
             // 更新总费用汇总
-            updateTotalSummary();
+            updateTotalEducationCost();
             
             // 更新表格中的总计列
             const row = event.target.closest('tr');
@@ -2477,14 +2477,14 @@
                     }
                 });
 
-                // 更新显示
+                // 更新显示 - 已删除的教育费用总览模块，不再更新
                 const totalCost = currentStageCost + futureStageCost;
-                document.getElementById('currentStageCost').textContent = `¥${Math.round(currentStageCost).toLocaleString()}`;
-                document.getElementById('futureStageCost').textContent = `¥${Math.round(futureStageCost).toLocaleString()}`;
-                document.getElementById('totalCostSummary').textContent = `¥${Math.round(totalCost).toLocaleString()}`;
+                // document.getElementById('currentStageCost').textContent = `¥${Math.round(currentStageCost).toLocaleString()}`;
+                // document.getElementById('futureStageCost').textContent = `¥${Math.round(futureStageCost).toLocaleString()}`;
+                // document.getElementById('totalCostSummary').textContent = `¥${Math.round(totalCost).toLocaleString()}`;
 
-                // 更新时间线
-                updateInvestmentTimeline(timelineItems);
+                // 更新时间线 - 已删除
+                // updateInvestmentTimeline(timelineItems);
 
 
                 // 保存到用户规划中
@@ -2590,7 +2590,7 @@
 
         // 在更新阶段卡片时检查完成状态
         function checkAndUpdateComplete() {
-            updateTotalSummary();
+            updateTotalEducationCost();
             checkEducationComplete();
         }
 
@@ -2825,7 +2825,7 @@
             }
             
             // 更新总费用汇总
-            updateTotalSummary();
+            updateTotalEducationCost();
             
             // 更新教育总费用
             updateTotalEducationCost();
@@ -3383,7 +3383,7 @@
                 if (stageCode === userPlan.currentStage) {
                     updateTotalEducationCost();
                 } else {
-                    updateTotalSummary();
+                    updateTotalEducationCost();
                 }
                 
                 // console.log(`updateStageDisplay - 阶段 ${stageCode} 更新完成`);
@@ -3425,7 +3425,7 @@
             }
             
             // 显示总费用汇总区域
-            updateTotalSummary();
+            updateTotalEducationCost();
         }
 
         // 创建阶段卡片HTML
@@ -3684,14 +3684,14 @@
                     }
                 });
 
-                // 更新汇总显示
+                // 更新汇总显示 - 已删除的教育费用总览模块，不再更新
                 const totalCost = currentStageCost + futureStageCost;
                 
-                document.getElementById('currentStageCost').textContent = `¥${Math.round(currentStageCost).toLocaleString()}`;
-                document.getElementById('futureStageCost').textContent = `¥${Math.round(futureStageCost).toLocaleString()}`;
+                // document.getElementById('currentStageCost').textContent = `¥${Math.round(currentStageCost).toLocaleString()}`;
+                // document.getElementById('futureStageCost').textContent = `¥${Math.round(futureStageCost).toLocaleString()}`;
 
-                // 更新时间线
-                updateInvestmentTimeline(timelineItems);
+                // 更新时间线 - 已删除
+                // updateInvestmentTimeline(timelineItems);
                 
                 
             } catch (error) {
