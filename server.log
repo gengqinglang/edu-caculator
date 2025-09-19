@@ -218,3 +218,58 @@
 ::1 - - [19/Sep/2025 12:50:50] "GET /phd-adapter.js HTTP/1.1" 200 -
 ::1 - - [19/Sep/2025 12:50:50] code 404, message File not found
 ::1 - - [19/Sep/2025 12:50:50] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [19/Sep/2025 12:56:13] "GET /index.html HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /education-stages-config.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] code 404, message File not found
+::1 - - [19/Sep/2025 12:56:13] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+::1 - - [19/Sep/2025 12:56:13] "GET /primary-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /kindergarten-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /city-tier-mapping.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /middle-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /kindergarten-primary-middle-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /university-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /high-school-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /graduate-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /graduate-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /phd-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /high-school-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /university-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] "GET /phd-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 12:56:13] code 404, message File not found
+::1 - - [19/Sep/2025 12:56:13] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [19/Sep/2025 13:09:39] "GET /test-all-stages-data.html HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:09:39] "GET /high-school-cost-data.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:09:39] "GET /university-cost-data.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:09:39] "GET /graduate-cost-data.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:09:39] "GET /phd-cost-data.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:09:39] "GET /university-adapter.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:09:39] "GET /education-stages-config.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:09:39] "GET /graduate-adapter.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:09:39] "GET /phd-adapter.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:09:57] code 404, message File not found
+::1 - - [19/Sep/2025 13:09:57] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+::1 - - [19/Sep/2025 13:10:09] "GET /test-all-stages-data.html HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] code 404, message File not found
+::1 - - [19/Sep/2025 13:10:09] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -
+::1 - - [19/Sep/2025 13:10:09] "GET /primary-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /kindergarten-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /middle-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /university-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /high-school-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /graduate-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /phd-cost-data.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /education-stages-config.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /city-tier-mapping.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /graduate-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /kindergarten-primary-middle-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /high-school-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /university-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] "GET /phd-adapter.js HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:10:09] code 404, message File not found
+::1 - - [19/Sep/2025 13:10:09] "GET /favicon.ico HTTP/1.1" 404 -
+::1 - - [19/Sep/2025 13:13:04] "GET /test-all-stages-data.html HTTP/1.1" 200 -
+::1 - - [19/Sep/2025 13:13:05] "GET /education-stages-config.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:13:05] "GET /high-school-cost-data.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:13:05] "GET /graduate-adapter.js HTTP/1.1" 304 -
+::1 - - [19/Sep/2025 13:13:05] code 404, message File not found
+::1 - - [19/Sep/2025 13:13:05] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 -

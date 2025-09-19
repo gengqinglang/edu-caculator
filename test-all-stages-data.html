@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全阶段数据获取测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .warning { background-color: #fff3cd; border-color: #ffeeba; }
+        .stage-test { margin: 10px 0; padding: 10px; border-left: 4px solid #007bff; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>全阶段数据获取测试</h1>
+    
+    <button onclick="testAllStages()">开始全面测试</button>
+    <button onclick="clearResults()">清除结果</button>
+    
+    <div id="testResults"></div>
+
+    <!-- 引入所有数据文件 -->
+    <script src="kindergarten-cost-data.js"></script>
+    <script src="primary-cost-data.js"></script>
+    <script src="middle-cost-data.js"></script>
+    <script src="high-school-cost-data.js"></script>
+    <script src="university-cost-data.js"></script>
+    <script src="graduate-cost-data.js"></script>
+    <script src="phd-cost-data.js"></script>
+    <script src="city-tier-mapping.js"></script>
+    <script src="education-stages-config.js"></script>
+
+    <!-- 引入所有适配器 -->
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+    <script src="high-school-adapter.js"></script>
+    <script src="university-adapter.js"></script>
+    <script src="graduate-adapter.js"></script>
+    <script src="phd-adapter.js"></script>
+
+    <script>
+        // 初始化适配器
+        let kindergartenPrimaryMiddleAdapter, highSchoolAdapter, universityAdapter, graduateAdapter, phdAdapter;
+
+        function initializeAdapters() {
+            try {
+                kindergartenPrimaryMiddleAdapter = new KindergartenPrimaryMiddleAdapter();
+                highSchoolAdapter = new HighSchoolAdapter();
+                universityAdapter = new UniversityAdapter();
+                graduateAdapter = new GraduateAdapter();
+                phdAdapter = new PhdAdapter();
+                
+                return true;
+            } catch (error) {
+                console.error('适配器初始化失败:', error);
+                return false;
+            }
+        }
+
+        function getAdapterForStage(stageCode) {
+            if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
+                return kindergartenPrimaryMiddleAdapter;
+            } else if (highSchoolAdapter && highSchoolAdapter.isStageSupported(stageCode)) {
+                return highSchoolAdapter;
+            } else if (universityAdapter && universityAdapter.isStageSupported(stageCode)) {
+                return universityAdapter;
+            } else if (graduateAdapter && graduateAdapter.isStageSupported(stageCode)) {
+                return graduateAdapter;
+            } else if (phdAdapter && phdAdapter.isStageSupported(stageCode)) {
+                return phdAdapter;
+            }
+            return null;
+        }
+
+        function getStageCostData(stageCode, levelCode, options = {}) {
+            const adapter = getAdapterForStage(stageCode);
+            if (!adapter) {
+                return { error: `❌ 未找到适配器支持阶段: ${stageCode}` };
+            }
+            
+            try {
+                if (kindergartenPrimaryMiddleAdapter && kindergartenPrimaryMiddleAdapter.isStageSupported(stageCode)) {
+                    return adapter.getCostData(stageCode, levelCode, options.city || '', options.educationStyle || 'balanced');
+                } else if (highSchoolAdapter && highSchoolAdapter.isStageSupported(stageCode)) {
+                    return adapter.getCostData(stageCode, levelCode, options.city || '', options.country || '', options.educationStyle || 'balanced');
+                } else {
+                    // 大学、研究生、博士适配器
+                    return adapter.getCostData(stageCode, options.grade || '', levelCode, options.city || '', options.country || '');
+                }
+            } catch (error) {
+                return { error: `❌ 数据获取异常: ${error.message}` };
+            }
+        }
+
+        function calculateStageTotal(stageCode, costData, years) {
+            const adapter = getAdapterForStage(stageCode);
+            if (!adapter) {
+                return { error: `❌ 未找到计算器支持阶段: ${stageCode}` };
+            }
+            
+            try {
+                return adapter.calculateTotalCost(costData, years);
+            } catch (error) {
+                return { error: `❌ 计算异常: ${error.message}` };
+            }
+        }
+
+        function testStage(stageCode, levelCode, options = {}, years = 1) {
+            const stageName = EDUCATION_STAGES_CONFIG.getStageInfo(stageCode)?.name || stageCode;
+            const testTitle = `${stageName} (${stageCode}) - ${levelCode}`;
+            
+            let html = `<div class="stage-test">`;
+            html += `<h3>${testTitle}</h3>`;
+            
+            // 1. 测试数据获取
+            const costData = getStageCostData(stageCode, levelCode, options);
+            
+            if (!costData || costData.error) {
+                html += `<div class="error">数据获取失败: ${costData ? costData.error : '返回null'}</div>`;
+                html += `</div>`;
+                return html;
+            }
+            
+            // 检查数据完整性
+            if (!costData || !costData.costs || Object.keys(costData.costs).length === 0) {
+                html += `<div class="error">❌ 获取到空的费用数据</div>`;
+                html += `<pre>costData: ${JSON.stringify(costData, null, 2)}</pre>`;
+                html += `</div>`;
+                return html;
+            }
+            
+            html += `<div class="success">✅ 数据获取成功</div>`;
+            html += `<pre>费用项数量: ${Object.keys(costData.costs).length}</pre>`;
+            
+            // 2. 测试费用计算
+            const calculation = calculateStageTotal(stageCode, costData, years);
+            
+            if (calculation.error) {
+                html += `<div class="error">计算失败: ${calculation.error}</div>`;
+            } else if (calculation.summary && calculation.summary.periodicTotal) {
+                html += `<div class="success">✅ 费用计算成功</div>`;
+                html += `<pre>年费用: ¥${calculation.summary.periodicTotal.toLocaleString()}</pre>`;
+                html += `<pre>总费用: ¥${(calculation.summary.periodicTotal * years).toLocaleString()}</pre>`;
+            } else {
+                html += `<div class="warning">⚠️ 计算结果格式异常</div>`;
+                html += `<pre>calculation: ${JSON.stringify(calculation, null, 2)}</pre>`;
+            }
+            
+            html += `</div>`;
+            return html;
+        }
+
+        function testAllStages() {
+            if (!initializeAdapters()) {
+                document.getElementById('testResults').innerHTML = '<div class="error">适配器初始化失败</div>';
+                return;
+            }
+            
+            let html = '<h2>全阶段数据获取测试结果</h2>';
+            
+                // 测试配置
+                const testCases = [
+                    // 幼儿园 - 小学 - 初中 (KMP适配器)
+                    { stageCode: 'kindergarten', levelCode: 'public', options: { city: 'beijing', educationStyle: 'balanced' }, years: 3 },
+                    { stageCode: 'primary', levelCode: 'public', options: { city: 'beijing', educationStyle: 'balanced' }, years: 6 },
+                    { stageCode: 'middle', levelCode: 'public', options: { city: 'beijing', educationStyle: 'balanced' }, years: 3 },
+                    
+                    // 高中
+                    { stageCode: 'high', levelCode: 'public', options: { city: 'beijing', educationStyle: 'balanced' }, years: 3 },
+                    { stageCode: 'high', levelCode: 'overseas', options: { city: 'beijing', country: 'usa', educationStyle: 'balanced' }, years: 3 },
+                    
+                    // 大学
+                    { stageCode: 'university', levelCode: 'public', options: { grade: '本科', city: 'beijing' }, years: 4 },
+                    { stageCode: 'university', levelCode: 'overseas', options: { grade: '本科', city: 'beijing', country: 'usa' }, years: 4 },
+                    
+                    // 研究生
+                    { stageCode: 'graduate', levelCode: 'public', options: { grade: '硕士', city: 'beijing' }, years: 2 },
+                    { stageCode: 'graduate', levelCode: 'overseas', options: { grade: '硕士', city: 'beijing', country: 'usa' }, years: 2 },
+                    
+                    // 博士
+                    { stageCode: 'phd', levelCode: 'public', options: { grade: '博士', city: 'beijing' }, years: 4 },
+                    { stageCode: 'phd', levelCode: 'overseas', options: { grade: '博士', city: 'beijing', country: 'usa' }, years: 4 }
+                ];
+            
+            testCases.forEach(testCase => {
+                html += testStage(testCase.stageCode, testCase.levelCode, testCase.options, testCase.years);
+            });
+            
+            document.getElementById('testResults').innerHTML = html;
+        }
+
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = '';
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('测试页面加载完成');
+        });
+    </script>
+</body>
+</html>

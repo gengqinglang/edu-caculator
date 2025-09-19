@@ -143,18 +143,19 @@ class PhdAdapter {
       };
     });
 
-    const totalCost = this.calculateTotalCost(formattedCosts);
+    // 直接计算年度总费用，避免循环调用
+    const yearlyTotal = Object.values(formattedCosts).reduce((sum, cost) => sum + cost.amount, 0);
     
     return {
       displayName,
       costs: formattedCosts,
-      totalCost: totalCost,
+      totalCost: yearlyTotal,
       dataSource: "系统数据",
       // 为了兼容现有系统，添加summary对象
       summary: {
-        periodicTotal: totalCost,
-        grandTotal: totalCost,
-        yearlyTotal: totalCost, // 假设1年制
+        periodicTotal: yearlyTotal,
+        grandTotal: yearlyTotal,
+        yearlyTotal: yearlyTotal,
         onceTotal: 0
       }
     };
