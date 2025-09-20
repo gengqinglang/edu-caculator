@@ -69,36 +69,43 @@
         .input-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            gap: 24px;
             margin-bottom: 30px;
+            align-items: start;
         }
 
         .input-group {
             position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .input-group label {
-            display: block;
-            margin-bottom: 10px;
+            flex-shrink: 0;
+            width: 120px;
             font-weight: 400;
             color: #475569;
-            font-size: 0.95rem;
-            letter-spacing: 0.3px;
+            font-size: 0.9rem;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            text-align: left;
         }
 
         /* 简单稳定的select样式 */
         .input-group select {
-            width: 100%;
-            padding: 16px 20px;
-            padding-right: 50px;
+            flex: 1;
+            padding: 12px 14px;
+            padding-right: 36px;
             border: 1px solid #E2E8F0;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
             background: white;
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 16px center;
+            background-position: right 12px center;
             background-repeat: no-repeat;
-            background-size: 16px;
+            background-size: 12px;
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -1000,8 +1007,9 @@
 
         /* 教育总费用模块 */
         .total-cost-sticky {
-            position: static;
-            background: rgba(202, 244, 247, 0.3);
+            position: sticky;
+            top: 0;
+            background: white;
             border: 0.5px solid #B3EBEF;
             border-radius: 12px;
             padding: 20px;
@@ -1009,6 +1017,13 @@
             max-width: 1440px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        /* 当卡片固定时的状态（保持样式不变，但可以用于调试） */
+        .total-cost-sticky.sticky-active {
+            /* 目前保持样式不变，如需要可以在这里添加固定时的特殊样式 */
         }
 
         .total-cost-content {
@@ -1027,6 +1042,294 @@
             font-size: 1.8rem;
             font-weight: 700;
             color: #01BCD6;
+        }
+
+        /* 增长率设置样式 */
+
+        .growth-rate-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .growth-rate-toggle:hover {
+            background: transparent;
+            border-color: transparent;
+        }
+
+        .growth-rate-toggle.expanded svg {
+            transform: rotate(180deg);
+        }
+
+        .growth-rate-text {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .growth-rate-panel {
+            margin-top: 12px;
+            padding: 16px;
+            background: #f8fbfc;
+            border: 1px solid #e1f0f2;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .growth-rate-panel.collapsed {
+            max-height: 0;
+            margin-top: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border: none;
+            opacity: 0;
+        }
+
+        .growth-rate-setting {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .growth-rate-setting label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .input-suffix {
+            margin-left: 8px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .growth-rate-save-btn {
+            margin-left: 12px;
+            padding: 6px 16px;
+            background: #01BCD6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .growth-rate-save-btn:hover {
+            background: #00ACC1;
+            transform: translateY(-1px);
+        }
+
+        .growth-rate-note {
+            font-size: 0.75rem;
+            color: #888;
+            line-height: 1.4;
+        }
+
+        .stage-config-header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e1f0f2;
+        }
+
+        .stage-config-header .growth-rate-toggle {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+        }
+
+        .stage-growth-rate-section {
+            margin: 16px 0;
+            padding: 12px;
+            background: #f8fbfc;
+            border: 1px solid #e1f0f2;
+            border-radius: 8px;
+        }
+
+        .stage-growth-rate-section .growth-rate-toggle {
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        /* 年度费用柱状图样式 */
+        .total-cost-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .total-cost-header:hover {
+            background: rgba(202, 244, 247, 0.1);
+            border-radius: 8px;
+            padding: 8px;
+            margin: -8px;
+        }
+
+        .expand-toggle {
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: rgba(202, 244, 247, 0.3);
+            border: 1px solid #B3EBEF;
+            cursor: pointer;
+        }
+
+        .expand-toggle:hover {
+            background: rgba(202, 244, 247, 0.5);
+            border-color: #7DD3DA;
+        }
+
+        .expand-text {
+            font-size: 0.75rem;
+            color: #666;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+        }
+
+        .expand-toggle:hover .expand-text {
+            color: #333;
+        }
+
+        .expand-toggle.expanded svg {
+            transform: rotate(180deg);
+        }
+
+        .yearly-cost-chart {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #B3EBEF;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .yearly-cost-chart.collapsed {
+            max-height: 0;
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+            opacity: 0;
+        }
+
+        .chart-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .chart-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 120px;
+            padding: 0 10px;
+            gap: 4px;
+            overflow-x: auto; /* 允许横向滚动 */
+            min-width: 100%;
+        }
+
+        .chart-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 45px; /* 设置最小宽度确保可读性 */
+            max-width: 80px; /* 设置最大宽度避免过宽 */
+            height: 100%; /* 确保chart-bar占满容器高度，让子元素的百分比高度有参考 */
+        }
+
+        .bar-container {
+            flex: 1; /* 占据剩余空间，作为柱子高度的参考 */
+            display: flex;
+            align-items: flex-end; /* 柱子从底部对齐 */
+            justify-content: center;
+            min-height: 60px; /* 最小高度确保有足够空间显示柱子 */
+        }
+
+        .bar-column {
+            width: 100%;
+            background: #CAF4F7;
+            border-radius: 4px 4px 0 0;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            /* 确保柱子有最小宽度和可见性 */
+            min-width: 20px;
+            border: 1px solid #B3EBEF; /* 添加淡色边框确保可见 */
+        }
+
+        .bar-column.current-year {
+            background: #7DD3DA;
+        }
+
+        .bar-column:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+        }
+
+        .bar-value {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bar-year {
+            font-size: 0.7rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        /* 包含一次性费用的柱子样式 */
+        .bar-column.has-once-cost {
+            background: linear-gradient(to top, #CAF4F7 0%, #A5E7EA 100%);
+            border: 1px solid #7DD3DA;
+        }
+
+        .bar-column.has-once-cost.current-year {
+            background: linear-gradient(to top, #7DD3DA 0%, #5BC0C7 100%);
+            border: 1px solid #4AB3BA;
+        }
+
+        /* 图表说明 */
+        .chart-note {
+            font-size: 0.65rem;
+            color: #7f8c8d;
+            text-align: center;
+            margin-top: 8px;
+            font-style: italic;
         }
 
         @media (max-width: 1024px) {
@@ -1049,6 +1352,30 @@
             .total-cost-amount {
                 font-size: 1.6rem;
             }
+            
+            /* 柱状图响应式 */
+            .chart-container {
+                height: 100px;
+                gap: 2px;
+                padding: 0 5px;
+            }
+            
+            .chart-bar {
+                min-width: 35px;
+                max-width: 60px;
+            }
+            
+            .bar-value {
+                font-size: 0.65rem;
+            }
+            
+            .bar-year {
+                font-size: 0.6rem;
+            }
+            
+            .chart-title {
+                font-size: 0.8rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1063,6 +1390,35 @@
 
             .total-cost-amount {
                 font-size: 1.4rem;
+            }
+            
+            /* 柱状图小屏幕响应式 */
+            .yearly-cost-chart {
+                margin-top: 15px;
+                padding-top: 15px;
+            }
+            
+            .chart-container {
+                height: 80px;
+                gap: 1px;
+                padding: 0 2px;
+            }
+            
+            .chart-bar {
+                min-width: 25px;
+                max-width: 45px;
+            }
+            
+            .bar-value {
+                font-size: 0.55rem;
+            }
+            
+            .bar-year {
+                font-size: 0.5rem;
+            }
+            
+            .chart-title {
+                font-size: 0.75rem;
             }
         }
 
@@ -1173,6 +1529,14 @@
         /* 未来阶段卡片中的配置区域样式 */
         .stage-config {
             margin-bottom: 25px;
+        }
+
+        .stage-config .input-group {
+            margin-bottom: 20px;
+        }
+
+        .stage-config .input-group:last-child {
+            margin-bottom: 0;
         }
 
 
@@ -1304,68 +1668,6 @@
             color: #e74c3c;
         }
 
-        /* 教育完成提示 */
-        .education-complete {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
-            color: white;
-            text-align: center;
-            padding: 40px;
-            border-radius: 20px;
-            margin-top: 30px;
-        }
-
-        .complete-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-        }
-
-        .complete-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .complete-message {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 20px;
-        }
-
-        .complete-summary {
-            background: rgba(255,255,255,0.2);
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-
-        .complete-summary h4 {
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .complete-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            text-align: center;
-        }
-
-        .complete-stat {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .complete-stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .complete-stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
 
         /* 响应式设计 */
         @media (max-width: 1024px) {
@@ -1707,9 +2009,25 @@
 
         <!-- 教育总费用模块 -->
         <div id="totalEducationCost" class="total-cost-sticky hidden">
-            <div class="total-cost-content">
-                <span class="total-cost-label">教育总费用</span>
-                <span id="totalEducationAmount" class="total-cost-amount">¥0</span>
+            <div class="total-cost-header" onclick="toggleYearlyChart()">
+                <div class="total-cost-content">
+                    <span class="total-cost-label">教育总费用</span>
+                    <span id="totalEducationAmount" class="total-cost-amount">¥0</span>
+                </div>
+                <div class="expand-toggle" id="expandToggle" title="点击查看年度费用明细">
+                    <span class="expand-text" id="expandText">查看明细</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="transition: transform 0.3s ease;">
+                        <path d="M4 6L8 10L12 6" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <!-- 年度费用柱状图 -->
+            <div class="yearly-cost-chart collapsed" id="yearlyChart">
+                <div class="chart-title">年度费用分布</div>
+                <div class="chart-container" id="yearlyChartContainer">
+                    <!-- 柱状图将通过JavaScript动态生成 -->
+                </div>
             </div>
         </div>
 
@@ -1723,6 +2041,33 @@
             <div id="currentCostSummary" class="cost-summary">
                 <!-- 费用汇总卡片将动态生成 -->
             </div>
+            
+            <!-- 当前阶段增长率设置 -->
+            <div class="stage-growth-rate-section">
+                <div class="growth-rate-toggle" onclick="toggleGrowthRateSettings('current')">
+                    <span class="growth-rate-text" id="currentGrowthRateText">已考虑年均增长率 2.0%</span>
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="transition: transform 0.3s ease;">
+                        <path d="M4 6L8 10L12 6" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                
+                <!-- 增长率设置面板 -->
+                <div class="growth-rate-panel collapsed" id="currentGrowthRatePanel">
+                    <div class="growth-rate-setting">
+                        <label for="currentGrowthRateInput">年均增长率 (%)</label>
+                        <div class="input-group">
+                            <input type="number" 
+                                   id="currentGrowthRateInput" 
+                                   value="2.0" 
+                                   min="-100" 
+                                   max="500" 
+                                   step="0.1">
+                            <span class="input-suffix">%</span>
+                            <button class="growth-rate-save-btn" onclick="saveGrowthRate('current', userPlan.currentStage)">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="cost-details">
                 <h3>详细费用清单</h3>
@@ -1733,7 +2078,7 @@
                             <th>费用项目</th>
                             <th>金额</th>
                             <th>单位</th>
-                            <th>剩余年限总计</th>
+                            <th>费用总计</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -1762,36 +2107,30 @@
             </div>
 
 
-            <!-- 教育完成提示 -->
-            <div id="educationComplete" class="education-complete hidden">
-                <div class="complete-icon"></div>
-                <div class="complete-title">恭喜！教育规划完成</div>
-                <div class="complete-message">您已完成了从当前阶段到博士的完整教育规划</div>
-                <div id="completeSummary" class="complete-summary">
-                    <!-- 完成汇总将在这里显示 -->
-                </div>
-            </div>
         </div>
     </div>
 
     <!-- 引入所有必要的数据和API文件 -->
-    <script src="education-stages-config.js"></script>
-    
-    <!-- 新的幼小初费用数据和适配器 -->
+    <!-- 首先加载城市映射 -->
     <script src="city-tier-mapping.js"></script>
+    
+    <!-- 加载所有费用数据文件 -->
     <script src="kindergarten-cost-data.js"></script>
     <script src="primary-cost-data.js"></script>
     <script src="middle-cost-data.js"></script>
-    <script src="kindergarten-primary-middle-adapter.js"></script>
     <script src="high-school-cost-data.js"></script>
-    <script src="high-school-adapter.js"></script>
-    
-    <!-- 新增教育阶段数据和适配器 -->
     <script src="university-cost-data.js"></script>
-    <script src="university-adapter.js"></script>
     <script src="graduate-cost-data.js"></script>
-    <script src="graduate-adapter.js"></script>
     <script src="phd-cost-data.js"></script>
+    
+    <!-- 在数据文件之后加载配置文件（依赖全局变量） -->
+    <script src="education-stages-config.js"></script>
+    
+    <!-- 最后加载适配器文件 -->
+    <script src="kindergarten-primary-middle-adapter.js"></script>
+    <script src="high-school-adapter.js"></script>
+    <script src="university-adapter.js"></script>
+    <script src="graduate-adapter.js"></script>
     <script src="phd-adapter.js"></script>
 
     <script>
@@ -1813,8 +2152,255 @@
             totalInvestment: 0,
             educationPath: [],
             // 新增：每个阶段独立的教育风格设置
-            stageEducationStyles: {} // 格式：{ 'primary': 'balanced', 'middle': 'intensive' }
+            stageEducationStyles: {}, // 格式：{ 'primary': 'balanced', 'middle': 'intensive' }
+            // 新增：每个阶段的增长率设置（默认2%）
+            stageGrowthRates: {
+                'kindergarten': 2.0,
+                'primary': 2.0,
+                'middle': 2.0,
+                'high': 2.0,
+                'university': 2.0,
+                'graduate': 2.0,
+                'phd': 2.0
+            }
         };
+
+        // 增长率计算函数
+        function applyGrowthRate(originalAmount, stageCode, targetYear) {
+            const baseYear = 2025; // 基准年，不应用增长率
+            // 修复：正确处理0值，只有当值为undefined/null时才使用默认值
+            const growthRate = userPlan.stageGrowthRates && userPlan.stageGrowthRates.hasOwnProperty(stageCode) 
+                ? userPlan.stageGrowthRates[stageCode] 
+                : 2.0; // 默认2%
+            
+            if (targetYear <= baseYear) {
+                return originalAmount; // 2025年及之前不应用增长率
+            }
+            
+            const yearsDiff = targetYear - baseYear;
+            const growthMultiplier = Math.pow(1 + growthRate / 100, yearsDiff);
+            
+            console.log(`增长率计算: ${stageCode} ${originalAmount} * (1 + ${growthRate}%)^${yearsDiff} = ${originalAmount * growthMultiplier}`);
+            
+            return originalAmount * growthMultiplier;
+        }
+
+        // 获取阶段增长率
+        function getStageGrowthRate(stageCode) {
+            if (!userPlan.stageGrowthRates) {
+                userPlan.stageGrowthRates = {
+                    'kindergarten': 2.0,
+                    'primary': 2.0,
+                    'middle': 2.0,
+                    'high': 2.0,
+                    'university': 2.0,
+                    'graduate': 2.0,
+                    'phd': 2.0
+                };
+            }
+            // 修复：正确处理0值，只有当值为undefined时才使用默认值
+            return userPlan.stageGrowthRates.hasOwnProperty(stageCode) 
+                ? userPlan.stageGrowthRates[stageCode] 
+                : 2.0;
+        }
+
+        // 更新阶段增长率
+        // 保存增长率（新的交互方式）
+        function saveGrowthRate(stageType, stageCode) {
+            let inputId, panelId;
+            
+            if (stageType === 'current') {
+                inputId = 'currentGrowthRateInput';
+                panelId = 'currentGrowthRatePanel';
+            } else {
+                inputId = `growthRateInput-${stageCode}`;
+                panelId = `growthRatePanel-${stageCode}`;
+            }
+            
+            const inputElement = document.getElementById(inputId);
+            const panelElement = document.getElementById(panelId);
+            
+            if (!inputElement) {
+                console.error('找不到增长率输入框:', inputId);
+                return;
+            }
+            
+            const newRate = parseFloat(inputElement.value);
+            if (isNaN(newRate) || newRate < -100 || newRate > 500) {
+                alert('请输入-100%到500%之间的有效增长率');
+                return;
+            }
+            
+            // 更新增长率
+            updateStageGrowthRate(stageCode, newRate);
+            
+            // 自动收起面板
+            if (panelElement) {
+                panelElement.classList.add('collapsed');
+                
+                // 更新箭头状态
+                const toggleElement = stageType === 'current' ? 
+                    document.querySelector('#currentStageSection .growth-rate-toggle') :
+                    document.querySelector(`#growthRateSection-${stageCode} .growth-rate-toggle`);
+                    
+                if (toggleElement) {
+                    toggleElement.classList.remove('expanded');
+                }
+            }
+            
+            console.log(`✅ 增长率保存成功并收起面板: ${stageCode} = ${newRate}%`);
+        }
+
+        function updateStageGrowthRate(stageCode, newRate) {
+            userPlan.stageGrowthRates[stageCode] = parseFloat(newRate);
+            console.log(`更新增长率: ${stageCode} = ${newRate}%`);
+            
+            // 更新增长率显示文字
+            updateGrowthRateDisplay(stageCode, newRate);
+            
+            // 重新计算该阶段的费用（这会触发费用汇总的重新计算）
+            if (stageCode === userPlan.currentStage) {
+                // 如果是当前阶段，重新计算当前阶段费用
+                console.log('重新计算当前阶段费用');
+                updateCurrentStageDisplay();
+            } else {
+                // 如果是未来阶段，重新计算该阶段费用
+                console.log(`重新计算未来阶段 ${stageCode} 费用`);
+                updateStageDisplay(stageCode);
+            }
+            
+            // 重新计算总费用和年度柱状图
+            updateTotalEducationCost();
+            console.log(`增长率更新完成: ${stageCode} = ${newRate}%`);
+        }
+
+        // 切换增长率设置面板
+        function toggleGrowthRateSettings(stageType, stageCode = null) {
+            let panelId, toggleId;
+            
+            if (stageType === 'current') {
+                panelId = 'currentGrowthRatePanel';
+                toggleId = 'currentGrowthRateToggle';
+            } else {
+                panelId = `growthRatePanel-${stageCode}`;
+                toggleId = `growthRateToggle-${stageCode}`;
+            }
+            
+            const panel = document.getElementById(panelId);
+            const toggle = document.querySelector(`[onclick*="${stageType === 'current' ? 'current' : stageCode}"]`);
+            
+            if (panel && toggle) {
+                if (panel.classList.contains('collapsed')) {
+                    // 展开
+                    panel.classList.remove('collapsed');
+                    toggle.classList.add('expanded');
+                } else {
+                    // 收起
+                    panel.classList.add('collapsed');
+                    toggle.classList.remove('expanded');
+                }
+            }
+        }
+
+        // 更新增长率显示文字
+        function updateGrowthRateDisplay(stageCode, rate) {
+            if (stageCode === userPlan.currentStage) {
+                const textElement = document.getElementById('currentGrowthRateText');
+                if (textElement) {
+                    textElement.textContent = `已考虑年均增长率 ${rate}%`;
+                }
+            } else {
+                const textElement = document.getElementById(`growthRateText-${stageCode}`);
+                if (textElement) {
+                    textElement.textContent = `已考虑年均增长率 ${rate}%`;
+                }
+            }
+        }
+
+        // 计算应用增长率后的费用汇总
+        function calculateGrowthAdjustedSummary(originalCalculation, stageCode, years) {
+            const currentYear = new Date().getFullYear();
+            const stageStartYear = stageCode === userPlan.currentStage ? currentYear : 
+                (currentYear + EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade));
+            
+            // 计算平均年份（阶段中点）来应用增长率
+            const averageYear = stageStartYear + Math.floor(years / 2);
+            
+            // 应用增长率到各项费用
+            const adjustedPeriodicTotal = applyGrowthRate(originalCalculation.summary.periodicTotal || 0, stageCode, averageYear);
+            const adjustedYearlyTotal = applyGrowthRate(originalCalculation.summary.yearlyTotal || 0, stageCode, averageYear);
+            const adjustedOnceTotal = applyGrowthRate(originalCalculation.summary.onceTotal || 0, stageCode, stageStartYear);
+            
+            // 返回调整后的汇总数据
+            return {
+                ...originalCalculation,
+                summary: {
+                    ...originalCalculation.summary,
+                    periodicTotal: adjustedPeriodicTotal,
+                    yearlyTotal: adjustedYearlyTotal,
+                    onceTotal: adjustedOnceTotal,
+                    totalCost: adjustedPeriodicTotal + adjustedOnceTotal
+                }
+            };
+        }
+
+        // 切换年度费用柱状图的展开/收起状态
+        function toggleYearlyChart() {
+            const yearlyChart = document.getElementById('yearlyChart');
+            const expandToggle = document.getElementById('expandToggle');
+            const expandText = document.getElementById('expandText');
+            
+            if (yearlyChart.classList.contains('collapsed')) {
+                // 展开
+                yearlyChart.classList.remove('collapsed');
+                expandToggle.classList.add('expanded');
+                expandText.textContent = '收起明细';
+                expandToggle.title = '点击收起年度费用明细';
+            } else {
+                // 收起
+                yearlyChart.classList.add('collapsed');
+                expandToggle.classList.remove('expanded');
+                expandText.textContent = '查看明细';
+                expandToggle.title = '点击查看年度费用明细';
+            }
+        }
+
+        // 粘性滚动控制
+        function initStickyScrollBehavior() {
+            const totalCostElement = document.getElementById('totalEducationCost');
+            if (!totalCostElement) return;
+
+            // 使用Intersection Observer监听粘性状态
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        // 当元素与视窗顶部相交时，判断是否处于粘性状态
+                        if (entry.boundingClientRect.top <= 0 && entry.intersectionRatio < 1) {
+                            totalCostElement.classList.add('sticky-active');
+                        } else {
+                            totalCostElement.classList.remove('sticky-active');
+                        }
+                    });
+                },
+                {
+                    threshold: [0, 1],
+                    rootMargin: '0px 0px -1px 0px' // 轻微偏移以确保准确检测
+                }
+            );
+
+            observer.observe(totalCostElement);
+
+            // 优化：添加滚动节流以提升性能
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                if (scrollTimeout) {
+                    clearTimeout(scrollTimeout);
+                }
+                scrollTimeout = setTimeout(() => {
+                    // 这里可以添加其他滚动相关的逻辑
+                }, 16); // 约60fps的频率
+            }, { passive: true });
+        }
 
         // 初始化适配器函数
         function initializeAdapters() {
@@ -2025,6 +2611,10 @@
         // 初始化应用
         document.addEventListener('DOMContentLoaded', function() {
             console.log('✅ 教育规划计算器页面加载完成');
+            
+            // 初始化粘性滚动行为
+            initStickyScrollBehavior();
+            console.log('✅ 粘性滚动行为初始化完成');
         });
 
         // 显示系统信息
@@ -2110,7 +2700,7 @@
             // 控制教育风格选择器的显示/隐藏
             const needsEducationStyle = selectedStage && !['university', 'graduate', 'phd'].includes(selectedStage);
             if (educationStyleGroup) {
-                educationStyleGroup.style.display = needsEducationStyle ? 'block' : 'none';
+                educationStyleGroup.style.display = needsEducationStyle ? 'flex' : 'none';
                 if (educationStyleSelect) {
                     if (!needsEducationStyle) {
                         educationStyleSelect.value = ''; // 清空不需要的教育风格
@@ -2325,7 +2915,7 @@
                                 <th>费用项目</th>
                                 <th>金额</th>
                                 <th>单位</th>
-                                <th>剩余年限总计</th>
+                                <th>费用总计</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -2418,7 +3008,7 @@
                                    placeholder="${cost.currency === 'CNY' ? '¥' + cost.amount.toLocaleString() : getCurrencySymbol(cost.currency) + cost.amount.toLocaleString()}">
                         </td>
                         <td>${getUnitText(cost.unit)}</td>
-                        <td id="total-${stageCode}-${key}">¥${Math.round(totalForPeriod).toLocaleString()}</td>
+                        <td id="total-${stageCode}-${key}">${formatCurrency(totalForPeriod)}</td>
                     </tr>
                 `;
             }
@@ -2451,10 +3041,18 @@
             const totalCell = row.querySelector('td:last-child');
             const calcCost = calculation.breakdown[costKey];
             const totalForPeriod = calcCost ? calcCost.totalForPeriod : numValue * remainingYears;
-            totalCell.textContent = `¥${Math.round(totalForPeriod).toLocaleString()}`;
+            totalCell.textContent = formatCurrency(totalForPeriod);
         }
 
         // 获取单位文本
+        // 安全的金额格式化函数
+        function formatCurrency(amount) {
+            if (amount === null || amount === undefined || isNaN(amount)) {
+                return '¥0';
+            }
+            return `¥${Math.round(amount).toLocaleString()}`;
+        }
+
         function getUnitText(unit) {
             const unitMap = {
                 'year': '每年',
@@ -2641,73 +3239,7 @@
             timeline.innerHTML = timelineHTML;
         }
 
-        // 完成教育规划时的处理
-        function completeEducationPlanning() {
-            if (userPlan.educationPath.length === 0) {
-                return;
-            }
 
-            // 计算统计数据
-            const totalYears = userPlan.educationPath.reduce((sum, item) => sum + item.years, 0);
-            const averageYearlyCost = userPlan.totalInvestment / totalYears;
-            const mostExpensiveStage = userPlan.educationPath.reduce((max, item) => 
-                item.cost > max.cost ? item : max
-            );
-
-            // 显示完成汇总
-            const completeSummary = document.getElementById('completeSummary');
-            completeSummary.innerHTML = `
-                <h4>🎯 规划完成统计</h4>
-                <div class="complete-stats">
-                    <div class="complete-stat">
-                        <div class="complete-stat-value">¥${Math.round(userPlan.totalInvestment).toLocaleString()}</div>
-                        <div class="complete-stat-label">总投资</div>
-                    </div>
-                    <div class="complete-stat">
-                        <div class="complete-stat-value">${totalYears}年</div>
-                        <div class="complete-stat-label">总学习时间</div>
-                    </div>
-                    <div class="complete-stat">
-                        <div class="complete-stat-value">¥${Math.round(averageYearlyCost).toLocaleString()}</div>
-                        <div class="complete-stat-label">年均费用</div>
-                    </div>
-                    <div class="complete-stat">
-                        <div class="complete-stat-value">${mostExpensiveStage.name.split(' - ')[0]}</div>
-                        <div class="complete-stat-label">最贵阶段</div>
-                    </div>
-                </div>
-            `;
-
-            // 显示完成提示
-            document.getElementById('educationComplete').classList.remove('hidden');
-        }
-
-        // 在生成卡片时检查是否完成规划
-        function checkEducationComplete() {
-            const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
-            let allStagesPlanned = true;
-
-            // 检查是否所有阶段都已选择
-            subsequentStages.slice(1).forEach(stage => { // 跳过当前阶段
-                const levelSelect = document.getElementById(`level-${stage.code}`);
-                if (!levelSelect || !levelSelect.value) {
-                    allStagesPlanned = false;
-                }
-            });
-
-            // 如果是博士阶段或所有阶段都已规划，显示完成提示
-            if (userPlan.currentStage === 'phd' || allStagesPlanned) {
-                setTimeout(() => {
-                    completeEducationPlanning();
-                }, 1000); // 延迟显示，让用户看到最后的更新
-            }
-        }
-
-        // 在更新阶段卡片时检查完成状态
-        function checkAndUpdateComplete() {
-            updateTotalEducationCost();
-            checkEducationComplete();
-        }
 
 
         // 显示费用汇总卡片
@@ -2772,7 +3304,7 @@
                                        placeholder="${cost.currency === 'CNY' ? '¥' + cost.amount.toLocaleString() : getCurrencySymbol(cost.currency) + cost.amount.toLocaleString()}">
                             </td>
                             <td>${getUnitText(cost.unit)}</td>
-                            <td id="total-${stageCode}-${key}">¥${Math.round(totalForPeriod).toLocaleString()}</td>
+                            <td id="total-${stageCode}-${key}">${formatCurrency(totalForPeriod)}</td>
                             <td>
                                 <button class="cost-item-edit" onclick="openCostEditModal('${stageCode}', '${key}', ${isCustomItem})">编辑</button>
                             </td>
@@ -2888,7 +3420,7 @@
             // 更新当前项目的总计显示
             const totalElement = document.getElementById(`total-${stageCode}-${costKey}`);
             const newTotal = calculateItemTotal(stageData.costData.costs[costKey], stageData.years);
-            totalElement.textContent = `¥${Math.round(newTotal).toLocaleString()}`;
+            totalElement.textContent = formatCurrency(newTotal);
             
             // 更新费用汇总卡片
             if (stageCode === userPlan.currentStage) {
@@ -2962,6 +3494,7 @@
 
 
 
+
         // 更新地区选择选项（仅控制国家选择器的显示）
         function updateLocationOptions() {
             const levelSelect = document.getElementById('currentLevel');
@@ -2982,8 +3515,27 @@
                     const stageInfo = EDUCATION_STAGES_CONFIG.getStageInfo(selectedStage);
                     const levelInfo = stageInfo?.educationLevels?.find(level => level.code === selectedLevel);
                     
-                    // 如果是海外方向，显示国家选择器
+                    // 如果是海外方向，显示国家选择器并填充选项
                     if (levelInfo && levelInfo.direction === 'overseas') {
+                        console.log('🌍 海外方向，动态填充国家选项');
+                        console.log('🔍 selectedStage:', selectedStage);
+                        
+                        // 清空现有选项
+                        countrySelect.innerHTML = '<option value="">请选择国家</option>';
+                        
+                        // 从配置文件获取国家选项
+                        const countries = EDUCATION_STAGES_CONFIG.getOverseasCountries(selectedStage);
+                        console.log('🔍 获取到的国家:', countries);
+                        
+                        if (countries && countries.length > 0) {
+                            countries.forEach(country => {
+                                const option = document.createElement('option');
+                                option.value = country.code;
+                                option.textContent = country.name;
+                                countrySelect.appendChild(option);
+                            });
+                        }
+                        
                         countrySelector.style.display = 'block';
                         countrySelect.disabled = false;
                     }
@@ -3027,13 +3579,34 @@
                 console.log('  - currentCity.options:', document.getElementById('currentCity')?.options);
                 
                 console.log('📝 用户输入:', { city, stage, grade, level, country, educationStyle });
+                console.log('📝 用户输入详细值:', { 
+                    city: `"${city}"`, 
+                    stage: `"${stage}"`, 
+                    grade: `"${grade}"`, 
+                    level: `"${level}"`, 
+                    country: `"${country}"`, 
+                    educationStyle: `"${educationStyle}"` 
+                });
                 
                 // 验证输入（大学/研究生/博士阶段不需要教育风格）
                 const needsEducationStyle = stage && !['university', 'graduate', 'phd'].includes(stage);
+                console.log('🔍 输入验证检查:', { 
+                    city: !!city, 
+                    stage: !!stage, 
+                    grade: !!grade, 
+                    level: !!level, 
+                    educationStyle: !!educationStyle, 
+                    needsEducationStyle,
+                    finalValidation: !(!city || !stage || !grade || !level || (needsEducationStyle && !educationStyle))
+                });
+                
                 if (!city || !stage || !grade || !level || (needsEducationStyle && !educationStyle)) {
                     console.error('❌ 输入验证失败:', { city: !!city, stage: !!stage, grade: !!grade, level: !!level, educationStyle: !!educationStyle, needsEducationStyle });
+                    showError('请完整填写所有必填信息');
                     return;
                 }
+                
+                console.log('✅ 输入验证通过，继续执行...');
                 
                 // 检查配置是否存在
                 if (!EDUCATION_STAGES_CONFIG) {
@@ -3069,7 +3642,17 @@
                     currentCountry: country,
                     educationStyle: educationStyle,
                     // 初始化阶段教育风格存储
-                    stageEducationStyles: {}
+                    stageEducationStyles: {},
+                    // 初始化阶段增长率设置（默认2%）
+                    stageGrowthRates: {
+                        'kindergarten': 2.0,
+                        'primary': 2.0,
+                        'middle': 2.0,
+                        'high': 2.0,
+                        'university': 2.0,
+                        'graduate': 2.0,
+                        'phd': 2.0
+                    }
                 };
                 
                 console.log('💾 用户计划已保存:', userPlan);
@@ -3206,13 +3789,20 @@
                 // 检查是否为大学阶段，使用大学适配器
                 if (universityAdapter && universityAdapter.isStageSupported(userPlan.currentStage)) {
                     console.log('✅ 使用大学适配器获取费用数据');
+                    console.log('🔍 大学适配器参数:', {
+                        stage: userPlan.currentStage,
+                        grade: userPlan.currentGrade,
+                        level: userPlan.currentLevel,
+                        city: userPlan.currentCity,
+                        country: userPlan.currentCountry
+                    });
                     
                     const costDataResult = universityAdapter.getCostData(
                         userPlan.currentStage,
                         userPlan.currentGrade,
                         userPlan.currentLevel,
                         userPlan.currentCity,
-                        userPlan.educationStyle || 'balanced'
+                        userPlan.currentCountry || ''
                     );
                     
                     console.log('getCurrentStageCostData - 大学适配器返回结果:', costDataResult);
@@ -3223,13 +3813,20 @@
                 // 检查是否为研究生阶段，使用研究生适配器
                 if (graduateAdapter && graduateAdapter.isStageSupported(userPlan.currentStage)) {
                     console.log('✅ 使用研究生适配器获取费用数据');
+                    console.log('🔍 研究生适配器参数:', {
+                        stage: userPlan.currentStage,
+                        grade: userPlan.currentGrade,
+                        level: userPlan.currentLevel,
+                        city: userPlan.currentCity,
+                        country: userPlan.currentCountry
+                    });
                     
                     const costDataResult = graduateAdapter.getCostData(
                         userPlan.currentStage,
                         userPlan.currentGrade,
                         userPlan.currentLevel,
                         userPlan.currentCity,
-                        userPlan.educationStyle || 'balanced'
+                        userPlan.currentCountry || ''
                     );
                     
                     console.log('getCurrentStageCostData - 研究生适配器返回结果:', costDataResult);
@@ -3240,13 +3837,20 @@
                 // 检查是否为博士阶段，使用博士适配器
                 if (phdAdapter && phdAdapter.isStageSupported(userPlan.currentStage)) {
                     console.log('✅ 使用博士适配器获取费用数据');
+                    console.log('🔍 博士适配器参数:', {
+                        stage: userPlan.currentStage,
+                        grade: userPlan.currentGrade,
+                        level: userPlan.currentLevel,
+                        city: userPlan.currentCity,
+                        country: userPlan.currentCountry
+                    });
                     
                     const costDataResult = phdAdapter.getCostData(
                         userPlan.currentStage,
                         userPlan.currentGrade,
                         userPlan.currentLevel,
                         userPlan.currentCity,
-                        userPlan.educationStyle || 'balanced'
+                        userPlan.currentCountry || ''
                     );
                     
                     console.log('getCurrentStageCostData - 博士适配器返回结果:', costDataResult);
@@ -3335,7 +3939,16 @@
                     years = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
                     
                     if (!baseCostData) {
-                        showError('无法获取当前阶段费用数据');
+                        console.error('❌ getCurrentStageCostData() 返回 null');
+                        console.error('❌ 当前用户计划:', userPlan);
+                        console.error('❌ 适配器状态:', {
+                            kindergarten: !!kindergartenPrimaryMiddleAdapter,
+                            highSchool: !!highSchoolAdapter,
+                            university: !!universityAdapter,
+                            graduate: !!graduateAdapter,
+                            phd: !!phdAdapter
+                        });
+                        showError('无法获取当前阶段费用数据，请检查输入信息是否完整');
                         return;
                     }
                 } else {
@@ -3518,27 +4131,80 @@
                     document.getElementById('currentStageMeta').textContent = 
                         `${gradeInfo.name} | 剩余${years}年 | ${baseCostData.cityName || baseCostData.countryName || ''}`;
                     
-                    // 显示费用汇总
-                    displayCostSummary(calculation, years);
+                    // 应用增长率并显示费用汇总
+                    const adjustedCalculation = calculateGrowthAdjustedSummary(calculation, stageCode, years);
+                    displayCostSummary(adjustedCalculation, years);
+                    
+                    // 显示或更新当前阶段的增长率设置
+                    const currentGrowthRateText = document.getElementById('currentGrowthRateText');
+                    const currentGrowthRateInput = document.getElementById('currentGrowthRateInput');
+                    const currentRate = getStageGrowthRate(stageCode);
+                    
+                    if (currentGrowthRateText) {
+                        currentGrowthRateText.textContent = `已考虑年均增长率 ${currentRate}%`;
+                    }
+                    if (currentGrowthRateInput) {
+                        currentGrowthRateInput.value = currentRate;
+                    }
                 } else {
                     // 未来阶段的处理
                     const costSummary = document.getElementById(`costSummary-${stageCode}`);
                     if (costSummary) {
+                        // 应用增长率到费用计算
+                        const adjustedCalculation = calculateGrowthAdjustedSummary(calculation, stageCode, years);
+                        
                         // 检查是否有一次性费用并应用相应的CSS类
-                        const hasOnetimeCost = calculation.summary.onceTotal && calculation.summary.onceTotal > 0;
+                        const hasOnetimeCost = adjustedCalculation.summary.onceTotal && adjustedCalculation.summary.onceTotal > 0;
                         costSummary.className = hasOnetimeCost ? 'cost-summary has-onetime' : 'cost-summary';
-                        costSummary.innerHTML = createCostSummaryCards(calculation, years);
+                        costSummary.innerHTML = createCostSummaryCards(adjustedCalculation, years);
                         costSummary.classList.remove('hidden');
                     }
                     
-                    const costDetails = document.getElementById(`costDetails-${stageCode}`);
-                    if (costDetails) {
-                        costDetails.classList.remove('hidden');
+                    // 显示或更新增长率设置
+                    const growthRateSection = document.getElementById(`growthRateSection-${stageCode}`);
+                    if (growthRateSection) {
+                        const currentRate = getStageGrowthRate(stageCode);
+                        
+                        // 动态生成增长率设置HTML
+                        growthRateSection.innerHTML = `
+                            <div class="growth-rate-toggle" onclick="toggleGrowthRateSettings('future', '${stageCode}')">
+                                <span class="growth-rate-text" id="growthRateText-${stageCode}">已考虑年均增长率 ${currentRate}%</span>
+                                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="transition: transform 0.3s ease;">
+                                    <path d="M4 6L8 10L12 6" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            
+                            <!-- 增长率设置面板 -->
+                            <div class="growth-rate-panel collapsed" id="growthRatePanel-${stageCode}">
+                                <div class="growth-rate-setting">
+                                    <label for="growthRateInput-${stageCode}">年均增长率 (%)</label>
+                                    <div class="input-group">
+                                        <input type="number" 
+                                               id="growthRateInput-${stageCode}" 
+                                               value="${currentRate}" 
+                                               min="-100" 
+                                               max="500" 
+                                               step="0.1">
+                                        <span class="input-suffix">%</span>
+                                        <button class="growth-rate-save-btn" onclick="saveGrowthRate('future', '${stageCode}')">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        growthRateSection.classList.remove('hidden');
                     }
+                    
                 }
                 
                 // 显示费用详情（统一处理）
                 displayCostDetails(mergedCostData, calculation, years, stageCode);
+                
+                // 最后显示费用详情区域
+                const costDetails = document.getElementById(`costDetails-${stageCode}`);
+                if (costDetails && stageCode !== userPlan.currentStage) {
+                    costDetails.classList.remove('hidden');
+                }
                 
                 // 保存数据到全局变量
                 if (!window.stageCostData) {
@@ -3552,6 +4218,9 @@
                     modified: false,
                     educationStyle: userPlan.educationStyle  // 保存当前教育风格用于缓存验证
                 };
+                
+                console.log(`✅ 数据已保存到 window.stageCostData[${stageCode}]:`, window.stageCostData[stageCode]);
+                console.log(`✅ 当前 window.stageCostData 包含的阶段:`, Object.keys(window.stageCostData));
                 
                 // 更新总费用汇总
                 if (stageCode === userPlan.currentStage) {
@@ -3593,10 +4262,6 @@
                 initializeFutureStageEducationStyles();
             }, 100); // 延迟执行，确保DOM已渲染
             
-            // 如果已经是最后阶段，显示完成提示
-            if (userPlan.currentStage === "phd") {
-                document.getElementById("educationComplete").classList.remove("hidden");
-            }
             
             // 显示总费用汇总区域
             updateTotalEducationCost();
@@ -3612,6 +4277,46 @@
                     </div>
                     
                     ${createFutureStageContent(stage)}
+                    
+                    <!-- 费用汇总 -->
+                    <div id="costSummary-${stage.code}" class="cost-summary hidden">
+                        <!-- 费用汇总卡片将动态生成 -->
+                    </div>
+                    
+                    <!-- 增长率设置（紧跟在费用汇总下方） -->
+                    <div class="stage-growth-rate-section hidden" id="growthRateSection-${stage.code}">
+                        <!-- 增长率设置内容将通过JavaScript动态生成 -->
+                    </div>
+                    
+                    <!-- 费用详情 -->
+                    <div id="costDetails-${stage.code}" class="cost-details hidden">
+                        <h4>详细费用清单</h4>
+                        <!-- 桌面端表格 -->
+                        <table id="costTable-${stage.code}" class="cost-table">
+                            <thead>
+                                <tr>
+                                    <th>费用项目</th>
+                                    <th>金额</th>
+                                    <th>单位</th>
+                                    <th>费用总计</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 费用项目将动态生成 -->
+                            </tbody>
+                        </table>
+                        <!-- 移动端列表 -->
+                        <div id="costList-${stage.code}" class="cost-list">
+                            <!-- 费用项目列表将动态生成 -->
+                        </div>
+                        <!-- 新增费用项按钮 -->
+                        <div class="add-cost-section">
+                            <button class="add-cost-btn" onclick="openAddCostModal('${stage.code}')">
+                                + 新增费用项
+                            </button>
+                        </div>
+                    </div>
                 </div>
             `;
         }
@@ -3620,6 +4325,7 @@
         function createFutureStageContent(stage) {
             const citySelectId = `city-${stage.code}`;
             const countrySelectId = `country-${stage.code}`;
+            const growthRate = getStageGrowthRate(stage.code);
             
             // 判断是否需要教育风格选择器
             const needsEducationStyle = !['university', 'graduate', 'phd'].includes(stage.code);
@@ -3668,38 +4374,6 @@
                             <option value="">请选择国家</option>
                             <!-- 国家选项将根据阶段动态填充 -->
                         </select>
-                    </div>
-                </div>
-                
-                <div id="costSummary-${stage.code}" class="cost-summary hidden">
-                    <!-- 费用汇总卡片将动态生成 -->
-                </div>
-                
-                <div id="costDetails-${stage.code}" class="cost-details hidden">
-                    <h4>详细费用清单</h4>
-                    <!-- 桌面端表格 -->
-                    <table id="costTable-${stage.code}" class="cost-table">
-                        <thead>
-                            <tr>
-                                <th>费用项目</th>
-                                <th>金额</th>
-                                <th>单位</th>
-                                <th>剩余年限总计</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- 费用项目将动态生成 -->
-                        </tbody>
-                    </table>
-                    <!-- 移动端列表 -->
-                    <div id="costList-${stage.code}" class="cost-list">
-                        <!-- 费用项目列表将动态生成 -->
-                    </div>
-                    <!-- 新增费用项按钮 -->
-                    <div class="add-cost-section">
-                        <button class="add-cost-btn" onclick="openAddCostModal('${stage.code}')">
-                            + 新增费用项
-                        </button>
                     </div>
                 </div>
             `;
@@ -4051,7 +4725,7 @@
                 unit: newUnit  // 使用新的单位进行计算
             }, currentEditingCost.years);
             
-            document.getElementById('modalTotalAmount').textContent = `¥${Math.round(totalAmount).toLocaleString()}`;
+            document.getElementById('modalTotalAmount').textContent = formatCurrency(totalAmount);
         }
 
         // 保存费用修改
@@ -4135,7 +4809,7 @@
                         <div style="display: flex; align-items: center; justify-content: space-between; min-height: 60px;">
                             <div>
                                 <div class="cost-item-title" style="margin-bottom: 4px;">${cost.description}</div>
-                                <div class="cost-item-total">总计: ¥${Math.round(totalForPeriod).toLocaleString()}</div>
+                                <div class="cost-item-total">总计: ${formatCurrency(totalForPeriod)}</div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 12px;">
                                 <div class="cost-item-amount">${displayAmount}/${getUnitText(cost.unit)}</div>
@@ -4147,6 +4821,203 @@
             }
             
             return listHTML;
+        }
+
+        // 生成年度费用柱状图
+        function generateYearlyCostChart(yearlyData) {
+            const chartContainer = document.getElementById('yearlyChartContainer');
+            if (!chartContainer || !yearlyData || yearlyData.length === 0) {
+                chartContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">暂无费用数据</div>';
+                return;
+            }
+
+            // 获取当前年份
+            const currentYear = new Date().getFullYear();
+            
+            // 计算最大费用以确定柱子高度比例
+            const maxCost = Math.max(...yearlyData.map(item => item.cost));
+            
+            console.log('生成年度费用柱状图，数据点数量:', yearlyData.length);
+            
+            if (maxCost === 0) {
+                chartContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">所有阶段费用为0</div>';
+                return;
+            }
+            
+            // 显示所有年份的数据，不做限制
+            const displayData = yearlyData;
+            
+            // 生成柱状图HTML
+            let chartHTML = '';
+            displayData.forEach(item => {
+                // 简单直接的线性比例计算，确保高度差异明显
+                let heightPercentage = 5; // 最小高度5%
+                
+                if (maxCost > 0 && item.cost > 0) {
+                    // 直接线性比例：费用 / 最大费用 * 95% + 5%最小高度
+                    const ratio = item.cost / maxCost;
+                    heightPercentage = 5 + (ratio * 95);
+                }
+                
+                // 确保高度在合理范围内
+                heightPercentage = Math.max(5, Math.min(100, heightPercentage));
+                
+                // 计算完成，无需额外日志
+                const isCurrentYear = item.year === currentYear;
+                const hasOnceCost = item.onceCost && item.onceCost > 0;
+                const costInWan = (item.cost / 10000).toFixed(1); // 转换为万元
+                
+                // 构建详细的tooltip信息
+                let tooltipText = `${item.year}年: ¥${item.cost.toLocaleString()}`;
+                if (hasOnceCost) {
+                    const periodicInWan = ((item.cost - item.onceCost) / 10000).toFixed(1);
+                    const onceInWan = (item.onceCost / 10000).toFixed(1);
+                    tooltipText += `\n周期费用: ${periodicInWan}万\n一次性费用: ${onceInWan}万`;
+                }
+                
+                // 如果有一次性费用，添加特殊样式类
+                const barClasses = [
+                    'bar-column',
+                    isCurrentYear ? 'current-year' : '',
+                    hasOnceCost ? 'has-once-cost' : ''
+                ].filter(Boolean).join(' ');
+                
+                // 设置柱子高度样式，使用!important确保生效
+                const heightStyle = `height: ${heightPercentage.toFixed(1)}% !important;`;
+                
+                chartHTML += `
+                    <div class="chart-bar">
+                        <div class="bar-value">${costInWan}万${hasOnceCost ? '*' : ''}</div>
+                        <div class="bar-container">
+                            <div class="${barClasses}" 
+                                 style="${heightStyle}"
+                                 title="${tooltipText}">
+                            </div>
+                        </div>
+                        <div class="bar-year">${item.year}</div>
+                    </div>
+                `;
+            });
+            
+            // 如果有一次性费用，添加说明
+            const hasAnyOnceCost = displayData.some(item => item.onceCost > 0);
+            if (hasAnyOnceCost) {
+                chartHTML += '<div class="chart-note">* 包含一次性费用</div>';
+            }
+            
+            chartContainer.innerHTML = chartHTML;
+        }
+
+        // 计算年度费用分布数据
+        function calculateYearlyData() {
+            if (!userPlan.currentStage) {
+                return [];
+            }
+
+            const yearlyData = [];
+            const currentYear = new Date().getFullYear();
+            
+            try {
+                // 获取所有已配置阶段的费用数据
+                const stageTimeline = [];
+                
+                // 添加当前阶段
+                if (window.stageCostData && window.stageCostData[userPlan.currentStage]) {
+                    const currentStageData = window.stageCostData[userPlan.currentStage];
+                    const remainingYears = EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade);
+                    
+                    stageTimeline.push({
+                        stage: userPlan.currentStage,
+                        startYear: currentYear,
+                        years: remainingYears,
+                        stageData: currentStageData
+                    });
+                }
+                
+                // 添加已配置的未来阶段
+                let nextStartYear = currentYear + (window.stageCostData[userPlan.currentStage] ? 
+                    EDUCATION_STAGES_CONFIG.getRemainingYears(userPlan.currentStage, userPlan.currentGrade) : 0);
+                
+                const subsequentStages = EDUCATION_STAGES_CONFIG.getSubsequentStages(userPlan.currentStage);
+                subsequentStages.slice(1).forEach(stage => {
+                    const levelSelect = document.getElementById(`level-${stage.code}`);
+                    if (levelSelect && levelSelect.value && window.stageCostData && window.stageCostData[stage.code]) {
+                        const stageData = window.stageCostData[stage.code];
+                        const totalYears = EDUCATION_STAGES_CONFIG.getStageInfo(stage.code)?.totalYears || 1;
+                        
+                        stageTimeline.push({
+                            stage: stage.code,
+                            startYear: nextStartYear,
+                            years: totalYears,
+                            stageData: stageData
+                        });
+                        
+                        nextStartYear += totalYears;
+                    }
+                });
+                
+                // 为每个阶段生成年度数据
+                stageTimeline.forEach(stageInfo => {
+                    const calculation = stageInfo.stageData.calculation;
+                    if (!calculation || !calculation.summary) {
+                        console.warn(`阶段 ${stageInfo.stage} 缺少计算数据`);
+                        return;
+                    }
+                    
+                    // 每年的周期性费用（年费+月费*12+季费*4）
+                    const yearlyPeriodicCost = calculation.summary.yearlyTotal || 0;
+                    // 一次性费用（在阶段第一年支付）
+                    const onceCost = calculation.summary.onceTotal || 0;
+                    
+                    console.log(`🔍 阶段 ${stageInfo.stage}:`, {
+                        年度周期费用: yearlyPeriodicCost,
+                        一次性费用: onceCost,
+                        总费用: calculation.summary.totalCost,
+                        周期总费用: calculation.summary.periodicTotal,
+                        完整计算对象: calculation.summary
+                    });
+                    
+                    // 生成每年的费用数据，应用增长率
+                    for (let i = 0; i < stageInfo.years; i++) {
+                        const year = stageInfo.startYear + i;
+                        
+                        // 应用增长率到周期性费用
+                        const adjustedPeriodicCost = applyGrowthRate(yearlyPeriodicCost, stageInfo.stage, year);
+                        let yearCost = adjustedPeriodicCost;
+                        
+                        // 第一年加上一次性费用（一次性费用按第一年计算增长率）
+                        let adjustedOnceCost = 0;
+                        if (i === 0 && onceCost > 0) {
+                            adjustedOnceCost = applyGrowthRate(onceCost, stageInfo.stage, year);
+                            yearCost += adjustedOnceCost;
+                        }
+                        
+                        yearlyData.push({
+                            year: year,
+                            cost: yearCost,
+                            stage: stageInfo.stage,
+                            isFirstYear: i === 0,
+                            periodicCost: adjustedPeriodicCost,
+                            onceCost: adjustedOnceCost,
+                            // 新增：原始费用（用于调试和对比）
+                            originalPeriodicCost: yearlyPeriodicCost,
+                            originalOnceCost: i === 0 ? onceCost : 0
+                        });
+                    }
+                });
+                
+                console.log('🎯 生成的年度费用数据:', yearlyData.map(item => ({
+                    年份: item.year,
+                    费用: item.cost,
+                    阶段: item.stage,
+                    是否第一年: item.isFirstYear
+                })));
+                
+            } catch (error) {
+                console.error('计算年度数据时出错:', error);
+            }
+            
+            return yearlyData;
         }
 
         // 计算和更新教育总费用
@@ -4192,6 +5063,16 @@
                 console.log('总费用已更新到DOM:', Math.round(totalCost));
             } else {
                 console.error('updateTotalEducationCost - 未找到totalEducationAmount元素');
+            }
+
+            // 更新年度费用柱状图
+            try {
+                const yearlyData = calculateYearlyData();
+                console.log('计算的年度数据:', yearlyData);
+                generateYearlyCostChart(yearlyData);
+                console.log('✅ 年度费用柱状图已更新');
+            } catch (error) {
+                console.error('更新年度费用柱状图时出错:', error);
             }
             
             // 显示总费用模块 - 即使只有当前阶段费用也要显示

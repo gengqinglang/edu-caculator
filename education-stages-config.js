@@ -172,7 +172,9 @@ const EDUCATION_STAGES_CONFIG = {
   // 获取海外国家选项
   getOverseasCountries: function(stageCode) {
     const stage = this.stages[stageCode];
+    
     if (!stage || !stage.overseasCountries) {
+      console.warn('⚠️ 未找到stage或overseasCountries:', stageCode);
       return [];
     }
     
@@ -190,7 +192,7 @@ const EDUCATION_STAGES_CONFIG = {
         countryLabels = window.PHD_EDUCATION_LEVELS;
       }
     } catch (error) {
-      console.warn('无法获取国家标签，使用默认标签');
+      console.warn('无法获取国家标签，使用默认标签:', error);
     }
     
     return stage.overseasCountries.map(code => ({
