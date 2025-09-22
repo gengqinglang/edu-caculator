@@ -197,12 +197,6 @@ class HighSchoolAdapter {
         currency: 'CNY',
         description: '学费'
       },
-      住宿费: {
-        amount: this.getAverageCost(baseCostData.accommodation),
-        unit: 'year',
-        currency: 'CNY',
-        description: '住宿费'
-      },
       餐费: {
         amount: this.getAverageCost(baseCostData.meal),
         unit: 'year',
@@ -216,6 +210,16 @@ class HighSchoolAdapter {
         description: '杂费'
       }
     };
+
+    // 仅对非公立高中添加住宿费
+    if (level !== 'domesticPublic' && level !== 'public') {
+      costs.住宿费 = {
+        amount: this.getAverageCost(baseCostData.accommodation),
+        unit: 'year',
+        currency: 'CNY',
+        description: '住宿费'
+      };
+    }
 
     // 根据学校类型添加特定费用项
     if (level === 'domesticPublic' || level === 'public') {
