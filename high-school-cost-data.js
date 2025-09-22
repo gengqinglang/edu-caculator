@@ -46,7 +46,6 @@ const HIGH_SCHOOL_COST_DATA = {
     // 公立高中 (国内方向)
     "公立高中": {
       tuition: { min: 800, max: 2000 },
-      accommodation: { min: 1000, max: 2000 },
       meal: { min: 9600, max: 14400 }, // 800-1200元/月 * 12月
       misc: { min: 1000, max: 2000 },
       tutoring: {
@@ -107,7 +106,6 @@ const HIGH_SCHOOL_COST_DATA = {
   二线城市: {
     "公立高中": {
       tuition: { min: 600, max: 1500 },
-      accommodation: { min: 800, max: 1500 },
       meal: { min: 7200, max: 10800 }, // 600-900元/月 * 12月
       misc: { min: 800, max: 1500 },
       tutoring: {
@@ -166,7 +164,6 @@ const HIGH_SCHOOL_COST_DATA = {
   三线城市: {
     "公立高中": {
       tuition: { min: 500, max: 1000 },
-      accommodation: { min: 600, max: 1000 },
       meal: { min: 6000, max: 9600 }, // 500-800元/月 * 12月
       misc: { min: 600, max: 1000 },
       tutoring: {
@@ -225,7 +222,6 @@ const HIGH_SCHOOL_COST_DATA = {
   "四线及以下": {
     "公立高中": {
       tuition: { min: 300, max: 800 },
-      accommodation: { min: 500, max: 800 },
       meal: { min: 4800, max: 7200 }, // 400-600元/月 * 12月
       misc: { min: 500, max: 800 },
       tutoring: {
