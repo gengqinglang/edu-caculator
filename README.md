@@ -241,6 +241,12 @@ const calculation = api.calculateTotalCost(costData, years, customRates);
 
 ---
 
+## 🌐 在线访问
+
+**Gitee Pages**: https://egg-yellow-geng.gitee.io/edu-caculate
+
+---
+
 **版本**: v1.0  
-**最后更新**: 2024年9月15日  
+**最后更新**: 2024年9月20日  
 **维护者**: 教育费用计算器项目组
